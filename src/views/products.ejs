@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js">
+  <!--<![endif]-->
+  <head>
+    <%- include("./partials/head.ejs") %>
+  </head>
+  <body>
+    <!--[if lt IE 7]>
+      <p class="browsehappy">
+        You are using an <strong>outdated</strong> browser. Please
+        <a href="#">upgrade your browser</a> to improve your experience.
+      </p>
+    <![endif]-->
+    <%- include("./partials/navbar.ejs") %>
+    <!-- Custom content -->
+
+    <div class="animate__animated animate__bounceInUp container center">
+      <% for(let i = 0; i < products.length; i += 3) { const part =
+      products.slice(i, i + 3); %>
+      <div class="row" style="margin-bottom: 5%;">
+        <%- part.map(p => `
+        <div
+          class="w-25 col padding-20 margin-right-20 margin-left-20 unique-color-dark text-primary z-depth-2"
+        >
+          <h5>${p.name}</h5>
+          <small>${p.id}</small>
+          <div class="center">
+            <hr
+              class="deep-purple accent-2 mb-4 mt-0 d-inline-block mx-auto"
+              style="width: 60px;"
+            />
+          </div>
+
+          <p>${p.desc.short}</p>
+
+          <a href="/products/${p.id}" class="btn btn-md btn-primary">View</a>
+        </div>
+        `).join("") %>
+      </div>
+      <% } %>
+    </div>
+
+    <!-- Included content -->
+    <%- include("./partials/footer.ejs") %> <%- include("./partials/js.ejs") %>
+  </body>
+</html>
