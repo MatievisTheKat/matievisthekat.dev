@@ -43,29 +43,6 @@ router.post("/update/:userID", async (req, res) => {
     avatarURL,
   } = req.body;
 
-  if (!password) return res.redirect("/me/settings?error=Missing password");
-  if (!email) return res.redirect("/me/settings?error=Missing email");
-  if (!username) return res.redirect("/me/settings?error=Missing username");
-  if (!confirmPassword)
-    return res.redirect("/me/settings?error=Missing password confirmation");
-  if (!firstName) return res.redirect("/me/settings?error=Missing first name");
-  if (!lastName) return res.redirect("/me/settings?error=Missing last name");
-
-  if (bio && bio.split(/ +/).length > 1000)
-    return res.redirect(
-      "/me/settings?error=Your bio may not be more than 1000 words long"
-    );
-  if (!validateEmail(email))
-    return res.redirect("/me/settings?error=Invalid email address");
-  if (!validatePassword(password))
-    return res.redirect(
-      "/me/settings?error=Passwords must contain at least 8 characters, 1 upperacse and 1 loweracse letter, 1 number and 1 special character"
-    );
-  if (!validateUsername(username))
-    return res.redirect(
-      "/me/settings?error=Usernames may only contain english characters, underscores and hyphens"
-    );
-
   if (password !== confirmPassword)
     return res.redirect("/me/settings?error=Passwords do not match");
 
@@ -101,16 +78,6 @@ router.post("/update/:userID", async (req, res) => {
 router.post("/login", async (req, res) => {
   const { email, password } = req.body;
 
-  if (!password) return res.redirect("/login?error=Missing password");
-  if (!email) return res.redirect("/login?error=Missing email");
-
-  if (!validateEmail(email))
-    return res.redirect("/login?error=Invalid email address");
-  if (!validatePassword(password))
-    return res.redirect(
-      "/login?error=Passwords must contain at least 8 characters, 1 upperacse and 1 loweracse letter, 1 number and 1 special character"
-    );
-
   const user = await User.findOne({ email });
   if (!user) return res.redirect("/login?error=Invalid email address");
 
@@ -130,25 +97,6 @@ router.post("/signup", async (req, res) => {
 
   if (password !== confirmPassword)
     return res.redirect("/signup?error=Passwords do not match");
-
-  if (!password) return res.redirect("/signup?error=Missing password");
-  if (!email) return res.redirect("/signup?error=Missing email");
-  if (!username) return res.redirect("/signup?error=Missing username");
-  if (!confirmPassword)
-    return res.redirect("/signup?error=Missing password confirmation");
-  if (!firstName) return res.redirect("/signup?error=Missing first name");
-  if (!lastName) return res.redirect("/signup?error=Missing last name");
-
-  if (!validateEmail(email))
-    return res.redirect("/signup?error=Invalid email address");
-  if (!validatePassword(password))
-    return res.redirect(
-      "/signup?error=Passwords must contain at least 8 characters, 1 upperacse and 1 loweracse letter, 1 number and 1 special character"
-    );
-  if (!validateUsername(username))
-    return res.redirect(
-      "/signup?error=Usernames may only contain english characters, underscores and hyphens"
-    );
 
   const passwordHash = await bcrypt.hash(
     password,
@@ -186,27 +134,5 @@ router.post("/logout", (req, res) => {
   res.clearCookie("userID");
   res.redirect("/login?success=Successfully logged out");
 });
-
-function validateEmail(email) {
-  const match = email.match(
-    /(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/
-  );
-  if (match && match[0] && !match[1]) return true;
-  else return false;
-}
-
-function validatePassword(pass) {
-  const match = pass.match(
-    /(?=(.*[0-9]))((?=.*[A-Za-z0-9])(?=.*[A-Z])(?=.*[a-z]))^.{8,}$/
-  );
-  if (match) return true;
-  else return false;
-}
-
-function validateUsername(username) {
-  const match = username.match(/^[a-z0-9_-]{3,20}$/);
-  if (match) return true;
-  else return false;
-}
 
 module.exports = router;

@@ -25,9 +25,10 @@
         action="/api/users/login"
         method="post"
         id="login-form"
-        class="center"
+        class="needs-validation"
+        novalidate
       >
-        <div class="form-group row">
+        <div class="form-group form-row">
           <div class="col">
             <label for="email">Email address</label>
             <input
@@ -37,6 +38,7 @@
               id="email"
               aria-describedby="emailHelp"
               placeholder="Enter email"
+              required
             />
             <div class="invalid-feedback">
               Please provide a valid email address
@@ -51,6 +53,7 @@
                 id="password"
                 name="password"
                 placeholder="Password"
+              required
               />
               <div class="invalid-feedback">
                 Passwords must contain at least 8 characters, 1 upperacse and 1

@@ -28,11 +28,7 @@
             alt="User avatar"
             class="avatar-img"
           />
-          <form
-            action="/api/avatars/delete/<%- user.id %>"
-            method="post"
-            class=""
-          >
+          <form action="/api/avatars/delete/<%- user.id %>" method="post">
             <a
               href="/me/avatar/change"
               class="btn btn-outline-primary btn-sm my-2 my-sm-0"
@@ -50,7 +46,8 @@
           <form
             action="/api/users/update/<%- user.id %>"
             method="post"
-            class=""
+            class="needs-validation"
+            novalidate
           >
             <input type="hidden" name="avatarURL" value="<%- user.avatarURL ||
             "/avatars/default.png" %>">
@@ -65,6 +62,7 @@
                   value="<%- user.name.first %>"
                   id="firstName"
                   placeholder="First name"
+                  required
                 />
                 <div class="invalid-feedback">
                   Please provide a valid first name
@@ -79,6 +77,7 @@
                   value="<%- user.name.last %>"
                   id="lastName"
                   placeholder="Last name"
+                  required
                 />
                 <div class="invalid-feedback">
                   Please provide a valid last name
@@ -97,6 +96,7 @@
                   aria-describedby="email"
                   value="<%- user.email %>"
                   placeholder="Email address"
+                  required
                 />
                 <div class="invalid-feedback">
                   Please provide a valid email address
@@ -111,6 +111,7 @@
                   value="<%- user.username %>"
                   id="username"
                   placeholder="Username"
+                  required
                 />
                 <div class="invalid-feedback">
                   Usernames may only contain english characters, underscores and
@@ -127,6 +128,7 @@
                   name="password"
                   id="password"
                   placeholder="Password"
+                  required
                 />
                 <div class="invalid-feedback">
                   Passwords must contain at least 8 characters, 1 upperacse and
@@ -141,6 +143,7 @@
                   name="confirmPassword"
                   id="confirmPassword"
                   placeholder="Confirm password"
+                  required
                 />
                 <div class="invalid-feedback">
                   Passwords must contain at least 8 characters, 1 upperacse and
