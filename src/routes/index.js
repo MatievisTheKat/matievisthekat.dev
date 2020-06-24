@@ -4,8 +4,6 @@ const ms = require("ms");
 const router = Router();
 
 router.use(async (req, res, next) => {
-  req.acceptedCookies = req.cookies ? req.cookies.acceptedCookies : false;
-
   let nexted = false;
   const id = req.cookies ? req.cookies.userID : null;
 
@@ -30,7 +28,6 @@ router.use("/legal", require("./legal"));
 router.get("/", (req, res) => {
   res.render("index", {
     user: req.user,
-    acceptedCookies: req.acceptedCookies,
     error: req.query.error,
     success: req.query.success,
     warning: req.query.warning,
