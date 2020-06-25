@@ -14,7 +14,8 @@ module.exports = model(
       required: true,
       default: "/avatars/default.png",
     },
-    bio: { required: false, type: String },
+    review: { type: Object, required: true, default: {} },
+    bio: { required: false, type: String, default: "" },
     admin: { type: Boolean, default: false },
     name: {
       required: true,
@@ -24,7 +25,6 @@ module.exports = model(
       full: {
         required: true,
         type: String,
-        default: `${this.first} ${this.last}`,
       },
     },
   })
