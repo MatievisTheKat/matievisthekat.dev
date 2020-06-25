@@ -6,4 +6,6 @@ router.get("/", async (req, res) => {
   res.send(reviews);
 });
 
+router.post("/new", async (req, res) => {});
+
 module.exports = router;
