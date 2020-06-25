@@ -18,7 +18,28 @@
     <%- include("../partials/navbar.ejs") %>
     <!-- Custom content -->
 
+    <% for(const review of reviews) { %>
+    <div
+      class="animate__animated animate__fadeInUp z-depth-2 container w-75 center padding-20 unique-color-dark text-primary"
+    >
+      <div>
+        <img
+          src="<%- review.author.avatarURL %>"
+          alt="User avatar"
+          class="avatar-img"
+          style="width: 5rem;"
+        />
+        <h5 class="text">
+          <%- review.author.username %>
+        </h5>
+
+        <%- review.text %>
+      </div>
+    </div>
+    <% } %>
+
     <!-- Included content -->
-    <%- include("../partials/footer.ejs") %> <%- include("../partials/js.ejs") %>
+    <%- include("../partials/footer.ejs") %> <%- include("../partials/js.ejs")
+    %>
   </body>
 </html>

@@ -9,13 +9,10 @@ router.get("/", async (req, res) => {
       author: {
         id: "iohasd897ASJdnau8-y098-0ijhdfioasfu790498jnfj[pdsaf=-030812hnwef",
         createdTimestamp: "12389407329564",
-        passwordHash: "0a89sd67baiwbd967rb32h8-8we9-8r23bhnjhdadsa",
         username: "matievisthekat",
         email: "matievisthekat@gmail.com",
+        verified: true,
         avatarURL: "/avatars/default.png",
-        review: {},
-        bio: "hello there general kenobi",
-        admin: false,
         name: {
           first: "Matthew",
           last: "Stead",

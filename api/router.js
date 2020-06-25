@@ -33,17 +33,20 @@ router.post("/email", async (req, res) => {
       user: "no-reply@matievisthekat.dev",
       pass: "Cvdm08&0",
     },
+    tls: {
+      rejectUnauthorized: false,
+    },
   });
 
   const info = await transporter.sendMail({
     from: '"matievisthekat.dev" <no-reply@matievisthekat.dev>', // sender address
     to: req.body.emails, // list of receivers
     subject: "Hello ✔", // Subject line
-    text: "Hello world?", // plain text body
-    html: "<b>Hello world?</b>", // html body
+    text: req.body.plainText, // plain text body
+    html: req.body.htmlText, // html body
   });
 
-  console.log(info);
+  res.send(info);
 });
 
 // 404 handling
