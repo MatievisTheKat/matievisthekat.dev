@@ -20,7 +20,7 @@ router.post("/new", async (req, res) => {
   const { userID, reviewText, stars } = req.body;
 
   const alreadyReviewed = (await Review.find()).find(
-    (r) => r.author.id === userID
+    (r) => r.author.id === userID && !r.deleted
   );
   if (alreadyReviewed)
     return res.redirect(

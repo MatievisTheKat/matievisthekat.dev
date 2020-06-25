@@ -22,14 +22,6 @@ router.get("/new", async (req, res) => {
       "/login?error=You need to be logged in to do that&redirect=/reviews/new"
     );
 
-  const previousReview = await axios.get(
-    `/api/reviews/getByUserID?id=${req.user.id}`
-  );
-  if (previousReview.data.id)
-    return res.redirect(
-      `/reviews?error=You have already submitted a review! View it <a href="/reviews/${previousReview.data.id}">here</a>`
-    );
-
   res.render("reviews/new", {
     user: req.user,
     error: req.query.error,
