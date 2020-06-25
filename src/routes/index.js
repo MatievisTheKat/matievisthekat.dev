@@ -54,6 +54,7 @@ router.get("/login", (req, res) => {
     error: req.query.error,
     success: req.query.success,
     warning: req.query.warning,
+    redirect: req.query.redirect,
   });
 });
 

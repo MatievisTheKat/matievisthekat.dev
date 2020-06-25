@@ -18,6 +18,17 @@
     <%- include("../partials/navbar.ejs") %>
     <!-- Custom content -->
 
+    <div class="container padding-10 container center z-depth-2 w-25 unique-color-dark">
+      <h6 class="text-primary">
+        Average:
+        <span class="<%- averageStars > 4 ? "text-success" : averageStars > 2 ? "text-info" : "text-danger" %>">
+          <i class="fas fa-star"></i>
+          <%- averageStars %>
+        </span>
+      </h6>
+      <a href="/reviews/new" class="btn btn-primary btn-md">Add a review</a>
+    </div>
+    <br />
     <div class="animate__animated animate__bounceInUp container center">
       <% for(let i = 0; i < reviews.length; i += 2) { const part =
       reviews.slice(i, i + 2); %>
@@ -43,7 +54,7 @@
             />
           </div>
 
-          <div class="center mb-1 ${review.stars > 3 ? "text-success" : review.stars > 2 ? "text-info" : "text-danger"}">
+          <div class="center mb-1 ${review.stars > 4 ? "text-success" : review.stars > 2 ? "text-info" : "text-danger"}">
             <i class="fas fa-star"></i>
             ${review.stars} / 5
           </div>
