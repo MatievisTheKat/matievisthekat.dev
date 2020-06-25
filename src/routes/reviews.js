@@ -31,6 +31,13 @@ router.get("/new", (req, res) => {
     return res.redirect(
       "/login?error=You need to be logged in to do that&redirect=/reviews/new"
     );
+
+  res.render("reviews/new", {
+    user: req.user,
+    error: req.query.error,
+    success: req.query.success,
+    warning: req.query.warning,
+  });
 });
 
 module.exports = router;
