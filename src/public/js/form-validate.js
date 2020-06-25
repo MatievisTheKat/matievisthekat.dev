@@ -88,7 +88,6 @@ function validateReviewStars(stars) {
 
 function validateReviewText(text) {
   const words = text.split(/ +/gi);
-  console.log(words.length);
   if (words.length <= 10) return false;
   else if (words.length > 1000) return false;
   else return true;

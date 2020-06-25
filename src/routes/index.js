@@ -9,7 +9,6 @@ router.use(async (req, res, next) => {
 
   if (id) {
     const user = await axios.get(`/api/users/${id}`).catch((err) => {
-      console.log(`CAUGHT ERROR WHEN REQUESTING USER: ${err.stack}`);
       next();
       nexted = true;
     });

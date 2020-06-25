@@ -6,7 +6,7 @@ module.exports = model(
   new Schema({
     id: { required: true, type: String, default: shortid.generate() },
     edited: { type: Boolean, required: true, default: false },
-    deleteted: { type: Boolean, required: true, default: false },
+    deleted: { type: Boolean, required: true, default: false },
     featured: { type: Boolean, required: true, default: false },
     author: {
       type: Object,

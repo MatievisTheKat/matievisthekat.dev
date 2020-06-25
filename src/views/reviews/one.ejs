@@ -18,35 +18,25 @@
     <%- include("../partials/navbar.ejs") %>
     <!-- Custom content -->
 
-    <div class="container padding-10 container center z-depth-2 w-25 unique-color-dark">
-      <h6 class="text-primary">
-        Average:
-        <span class="<%- averageStars > 4 ? "text-success" : averageStars > 2 ? "text-info" : "text-danger" %>">
-          <i class="fas fa-star"></i>
-          <%- averageStars || 0 %>
-        </span>
-      </h6>
-      <a href="/reviews/new" class="btn btn-primary btn-md">Add a review</a>
+    <div class="container padding-10 container center">
+      <a href="#" onclick="window.history.back()" class="btn btn-primary btn-md">Back</a>
     </div>
     <br />
     <div class="animate__animated animate__bounceInUp container center">
-      <% for(let i = 0; i < reviews.length; i += 2) { const part =
-      reviews.slice(i, i + 2); %>
       <div class="row">
-        <%- part.map(review => `
         <div
-          class="col w-25 padding-20 mb-4 margin-right-20 margin-left-20 unique-color-dark text-primary z-depth-2"
+          class="col w-75 padding-20 mb-4 margin-right-20 margin-left-20 unique-color-dark text-primary z-depth-2"
         >
           <img
-            src="${review.author.avatarURL}"
+            src="<%- review.author.avatarURL %>"
             alt="User avatar"
             class="avatar-img"
             style="width: 5rem;"
           />
           <h5>
-            ${review.author.username}
+            <%- review.author.username %>
           </h5>
-          ${review.author.verified ? `<small><i class="fas fa-user-check"></i> Verified</small>` : ""}
+          <%- review.author.verified ? `<small><i class="fas fa-user-check"></i> Verified</small>` : "" %>
           <div class="center">
             <hr
               class="deep-purple accent-2 mb-2 mt-1 d-inline-block mx-auto"
@@ -54,20 +44,25 @@
             />
           </div>
 
-          <div class="center mb-1 ${review.stars > 4 ? "text-success" : review.stars > 2 ? "text-info" : "text-danger"}">
+          <div class="center mb-1 <%- review.stars > 4 ? "text-success" : review.stars > 2 ? "text-info" : "text-danger" %>">
             <i class="fas fa-star"></i>
-            ${review.stars} / 5
+            <%- review.stars %> / 5
           </div>
 
-          ${review.text}
+          <%- review.text %>
 
-          <hr />
-
-          <a href="/reviews/${review.id}" class="btn btn-primary btn-md">View</a>
+          <% if (review.author.id === user.id || user.admin) { %>
+            <hr />
+            <div class="center container">
+              <form action="/api/reviews/delete" method="post">
+                <input type="hidden" name="id" value="<%- review.id %>">
+                <a href="/reviews/<%- review.id %>/edit" class="btn btn-primary btn-md">Edit</a>
+                <button type="submit" class="btn btn-outline-danger btn-md">Delete</button>
+              </form>
+            </div>
+          <% } %>
         </div>
-        `).join("") %>
       </div>
-      <% } %>
     </div>
 
     <!-- Included content -->
