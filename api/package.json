@@ -13,6 +13,7 @@
     "express": "^4.17.1",
     "express-fileupload": "^1.1.7-alpha.3",
     "mongoose": "^5.9.19",
+    "nodemailer": "^6.4.10",
     "shortid": "^2.2.15",
     "uuid": "^8.1.0"
   }

@@ -2,8 +2,6 @@ const router = require("express").Router();
 const Review = require("../models/Review");
 const User = require("../models/User");
 
-console.log(this);
-
 router.get("/", async (req, res) => {
   const reviews = [
     {
@@ -15,7 +13,7 @@ router.get("/", async (req, res) => {
         username: "matievisthekat",
         email: "matievisthekat@gmail.com",
         avatarURL: "/avatars/default.png",
-        review: console.log(this),
+        review: {},
         bio: "hello there general kenobi",
         admin: false,
         name: {
