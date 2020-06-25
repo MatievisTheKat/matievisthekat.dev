@@ -21,7 +21,102 @@ router.get("/", async (req, res) => {
       },
       text:
         "Matievis is a very skilled developer however that is not only where he excels at, his communication is outstanding and I highly recommend his services to anyone looking for any help getting their ideas created into reality.",
+      stars: 1,
+    },
+    {
+      id: "Hb6aLo",
+      author: {
+        id: "iohasd897ASJdnau8-y098-0ijhdfioasfu790498jnfj[pdsaf=-030812hnwef",
+        createdTimestamp: "12389407329564",
+        username: "matievisthekat",
+        email: "matievisthekat@gmail.com",
+        verified: true,
+        avatarURL: "/avatars/default.png",
+        name: {
+          first: "Matthew",
+          last: "Stead",
+          full: "Matthew Stead",
+        },
+      },
+      text:
+        "Matievis is a very skilled developer however that is not only where he excels at, his communication is outstanding and I highly recommend his services to anyone looking for any help getting their ideas created into reality.",
+      stars: 1,
+    },
+    {
+      id: "Hb6aLo",
+      author: {
+        id: "iohasd897ASJdnau8-y098-0ijhdfioasfu790498jnfj[pdsaf=-030812hnwef",
+        createdTimestamp: "12389407329564",
+        username: "matievisthekat",
+        email: "matievisthekat@gmail.com",
+        verified: true,
+        avatarURL: "/avatars/default.png",
+        name: {
+          first: "Matthew",
+          last: "Stead",
+          full: "Matthew Stead",
+        },
+      },
+      text:
+        "Matievis is a very skilled developer however that is not only where he excels at, his communication is outstanding and I highly recommend his services to anyone looking for any help getting their ideas created into reality.",
       stars: 5,
+    },
+    {
+      id: "Hb6aLo",
+      author: {
+        id: "iohasd897ASJdnau8-y098-0ijhdfioasfu790498jnfj[pdsaf=-030812hnwef",
+        createdTimestamp: "12389407329564",
+        username: "matievisthekat",
+        email: "matievisthekat@gmail.com",
+        verified: true,
+        avatarURL: "/avatars/default.png",
+        name: {
+          first: "Matthew",
+          last: "Stead",
+          full: "Matthew Stead",
+        },
+      },
+      text:
+        "Matievis is a very skilled developer however that is not only where he excels at, his communication is outstanding and I highly recommend his services to anyone looking for any help getting their ideas created into reality.",
+      stars: 4,
+    },
+    {
+      id: "Hb6aLo",
+      author: {
+        id: "iohasd897ASJdnau8-y098-0ijhdfioasfu790498jnfj[pdsaf=-030812hnwef",
+        createdTimestamp: "12389407329564",
+        username: "matievisthekat",
+        email: "matievisthekat@gmail.com",
+        verified: true,
+        avatarURL: "/avatars/default.png",
+        name: {
+          first: "Matthew",
+          last: "Stead",
+          full: "Matthew Stead",
+        },
+      },
+      text:
+        "Matievis is a very skilled developer however that is not only where he excels at, his communication is outstanding and I highly recommend his services to anyone looking for any help getting their ideas created into reality.",
+      stars: 3,
+    },
+    {
+      id: "Hb6aLo",
+      author: {
+        id: "iohasd897ASJdnau8-y098-0ijhdfioasfu790498jnfj[pdsaf=-030812hnwef",
+        createdTimestamp: "12389407329564",
+        username: "matievisthekat",
+        email: "matievisthekat@gmail.com",
+        verified: true,
+        avatarURL: "/avatars/default.png",
+        name: {
+          first: "Matthew",
+          last: "Stead",
+          full: "Matthew Stead",
+        },
+      },
+      text:
+        "Matievis is a very skilled developer however that is not only where he excels at, his communication is outstanding and I highly recommend his services to anyone looking for any help getting their ideas created into reality.",
+      stars: 2,
     },
   ]; //await Review.find();
   res.send(reviews);

@@ -8,14 +8,13 @@ router.get("/", async (req, res) => {
     error: req.query.error,
     success: req.query.success,
     warning: req.query.warning,
-    reviews: reviews.data,
+    reviews: reviews.data.reverse(),
   });
 });
 
-router.get("/:id", async (req, res) => {
+router.get("/:id", async (req, res, next) => {
   const review = await axios.get(`/api/reviews/${req.params.id}`);
-  if (!review.data || !review.data.id || review.data.error)
-    return res.redirect("/reviews");
+  if (!review.data || !review.data.id || review.data.error) return next();
 
   res.render("reviews/review", {
     user: req.user,

@@ -18,25 +18,46 @@
     <%- include("../partials/navbar.ejs") %>
     <!-- Custom content -->
 
-    <% for(const review of reviews) { %>
-    <div
-      class="animate__animated animate__fadeInUp z-depth-2 container w-75 center padding-20 unique-color-dark text-primary"
-    >
-      <div>
-        <img
-          src="<%- review.author.avatarURL %>"
-          alt="User avatar"
-          class="avatar-img"
-          style="width: 5rem;"
-        />
-        <h5 class="text">
-          <%- review.author.username %>
-        </h5>
+    <div class="animate__animated animate__bounceInUp container center">
+      <% for(let i = 0; i < reviews.length; i += 2) { const part =
+      reviews.slice(i, i + 2); %>
+      <div class="row">
+        <%- part.map(review => `
+        <div
+          class="col w-25 padding-20 mb-4 margin-right-20 margin-left-20 unique-color-dark text-primary z-depth-2"
+        >
+          <img
+            src="${review.author.avatarURL}"
+            alt="User avatar"
+            class="avatar-img"
+            style="width: 5rem;"
+          />
+          <h5>
+            ${review.author.username}
+          </h5>
+          ${review.author.verified ? `<small><i class="fas fa-user-check"></i> Verified</small>` : ""}
+          <div class="center">
+            <hr
+              class="deep-purple accent-2 mb-2 mt-1 d-inline-block mx-auto"
+              style="width: 140px;"
+            />
+          </div>
 
-        <%- review.text %>
+          <div class="center mb-1 ${review.stars > 3 ? "text-success" : review.stars > 2 ? "text-info" : "text-danger"}">
+            <i class="fas fa-star"></i>
+            ${review.stars} / 5
+          </div>
+
+          ${review.text}
+
+          <hr />
+
+          <a href="/reviews/${review.id}" class="btn btn-primary btn-md">View</a>
+        </div>
+        `).join("") %>
       </div>
+      <% } %>
     </div>
-    <% } %>
 
     <!-- Included content -->
     <%- include("../partials/footer.ejs") %> <%- include("../partials/js.ejs")
