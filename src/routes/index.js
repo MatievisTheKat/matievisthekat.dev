@@ -24,6 +24,7 @@ router.use(async (req, res, next) => {
 router.use("/products", require("./products"));
 router.use("/me", require("./me"));
 router.use("/legal", require("./legal"));
+router.use("/reviews", require("./reviews"));
 
 router.get("/", (req, res) => {
   res.render("index", {

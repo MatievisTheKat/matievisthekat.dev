@@ -1,0 +1,36 @@
+const router = require("express").Router();
+const axios = require("axios");
+
+router.get("/", async (req, res) => {
+  const reviews = await axios.get("/api/reviews");
+  res.render("reviews/list", {
+    user: req.user,
+    error: req.query.error,
+    success: req.query.success,
+    warning: req.query.warning,
+    reviews: reviews.data,
+  });
+});
+
+router.get("/:id", async (req, res) => {
+  const review = await axios.get(`/api/reviews/${req.params.id}`);
+  if (!review.data || !review.data.id || review.data.error)
+    return res.redirect("/reviews");
+
+  res.render("reviews/review", {
+    user: req.user,
+    error: req.query.error,
+    success: req.query.success,
+    warning: req.query.warning,
+    review: review.data,
+  });
+});
+
+router.get("/new", (req, res) => {
+  if (!req.user)
+    return res.redirect(
+      "/login?error=You need to be logged in to do that&redirect=/reviews/new"
+    );
+});
+
+module.exports = router;
