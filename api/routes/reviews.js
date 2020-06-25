@@ -2,8 +2,33 @@ const router = require("express").Router();
 const Review = require("../models/Review");
 const User = require("../models/User");
 
+console.log(this);
+
 router.get("/", async (req, res) => {
-  const reviews = await Review.find();
+  const reviews = [
+    {
+      id: "Hb6aLo",
+      author: {
+        id: "iohasd897ASJdnau8-y098-0ijhdfioasfu790498jnfj[pdsaf=-030812hnwef",
+        createdTimestamp: "12389407329564",
+        passwordHash: "0a89sd67baiwbd967rb32h8-8we9-8r23bhnjhdadsa",
+        username: "matievisthekat",
+        email: "matievisthekat@gmail.com",
+        avatarURL: "/avatars/default.png",
+        review: console.log(this),
+        bio: "hello there general kenobi",
+        admin: false,
+        name: {
+          first: "Matthew",
+          last: "Stead",
+          full: "Matthew Stead",
+        },
+      },
+      text:
+        "Matievis is a very skilled developer however that is not only where he excels at, his communication is outstanding and I highly recommend his services to anyone looking for any help getting their ideas created into reality.",
+      stars: 5,
+    },
+  ]; //await Review.find();
   res.send(reviews);
 });
 
@@ -36,7 +61,13 @@ router.post("/new", async (req, res) => {
     );
 
   const review = new Review({
-    author: user,
+    author: {
+      username: user.username,
+      id: user.id,
+      avatarURL: user.avatarURL,
+      email: user.email,
+      emailVerified: user.emailVerified,
+    },
     text: text.trim(),
     stars: parseInt(stars),
   });

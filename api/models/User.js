@@ -9,6 +9,7 @@ module.exports = model(
     passwordHash: { required: true, type: String },
     username: { required: true, type: String },
     email: { required: false, type: String },
+    emailVerifed: { type: Boolean, required: true, default: false },
     avatarURL: {
       type: String,
       required: true,

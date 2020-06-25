@@ -18,6 +18,7 @@ router.use(fileUpload());
 router.use("/avatars", require("./routes/avatars"));
 router.use("/users", require("./routes/users"));
 router.use("/products", require("./routes/products"));
+router.use("/reviews", require("./routes/reviews"));
 
 // 404 handling
 router.use((req, res, next) => {
