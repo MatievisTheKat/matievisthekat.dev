@@ -76,7 +76,7 @@ router.post("/update/:userID", async (req, res) => {
 });
 
 router.post("/login", async (req, res) => {
-  const { email, password } = req.body;
+  const { email, password, redirect } = req.body;
 
   const user = await User.findOne({ email });
   if (!user) return res.redirect("/login?error=Invalid email address");
@@ -84,7 +84,7 @@ router.post("/login", async (req, res) => {
   const match = await bcrypt.compare(password, user.passwordHash);
   if (match) {
     res.cookie("userID", user.id, { maxAge: ms("7 days") });
-    res.redirect("/me");
+    res.redirect(redirect || "/me");
   } else {
     res.redirect("/login?error=Incorrect password");
   }
