@@ -35,6 +35,8 @@ $(".form-control").change((evnt) => {
     check = validatePassword(el.value);
   else if (el.name === "username") check = validateUsername(el.value);
   else if (el.name === "bio") check = validateBio(el.value);
+  else if (el.name === "stars") check = validateReviewStars(el.value);
+  else if (el.name === "reviewText") check = validateReviewText(el.value);
 
   if (!genCheck) {
     el.classList.remove(`is-${genCheck ? "invalid" : "valid"}`);
@@ -75,5 +77,19 @@ function validateUsername(username) {
 function validateBio(bio) {
   const words = bio.split(/ +/gi);
   if (words.length > 1000) return false;
+  else return true;
+}
+
+function validateReviewStars(stars) {
+  stars = parseInt(stars);
+  if (stars > 5 || stars <= 1) return false;
+  else return true;
+}
+
+function validateReviewText(text) {
+  const words = text.split(/ +/gi);
+  console.log(words.length);
+  if (words.length <= 10) return false;
+  else if (words.length > 1000) return false;
   else return true;
 }

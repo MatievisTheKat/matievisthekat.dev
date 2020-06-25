@@ -15,19 +15,6 @@ router.get("/", async (req, res) => {
   });
 });
 
-router.get("/:id", async (req, res, next) => {
-  const review = await axios.get(`/api/reviews/${req.params.id}`);
-  if (!review.data || !review.data.id || review.data.error) return next();
-
-  res.render("reviews/review", {
-    user: req.user,
-    error: req.query.error,
-    success: req.query.success,
-    warning: req.query.warning,
-    review: review.data,
-  });
-});
-
 router.get("/new", (req, res) => {
   if (!req.user)
     return res.redirect(

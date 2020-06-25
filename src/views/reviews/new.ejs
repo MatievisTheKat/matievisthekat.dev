@@ -22,102 +22,48 @@
       class="animate__animated animate__bounceInUp z-depth-2 container center padding-20 unique-color-dark text-primary"
     >
       <form
-        action="/api/users/signup"
+        action="/api/reviews/new"
         method="post"
-        id="login-form"
+        id="review-form"
         class="needs-validation"
         novalidate
       >
+        <input type="hidden" name="userID" value="<%- user.id %>" />
         <div class="form-group row">
-          <div class="col">
-            <label for="first-name">First name</label>
+          <div class="center container">
+            <label for="stars">Stars</label>
             <input
-              type="text"
-              name="firstName"
+              type="number"
+              name="stars"
+              id="stars"
+              min="1"
+              max="5"
+              placeholder="Stars"
               class="form-control"
-              id="first-name"
-              placeholder="First name"
-              required
             />
             <div class="invalid-feedback">
-              Please provide a valid first name
-            </div>
-            <br />
-            <label for="last-name">Last name</label>
-            <input
-              type="text"
-              name="lastName"
-              class="form-control"
-              id="last-name"
-              placeholder="Last name"
-              required
-            />
-            <div class="invalid-feedback">
-              Please provide a valid last name
-            </div>
-            <br />
-            <label for="email">Email address</label>
-            <input
-              type="email"
-              name="email"
-              class="form-control"
-              id="email"
-              placeholder="Enter email"
-              required
-            />
-            <div class="invalid-feedback">
-              Please provide a valid email address
-            </div>
-          </div>
-          <div class="col">
-            <div class="form-group">
-              <label for="username">Username</label>
-              <input
-                type="text"
-                class="form-control"
-                id="username"
-                name="username"
-                placeholder="Username"
-                required
-              />
-              <div class="invalid-feedback">
-                Usernames may only contain english characters, underscores and
-                hyphens
-              </div>
-              <br />
-              <label for="password">Password</label>
-              <input
-                type="password"
-                class="form-control"
-                id="password"
-                name="password"
-                placeholder="Password"
-                required
-              />
-              <div class="invalid-feedback">
-                Passwords must contain at least 8 characters, 1 upperacse and 1
-                loweracse letter, 1 number and 1 special character
-              </div>
-              <br />
-              <label for="confirm-password">Confirm password</label>
-              <input
-                type="password"
-                class="form-control"
-                id="confirm-password"
-                name="confirmPassword"
-                placeholder="Enter password again"
-                required
-              />
-              <div class="invalid-feedback">
-                Passwords must contain at least 8 characters, 1 upperacse and 1
-                loweracse letter, 1 number and 1 special character
-              </div>
+              Please select between 1 and 5 stars
             </div>
           </div>
         </div>
-        <button type="submit" class="btn btn-primary">Sign Up</button>
-        <br />
-        <small>Already have an account? <a href="/login">Login</a></small>
+        <div class="form-group row">
+          <div class="col">
+            <label for="text">Review</label>
+            <textarea
+              name="reviewText"
+              id="text"
+              cols="30"
+              rows="10"
+              placeholder="Review"
+              class="form-control"
+              required
+            ></textarea>
+            <div class="invalid-feedback">
+              Please enter at least 10 words. No more than 1000 words
+            </div>
+          </div>
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
       </form>
     </div>
 
