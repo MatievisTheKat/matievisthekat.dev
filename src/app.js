@@ -3,6 +3,8 @@ const express = require("express");
 const cookieParser = require("cookie-parser");
 const app = express();
 
+require("dotenv").config({ path: path.join(__dirname, "..", ".env") });
+
 // Use middleware
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));

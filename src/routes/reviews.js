@@ -2,7 +2,9 @@ const router = require("express").Router();
 const axios = require("axios");
 
 router.get("/", async (req, res) => {
-  const rawReviews = await axios.get("/api/reviews");
+  const rawReviews = await axios.get(
+    `http://localhost:${process.env.PORT}/api/reviews`
+  );
   const reviews = rawReviews.data.filter((r) => !r.deleted);
   const totalStars = reviews.reduce((a, b) => (a += parseInt(b.stars)), 0);
   const averageStars = Math.floor((totalStars / reviews.length) * 10) / 10;
@@ -31,7 +33,9 @@ router.get("/new", async (req, res) => {
 });
 
 router.get("/:id/edit", async (req, res) => {
-  const review = await axios.get(`/api/reviews/${req.params.id}`);
+  const review = await axios.get(
+    `http://localhost:${process.env.PORT}/api/reviews/${req.params.id}`
+  );
   res.render("reviews/edit", {
     user: req.user,
     error: req.query.error,
@@ -42,7 +46,9 @@ router.get("/:id/edit", async (req, res) => {
 });
 
 router.get("/:id", async (req, res) => {
-  const review = await axios.get(`/api/reviews/${req.params.id}`);
+  const review = await axios.get(
+    `http://localhost:${process.env.PORT}/api/reviews/${req.params.id}`
+  );
   res.render("reviews/one", {
     user: req.user,
     error: req.query.error,

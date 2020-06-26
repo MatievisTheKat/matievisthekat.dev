@@ -8,10 +8,12 @@ router.use(async (req, res, next) => {
   const id = req.cookies ? req.cookies.userID : null;
 
   if (id) {
-    const user = await axios.get(`/api/users/${id}`).catch((err) => {
-      next();
-      nexted = true;
-    });
+    const user = await axios
+      .get(`http://localhost:${process.env.PORT}/api/users/${id}`)
+      .catch((err) => {
+        next();
+        nexted = true;
+      });
 
     if (user && user.data && user.data.id) req.user = user.data;
     res.cookie("userID", id, { maxAge: ms("7 days") });
