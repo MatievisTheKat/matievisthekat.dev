@@ -28,4 +28,31 @@ router.get("/terms", (req, res) =>
   })
 );
 
+router.get("/disclaimer", (req, res) =>
+  res.render("legal/disclaimer", {
+    user: req.user,
+    error: req.query.error,
+    success: req.query.success,
+    warning: req.query.warning,
+  })
+);
+
+router.get("/acceptable-use", (req, res) =>
+  res.render("legal/acceptable-use", {
+    user: req.user,
+    error: req.query.error,
+    success: req.query.success,
+    warning: req.query.warning,
+  })
+);
+
+router.get("/refunds", (req, res) =>
+  res.render("legal/refunds", {
+    user: req.user,
+    error: req.query.error,
+    success: req.query.success,
+    warning: req.query.warning,
+  })
+);
+
 module.exports = router;
