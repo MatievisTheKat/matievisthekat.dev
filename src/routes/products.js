@@ -234,7 +234,9 @@ const products = [
 ];
 
 router.get("/", async (req, res) => {
-  const resp = await axios.get("/api/products");
+  const resp = await axios.get(
+    `http://localhost:${process.env.PORT}/api/products`
+  );
   res.render("products", {
     user: req.user,
     products,
