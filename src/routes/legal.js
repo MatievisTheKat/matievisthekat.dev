@@ -1,6 +1,15 @@
 const { Router } = require("express");
 const router = Router();
 
+router.get("/", (req, res) =>
+  res.render("legal/index", {
+    user: req.user,
+    error: req.query.error,
+    success: req.query.success,
+    warning: req.query.warning,
+  })
+);
+
 router.get("/cookie-policy", (req, res) =>
   res.render("legal/cookie-policy", {
     user: req.user,
