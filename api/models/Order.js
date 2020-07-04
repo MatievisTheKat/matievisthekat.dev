@@ -5,5 +5,7 @@ module.exports = model(
   "orders",
   new Schema({
     id: { type: String, required: true, default: uuid() },
+    description: { type: String, required: true },
+    author: { type: Object, required: true },
   })
 );

@@ -1,12 +1,14 @@
 const path = require("path");
+require("dotenv").config({ path: path.join(__dirname, "..", ".env") });
+
 const express = require("express");
 const cookieParser = require("cookie-parser");
+const csrf = require("csurf");
 const app = express();
-
-require("dotenv").config({ path: path.join(__dirname, "..", ".env") });
 
 // Use middleware
 app.use(cookieParser());
+app.use(csrf({ cookie: true }));
 app.use(express.static(path.join(__dirname, "public")));
 
 // Set public and views dirs
@@ -51,8 +53,5 @@ const port = process.env.PORT || 3000;
 app.listen(port, () => console.log(`Listening on port ${port}`));
 
 String.prototype.toProperCase = function () {
-  return this.replace(
-    /([^\W_]+[^\s-]*) */g,
-    (txt) => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase()
-  );
+  return this.replace(/([^\W_]+[^\s-]*) */g, (txt) => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase());
 };
