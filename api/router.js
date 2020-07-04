@@ -5,7 +5,6 @@ require("dotenv").config({ path: path.join(__dirname, "..", ".env") });
 const { Router } = require("express");
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
-const mailer = require("nodemailer");
 const fileUpload = require("express-fileupload");
 
 // Setup
@@ -23,32 +22,6 @@ router.use("/avatars", require("./routes/avatars"));
 router.use("/users", require("./routes/users"));
 router.use("/products", require("./routes/products"));
 router.use("/reviews", require("./routes/reviews"));
-
-// Send mail
-router.post("/email", async (req, res) => {
-  const transporter = mailer.createTransport({
-    host: "webmail.matievisthekat.dev",
-    port: 465,
-    secure: true,
-    auth: {
-      user: "no-reply@matievisthekat.dev",
-      pass: "Cvdm08&0",
-    },
-    tls: {
-      rejectUnauthorized: false,
-    },
-  });
-
-  const info = await transporter.sendMail({
-    from: '"matievisthekat.dev" <no-reply@matievisthekat.dev>', // sender address
-    to: req.body.emails, // list of receivers
-    subject: "Hello ✔", // Subject line
-    text: req.body.plainText, // plain text body
-    html: req.body.htmlText, // html body
-  });
-
-  res.send(info);
-});
 
 // 404 handling
 router.use((req, res, next) => {
