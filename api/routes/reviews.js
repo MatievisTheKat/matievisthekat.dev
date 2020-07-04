@@ -19,9 +19,7 @@ router.get("/getByUserID", async (req, res) => {
 router.post("/new", async (req, res) => {
   const { userID, reviewText, stars } = req.body;
 
-  const alreadyReviewed = (await Review.find()).find(
-    (r) => r.author.id === userID && !r.deleted
-  );
+  const alreadyReviewed = (await Review.find()).find((r) => r.author.id === userID && !r.deleted);
   if (alreadyReviewed)
     return res.redirect(
       `/reviews/new?error=You have already submitted a review <a href="/reviews/${alreadyReviewed.id}">here</a>`
@@ -31,9 +29,7 @@ router.post("/new", async (req, res) => {
     id: userID,
   });
   if (!user)
-    return res.redirect(
-      "/reviews/new?error=No user was found with your id. If this persists please contact an admin"
-    );
+    return res.redirect("/reviews/new?error=No user was found with your id. If this persists please contact an admin");
 
   const review = new Review({
     author: {
@@ -51,9 +47,7 @@ router.post("/new", async (req, res) => {
   user.review = saved;
   await user.save();
 
-  res.redirect(
-    `/reviews?success=Thank you for the feeback! Your review was successfully submitted`
-  );
+  res.redirect(`/reviews?success=Thank you for the feeback! Your review was successfully submitted`);
 });
 
 router.post("/update", async (req, res) => {
@@ -79,8 +73,7 @@ router.post("/delete", async (req, res) => {
       "/reviews?error=Could not find a review with that id. If this persists please contact an admin"
     );
 
-  review.deleted = true;
-  await review.save();
+  await review.delete();
 
   res.redirect("/reviews?success=Successfully removed that review");
 });
@@ -88,10 +81,7 @@ router.post("/delete", async (req, res) => {
 router.get("/:id", async (req, res) => {
   const admin = req.query.admin;
   const review = await Review.findOne({ id: req.params.id });
-  if (!review)
-    return res.redirect(
-      `/${admin ? "admin/" : ""}reviews?error=No review with that id was found`
-    );
+  if (!review) return res.redirect(`/${admin ? "admin/" : ""}reviews?error=No review with that id was found`);
 
   res.send(review);
 });

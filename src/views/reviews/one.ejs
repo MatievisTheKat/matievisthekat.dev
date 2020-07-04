@@ -37,6 +37,7 @@
             <%- review.author.username %>
           </h5>
           <%- review.author.verified ? `<small><i class="fas fa-user-check"></i> Verified</small>` : "" %>
+          <%- review.edited ? "<small>(edited)</small>" : "" %>
           <div class="center">
             <hr
               class="deep-purple accent-2 mb-2 mt-1 d-inline-block mx-auto"
