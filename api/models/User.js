@@ -1,5 +1,6 @@
 const { model, Schema } = require("mongoose");
 const { v4: uuid } = require("uuid");
+const token = require("rand-token");
 
 module.exports = model(
   "users",
@@ -10,6 +11,7 @@ module.exports = model(
     username: { required: true, type: String },
     email: { required: false, type: String },
     verifed: { type: Boolean, required: true, default: false },
+    varifyToken: { type: String, required: false, default: token.generate(32) },
     avatarURL: {
       type: String,
       required: true,
