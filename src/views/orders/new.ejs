@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js">
+  <!--<![endif]-->
+  <head>
+    <%- include("../partials/head.ejs") %>
+  </head>
+  <body>
+    <!--[if lt IE 7]>
+      <p class="browsehappy">
+        You are using an <strong>outdated</strong> browser. Please <a href="#">upgrade your browser</a> to improve your
+        experience.
+      </p>
+    <![endif]-->
+    <%- include("../partials/navbar.ejs") %> <%- include("../partials/back-btn.ejs") %>
+    <!-- Custom content -->
+
+    <div
+      class="animate__animated animate__bounceInUp z-depth-2 container center padding-20 unique-color-dark text-primary"
+      style="margin-bottom: 15%;"
+    >
+      <form action="/api/orders/new" method="post" id="order-form" class="needs-validation" novalidate>
+        <div class="form-group form-row">
+          <div class="col">
+            <label for="email">Email address</label>
+            <input
+              type="text"
+              name="email"
+              class="form-control"
+              id="email"
+              aria-describedby="emailHelp"
+              placeholder="Enter email"
+              required
+            />
+            <div class="invalid-feedback">
+              Please provide a valid email address
+            </div>
+            <div class="form-group">
+              <label for="password">Description</label>
+              <textarea
+                name="orderDescription"
+                id="text"
+                cols="30"
+                rows="10"
+                placeholder="Description"
+                class="form-control"
+                required
+              ></textarea>
+              <small>Please provide as much information as possible</small>
+              <div class="invalid-feedback">
+                Please enter more than 20 words describing the product you want
+              </div>
+            </div>
+          </div>
+        </div>
+        <button type="submit" class="btn btn-primary">Order</button>
+        <a href="/" class="btn btn-outline-danger">Cancel</a>
+      </form>
+    </div>
+
+    <!-- Included content -->
+    <%- include("../partials/footer.ejs") %> <%- include("../partials/js.ejs") %>
+  </body>
+</html>

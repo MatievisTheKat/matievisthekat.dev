@@ -31,12 +31,12 @@ $(".form-control").change((evnt) => {
   const genCheck = validateGeneral(el);
 
   if (el.name === "email") check = validateEmail(el.value);
-  else if (el.name === "password" || el.name === "confirmPassword")
-    check = validatePassword(el.value);
+  else if (el.name === "password" || el.name === "confirmPassword") check = validatePassword(el.value);
   else if (el.name === "username") check = validateUsername(el.value);
   else if (el.name === "bio") check = validateBio(el.value);
   else if (el.name === "stars") check = validateReviewStars(el.value);
   else if (el.name === "reviewText") check = validateReviewText(el.value);
+  else if (el.name === "orderDescription") check = validateOrderDesc(el.value);
 
   if (!genCheck) {
     el.classList.remove(`is-${genCheck ? "invalid" : "valid"}`);
@@ -61,9 +61,7 @@ function validateEmail(email) {
 }
 
 function validatePassword(pass) {
-  const match = pass.match(
-    /(?=(.*[0-9]))((?=.*[A-Za-z0-9])(?=.*[A-Z])(?=.*[a-z]))^.{8,}$/
-  );
+  const match = pass.match(/(?=(.*[0-9]))((?=.*[A-Za-z0-9])(?=.*[A-Z])(?=.*[a-z]))^.{8,}$/);
   if (match) return true;
   else return false;
 }
@@ -90,5 +88,11 @@ function validateReviewText(text) {
   const words = text.split(/ +/gi);
   if (words.length <= 10) return false;
   else if (words.length > 1000) return false;
+  else return true;
+}
+
+function validateOrderDesc(desc) {
+  const words = desc.split(/ +/gi);
+  if (words.length < 20) return false;
   else return true;
 }

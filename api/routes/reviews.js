@@ -37,7 +37,7 @@ router.post("/new", async (req, res) => {
       id: user.id,
       avatarURL: user.avatarURL,
       email: user.email,
-      emailVerified: user.emailVerified,
+      emailVerified: user.verifed,
     },
     text: reviewText.trim(),
     stars: parseInt(stars),

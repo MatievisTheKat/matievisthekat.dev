@@ -25,6 +25,7 @@ router.use("/me", require("./me"));
 router.use("/legal", require("./legal"));
 router.use("/reviews", require("./reviews"));
 router.use("/contact", require("./contact"));
+router.use("/orders", require("./orders"));
 
 router.get("/", (req, res) => {
   res.render("index", {
