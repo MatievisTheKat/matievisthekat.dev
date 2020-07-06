@@ -15,6 +15,12 @@ app.use(express.static(path.join(__dirname, "public")));
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 
+app.use((req, res, next) => {
+  var token = req.csrfToken();
+  res.cookie("_csrf", token);
+  next();
+});
+
 // Handle routes
 app.use("/api", require("../api/router"));
 app.use("/", require("./routes/index"));
@@ -30,12 +36,21 @@ app.use((req, res, next) => {
 });
 
 // 500 handling
-app.use((error, req, res, next) => {
-  console.log(error);
+app.use((err, req, res, next) => {
+  console.log(err);
+  if (err.code === "EBADCSRFTOKEN")
+    return res.render("errors/403", {
+      user: req.user,
+      error: req.query.error,
+      err: "Invalid CSRF token",
+      success: req.query.success,
+      warning: req.query.warning,
+    });
   if (process.env.DEV)
     res.render("errors/500", {
       user: req.user,
-      error,
+      error: req.query.error,
+      err,
       success: req.query.success,
       warning: req.query.warning,
     });
@@ -43,6 +58,7 @@ app.use((error, req, res, next) => {
     res.render("errors/500", {
       user: req.user,
       error: req.query.error,
+      err: "",
       success: req.query.success,
       warning: req.query.warning,
     });

@@ -11,8 +11,8 @@
   <body>
     <!--[if lt IE 7]>
       <p class="browsehappy">
-        You are using an <strong>outdated</strong> browser. Please
-        <a href="#">upgrade your browser</a> to improve your experience.
+        You are using an <strong>outdated</strong> browser. Please <a href="#">upgrade your browser</a> to improve your
+        experience.
       </p>
     <![endif]-->
     <%- include("./partials/navbar.ejs") %>
@@ -24,6 +24,7 @@
     >
       <h5 class="text-danger">Are you sure?</h5>
       <form action="/api/users/logout" method="post" class="">
+        <input type="hidden" name="_csrf" value="<%- csrfToken %>" />
         <input type="hidden" name="userID" value="<%- user.id %>" />
         <button type="submit" class="btn btn-outline-danger">Logout</button>
       </form>

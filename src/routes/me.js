@@ -2,8 +2,7 @@ const { Router } = require("express");
 const router = Router();
 
 router.use((req, res, next) => {
-  if (!req.user)
-    return res.redirect("/login?error=You must be logged in to do that!");
+  if (!req.user) return res.redirect(`/login?error=You must be logged in to do that!?redirect=${req.originalUrl}`);
   else next();
 });
 
@@ -25,9 +24,7 @@ router.get("/settings", (req, res) => {
   });
 });
 
-router.get("/avatar", (req, res) =>
-  res.redirect(`/avatars/${req.user.id}.png`)
-);
+router.get("/avatar", (req, res) => res.redirect(`/avatars/${req.user.id}.png`));
 
 router.get("/avatar/change", (req, res) => {
   res.render("settings/change-avatar", {
@@ -44,6 +41,7 @@ router.get("/logout", (req, res) =>
     error: req.query.error,
     success: req.query.success,
     warning: req.query.warning,
+    csrfToken: req.csrfToken(),
   })
 );
 

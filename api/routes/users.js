@@ -2,13 +2,13 @@ const { Router } = require("express");
 const bcrypt = require("bcrypt");
 const User = require("../models/User");
 const ms = require("ms");
+const mail = require("../../src/mail");
 const router = Router();
 
 router.post("/delete/:userID", async (req, res) => {
   const id = req.params.userID;
   const user = await User.findOne({ id });
-  if (!user)
-    return res.redirect("/login?error=You must be logged in to do that");
+  if (!user) return res.redirect("/login?error=You must be logged in to do that");
 
   await user.delete();
   res.clearCookie("userID");
@@ -18,10 +18,7 @@ router.post("/delete/:userID", async (req, res) => {
 router.get("/:userID", async (req, res) => {
   const id = req.params.userID;
   const user = await User.findOne({ id });
-  if (!user)
-    return res
-      .send({ status: 404, error: "No user found with that ID" })
-      .status(200);
+  if (!user) return res.send({ status: 404, error: "No user found with that ID" }).status(200);
 
   res.send(user).status(200);
 });
@@ -29,36 +26,19 @@ router.get("/:userID", async (req, res) => {
 router.post("/update/:userID", async (req, res) => {
   const id = req.params.userID;
   const user = await User.findOne({ id });
-  if (!user)
-    return res.redirect("/login?error=You need to be logged in to do that");
+  if (!user) return res.redirect("/login?error=You need to be logged in to do that");
 
-  const {
-    email,
-    password,
-    bio,
-    confirmPassword,
-    username,
-    firstName,
-    lastName,
-    avatarURL,
-  } = req.body;
+  const { email, password, bio, confirmPassword, username, firstName, lastName, avatarURL } = req.body;
 
-  if (password !== confirmPassword)
-    return res.redirect("/me/settings?error=Passwords do not match");
+  if (password !== confirmPassword) return res.redirect("/me/settings?error=Passwords do not match");
 
-  const passwordHash = await bcrypt.hash(
-    password,
-    parseInt(process.env.SALT_ROUNDS)
-  );
+  const passwordHash = await bcrypt.hash(password, parseInt(process.env.SALT_ROUNDS));
 
   const emailInUse = await User.findOne({ email });
-  if (emailInUse && emailInUse.id !== user.id)
-    return res.redirect("/me/settings?error=That email is already in use");
+  if (emailInUse && emailInUse.id !== user.id) return res.redirect("/me/settings?error=That email is already in use");
   const usernameInUse = await User.findOne({ username });
   if (usernameInUse && usernameInUse.id !== user.id)
-    return res.redirect(
-      "/me/settings?error=That username is not available. Please choose another"
-    );
+    return res.redirect("/me/settings?error=That username is not available. Please choose another");
 
   user.bio = bio || "";
   user.email = email.toLowerCase().trim();
@@ -95,22 +75,14 @@ router.post("/signup", async (req, res) => {
   const username = req.body.username.trim().toLowerCase();
   const email = req.body.email.trim().toLowerCase();
 
-  if (password !== confirmPassword)
-    return res.redirect("/signup?error=Passwords do not match");
+  if (password !== confirmPassword) return res.redirect("/signup?error=Passwords do not match");
 
-  const passwordHash = await bcrypt.hash(
-    password,
-    parseInt(process.env.SALT_ROUNDS)
-  );
+  const passwordHash = await bcrypt.hash(password, parseInt(process.env.SALT_ROUNDS));
 
   const emailInUse = await User.findOne({ email });
-  if (emailInUse)
-    return res.redirect("/signup?error=That email is already in use");
+  if (emailInUse) return res.redirect("/signup?error=That email is already in use");
   const usernameInUse = await User.findOne({ username });
-  if (usernameInUse)
-    return res.redirect(
-      "/signup?error=That username is not available. Please choose another"
-    );
+  if (usernameInUse) return res.redirect("/signup?error=That username is not available. Please choose another");
 
   const user = new User({
     passwordHash,
@@ -124,13 +96,31 @@ router.post("/signup", async (req, res) => {
   user.name.full = `${user.name.first} ${user.name.last}`.toProperCase();
 
   const saved = await user.save();
+
   res.cookie("userID", saved.id, { maxAge: ms("7 days") });
   res.redirect("/me");
 });
 
+router.post("/verify", async (req, res) => {
+  const token = req.body.token;
+  if (!token) return res.redirect("/?error=No verification token provided");
+  if (!req.user) return res.redirect(`/login?error=Please login before doing that&redirect=/verify?token=${token}`);
+
+  const user = await User.findOne({
+    verifyToken: token,
+    id: req.user.id,
+  });
+  if (!user) return res.redirect("/?error=Invalid token");
+
+  user.verified = true;
+  user.verifyToken = null;
+  await user.save();
+
+  res.redirect("/me?success=Successfully verified your account");
+});
+
 router.post("/logout", (req, res) => {
-  if (!req.body.userID)
-    return res.redirect("/login?error=You need to be logged in to do that!");
+  if (!req.body.userID) return res.redirect("/login?error=You need to be logged in to do that!");
   res.clearCookie("userID");
   res.redirect("/login?success=Successfully logged out");
 });

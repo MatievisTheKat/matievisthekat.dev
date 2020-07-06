@@ -30,12 +30,11 @@ router.use((req, res, next) => {
 
 // 500 handling
 router.use((error, req, res, next) => {
+  if (err.code === "EBADCSRFTOKEN") return res.send({ status: 403, error: "Forbidden" });
   if (dev) res.send(error.stack).status(500);
   else res.send({ status: 500, error: "Something broke" }).status(500);
 });
 
-mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true }, () =>
-  console.log("Connected to MongoDB")
-);
+mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true }, () => console.log("Connected to MongoDB"));
 
 module.exports = router;

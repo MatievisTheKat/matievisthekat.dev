@@ -11,8 +11,8 @@
   <body>
     <!--[if lt IE 7]>
       <p class="browsehappy">
-        You are using an <strong>outdated</strong> browser. Please <a href="#">upgrade your browser</a> to improve your
-        experience.
+        You are using an <strong>outdated</strong> browser. Please
+        <a href="#">upgrade your browser</a> to improve your experience.
       </p>
     <![endif]-->
 
@@ -23,17 +23,12 @@
       style="margin-bottom: 20%;"
     >
       <h3>
-        Seems like something went wrong on our end
-        <i class="far fa-frown"></i>
+        <%- err %>
       </h3>
-      <% if (err) { %>
-      <hr class="red" />
-      <code><%-err.stack || err %></code>
-      <hr class="red" />
-      <% } %>
       <a href="#" onclick="window.history.back()">Back?</a>
     </div>
 
-    <%- include("../partials/footer.ejs") %> <%- include("../partials/js.ejs") %>
+    <%- include("../partials/footer.ejs") %> <%- include("../partials/js.ejs")
+    %>
   </body>
 </html>
