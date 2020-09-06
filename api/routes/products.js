@@ -8,14 +8,8 @@ router.get("/", async (req, res) => {
 });
 
 router.get("/:id", async (req, res) => {
-  const admin = req.query.admin;
   const product = await Product.findOne({ id: req.params.id });
-  if (!product)
-    return res.redirect(
-      `/${
-        admin ? "admin/" : ""
-      }products?error=No product with that id was found`
-    );
+  if (!product) return res.redirect(`/products?error=No product with that id was found`);
 
   res.send(product);
 });
@@ -24,10 +18,7 @@ router.post("/new", async (req, res) => {
   const { name, shortDesc, longDesc, price, features } = req.body;
 
   const nameInUse = await Product.findOne({ name });
-  if (nameInUse)
-    return res.redirect(
-      "/admin/products/new?error=That name is already in use"
-    );
+  if (nameInUse) return res.redirect("/products/new?error=That name is already in use");
 
   const product = new Product({
     name,
@@ -41,7 +32,7 @@ router.post("/new", async (req, res) => {
   });
 
   const saved = await product.save();
-  res.redirect(`/admin/products/${saved.id}`);
+  res.redirect(`/products/${saved.id}`);
 });
 
 module.exports = router;

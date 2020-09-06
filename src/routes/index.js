@@ -8,7 +8,7 @@ router.use(async (req, res, next) => {
   const id = req.cookies ? req.cookies.userID : null;
 
   if (id) {
-    const user = await axios.get(`http://localhost:${process.env.PORT}/api/users/${id}`).catch((err) => {
+    const user = await axios.get(`http://localhost:${parseInt(process.env.PORT)}/api/users/${id}`).catch((err) => {
       next();
       nexted = true;
     });

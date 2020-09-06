@@ -6,6 +6,7 @@ const { Router } = require("express");
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 const fileUpload = require("express-fileupload");
+const cors = require("cors");
 
 // Setup
 const uri = process.env.MONGODB_URI;
@@ -16,6 +17,12 @@ const router = Router();
 router.use(bodyParser.json());
 router.use(bodyParser.urlencoded({ extended: true }));
 router.use(fileUpload());
+router.use(
+  cors({
+    origin: `http://localhost:${process.env.PORT ?? 3000}`,
+    optionsSuccessStatus: 200,
+  })
+);
 
 // Routes
 router.use("/avatars", require("./routes/avatars"));
@@ -30,7 +37,6 @@ router.use((req, res, next) => {
 
 // 500 handling
 router.use((error, req, res, next) => {
-  if (err.code === "EBADCSRFTOKEN") return res.send({ status: 403, error: "Forbidden" });
   if (dev) res.send(error.stack).status(500);
   else res.send({ status: 500, error: "Something broke" }).status(500);
 });
