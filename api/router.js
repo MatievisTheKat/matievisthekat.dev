@@ -17,12 +17,12 @@ const router = Router();
 router.use(bodyParser.json());
 router.use(bodyParser.urlencoded({ extended: true }));
 router.use(fileUpload());
-router.use(
-  cors({
-    origin: `http://localhost:${process.env.PORT ?? 3000}`,
-    optionsSuccessStatus: 200,
-  })
-);
+// router.use(
+//   cors({
+//     //origin: `http://localhost:${process.env.PORT ?? 3000}`,
+//     //optionsSuccessStatus: 200,
+//   })
+// );
 
 // Routes
 router.use("/avatars", require("./routes/avatars"));
@@ -41,6 +41,8 @@ router.use((error, req, res, next) => {
   else res.send({ status: 500, error: "Something broke" }).status(500);
 });
 
-mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true }, () => console.log("Connected to MongoDB"));
+mongoose
+  .connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })
+  .then(() => console.log("Connected to MongoDB"));
 
 module.exports = router;

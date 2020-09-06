@@ -6,7 +6,7 @@
       // Fetch all the forms we want to apply custom Bootstrap validation styles to
       var forms = document.getElementsByClassName("needs-validation");
       // Loop over them and prevent submission
-      var validation = Array.prototype.filter.call(forms, function (form) {
+      Array.prototype.filter.call(forms, function (form) {
         form.addEventListener(
           "submit",
           function (event) {
@@ -61,7 +61,7 @@ function validateEmail(email) {
 }
 
 function validatePassword(pass) {
-  const match = pass.match(/(?=(.*[0-9]))((?=.*[A-Za-z0-9])(?=.*[A-Z])(?=.*[a-z]))^.{8,}$/);
+  const match = pass.match(/(?=.{8,})/);
   if (match) return true;
   else return false;
 }

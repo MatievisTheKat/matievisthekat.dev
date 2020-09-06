@@ -24,7 +24,6 @@
     >
       <h5 class="text-danger">Are you sure?</h5>
       <form action="/api/users/logout" method="post" class="">
-        <input type="hidden" name="_csrf" value="<%- csrfToken %>" />
         <input type="hidden" name="userID" value="<%- user.id %>" />
         <button type="submit" class="btn btn-outline-danger">Logout</button>
       </form>
