@@ -1,5 +1,4 @@
-*.bat
-*.test.html
+.env.json
 
 # Logs
 logs
