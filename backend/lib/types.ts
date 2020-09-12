@@ -1,3 +1,10 @@
+import { Router } from "express";
+
+export interface Route {
+  path: string;
+  router: Router;
+}
+
 export type HTTPStatusCode =
   | 100
   | 101
@@ -62,4 +69,4 @@ export type HTTPStatusCode =
   | 509
   | 510
   | 511
-  | 599
+  | 599;

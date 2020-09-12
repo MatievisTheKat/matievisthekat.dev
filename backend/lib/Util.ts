@@ -1,15 +1,9 @@
 import fs from "fs";
 import path from "path";
 import { HTTPStatusCode } from "./types";
+import { Request, Response } from "express";
 
 export class Util {
-  /**
-   * Capitalise a string or words
-   * @param {String} str The string to capitalise
-   * @returns {String} The capitalised string
-   * @public
-   * @static
-   */
   public static capitalise(str: string): string {
     return str.length > 0
       ? str
@@ -19,14 +13,7 @@ export class Util {
       : str;
   }
 
-  /**
-   * Load environment variables from a .env.json file
-   * @param {String} path The path to the .env.json file
-   * @returns {Object} The environment variables
-   * @public
-   * @static
-   */
-  public static loadEnv(envPath: string): Record<string, string> {
+  public static loadEnv(envPath: string): NodeJS.ProcessEnv {
     // eslint-disable-next-line @typescript-eslint/no-var-requires
     const env = require(envPath);
     if (!env) throw new Error("(Util#loadEnv) No environment variables to load");
@@ -34,13 +21,7 @@ export class Util {
     return Util.loadObjectToEnv(env);
   }
 
-  /**
-   * Load an object into environment variables
-   * @param {Object} obj The object to load
-   * @public
-   * @static
-   */
-  public static loadObjectToEnv(obj: unknown): Record<string, string> {
+  public static loadObjectToEnv(obj: Record<string, any>): NodeJS.ProcessEnv {
     for (const entry of Object.entries(obj)) {
       if (typeof entry[1] === "object") {
         Util.loadObjectToEnv(entry[1]);
@@ -51,14 +32,6 @@ export class Util {
     return process.env;
   }
 
-  /**
-   * Find all files in a certain directory (nested)
-   * @param {String} dir The directory to read
-   * @param {String} pattern The file type to look for
-   * @returns {string[]} An array of file paths
-   * @public
-   * @static
-   */
   public static findNested(dir: string, pattern: string = "js"): string[] {
     let results: string[] = [];
 
@@ -74,9 +47,11 @@ export class Util {
     return results;
   }
 
-  /**
-   * HTTP codes with their status text as well
-   */
+  public static auth(req: Request, res: Response): boolean {
+    const key = req.headers["authorization"];
+    return key === process.env.KEY;
+  }
+
   public static httpCodes: Record<HTTPStatusCode, string> = {
     // 1×× Informational
     100: "Continue",
