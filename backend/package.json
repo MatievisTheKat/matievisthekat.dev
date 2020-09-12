@@ -4,7 +4,8 @@
   "description": "Backend for matievisthekat.dev",
   "main": "dist/index.js",
   "scripts": {
-    "test": "tsc && rm -rf ../dist"
+    "test": "tsc && rm -rf ../dist",
+    "start": "tsc && node dist/src/index.js"
   },
   "repository": {
     "type": "git",

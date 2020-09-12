@@ -7,6 +7,8 @@ import { join, resolve } from "path";
 const app = express();
 const port = parseInt(process.env.PORT || "3000");
 
+app.set("json spaces", 2);
+
 app.use(morgan("dev"));
 app.use(express.static(join(__dirname, "../public")));
 app.use(bodyParser.json());
@@ -14,9 +16,9 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 Util.loadEnv(resolve("./.env.json"));
 
-const routeFiles = Util.findNested("./routes/");
+const routeFiles = Util.findNested(join(__dirname, "./routes/"));
 for (const file of routeFiles) {
-  const route: Route = require(file).default;
+  const route: Route = require(file).info;
   app.use(route.path, route.router);
 }
 

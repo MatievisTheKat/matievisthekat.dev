@@ -1,7 +1,8 @@
 import fs from "fs";
 import path from "path";
 import { HTTPStatusCode } from "./types";
-import { Request, Response } from "express";
+import { Response } from "./Response";
+import { NextFunction, Request, Response as ExResponse } from "express";
 
 export class Util {
   public static capitalise(str: string): string {
@@ -47,9 +48,13 @@ export class Util {
     return results;
   }
 
-  public static auth(req: Request, res: Response): boolean {
+  public static auth(req: Request, res: ExResponse, next: NextFunction): void {
     const key = req.headers["authorization"];
-    return key === process.env.KEY;
+    const allowed = key === process.env.KEY;
+
+    if (!allowed) {
+      new Response({ status: 401 }).send(res);
+    } else next();
   }
 
   public static httpCodes: Record<HTTPStatusCode, string> = {
