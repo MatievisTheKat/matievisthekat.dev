@@ -1,0 +1,28 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "description": "Backend for matievisthekat.dev",
+  "main": "dist/index.js",
+  "scripts": {
+    "test": "tsc && rm -rf ../dist"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MatievisTheKat/matievisthekat.dev.git"
+  },
+  "author": "Matthew Stead <matthew.stead@matievisthekat.dev>",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/MatievisTheKat/matievisthekat.dev/issues"
+  },
+  "homepage": "https://github.com/MatievisTheKat/matievisthekat.dev#readme",
+  "dependencies": {
+    "express": "^4.17.1",
+    "morgan": "^1.10.0"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.8",
+    "@types/morgan": "^1.9.1",
+    "@types/node": "^14.10.1"
+  }
+}
