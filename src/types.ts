@@ -1,5 +1,17 @@
 import { Router } from "express";
 
+export interface Route {
+  path: string;
+  router: Router;
+}
+
+export interface ApiResponseOptions {
+  status: HTTPStatusCode;
+  message?: string;
+  error?: string;
+  data?: any;
+}
+
 export type HTTPStatusCode =
   | 100
   | 101
@@ -65,8 +77,3 @@ export type HTTPStatusCode =
   | 510
   | 511
   | 599;
-
-export interface Route {
-  path: string;
-  router: Router;
-}
