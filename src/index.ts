@@ -12,6 +12,8 @@ app.set("view engine", "jsx");
 
 app.engine("jsx", require("express-react-views").createEngine());
 
+app.use(express.static(resolve("public")));
+
 const routeFiles = Util.findNested(join(__dirname, "routes"));
 for (const file of routeFiles) {
   const route: Route = require(file).route;
