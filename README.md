@@ -6,7 +6,6 @@ The official rewrite repository for https://matievisthekat.dev
 [![score](https://www.code-inspector.com/project/15527/score/svg)](https://frontend.code-inspector.com/project/15527)
 [![status](https://www.code-inspector.com/project/15527/status/svg)](https://frontend.code-inspector.com/project/15527)
 [![discord](https://img.shields.io/discord/673605613456195584)](https://discord.gg/t65hRpd)
-[![visits](https://badges.pufler.dev/visits/MatievisTheKat/matievisthekat.dev)](https://badges.pufler.dev/visits/MatievisTheKat/matievisthekat.dev)
 [![repo size](https://img.shields.io/github/repo-size/matievisthekat/matievisthekat.dev)](https://shields.io)
 [![license](https://img.shields.io/github/license/MatievisTheKat/matievisthekat.dev)](https://shields.io)
 [![last commit](https://img.shields.io/github/last-commit/MatievisTheKat/matievisthekat.dev)](https://shields.io)
