@@ -1,28 +1,44 @@
 import React from "react";
-import { useStaticQuery, graphql } from "gatsby";
-
-import Header from "./Header";
+import { StaticQuery, graphql } from "gatsby";
 
 import "../../assets/css/tailwind.css";
 
-export default function Layout({
-  children,
-  tab = window.location.pathname.slice(1).replace(/\//gi, "-").toLowerCase(),
-}) {
-  const { site } = useStaticQuery(graphql`
-    query SiteTitleQuery {
-      site {
-        siteMetadata {
-          title
-        }
-      }
-    }
-  `);
+import Header from "./Header";
 
-  return (
-    <>
-      <Header title={site.siteMetadata?.title} tab={tab} />
-      <main className="mx-20 my-10">{children}</main>
-    </>
-  );
+interface State {}
+interface Props {
+  tab?: string;
+}
+
+export default class Layout extends React.Component<Props, State> {
+  constructor(props: Props | Readonly<Props>) {
+    super(props);
+  }
+
+  public render() {
+    const toSlug = (str: string) => str.trim().replace(/\//gi, "-").toLowerCase();
+
+    return (
+      <StaticQuery
+        query={graphql`
+          query SiteTitleQuery {
+            site {
+              siteMetadata {
+                title
+              }
+            }
+          }
+        `}
+        render={({ site }) => {
+          const tab = this.props.tab ?? window.location.pathname.slice(1).replace(/\//gi, "-").toLowerCase();
+          return (
+            <>
+              <Header title={site.siteMetadata?.title} tab={tab} />
+              <main className="mx-20 my-10">{this.props.children}</main>
+            </>
+          );
+        }}
+      />
+    );
+  }
 }
