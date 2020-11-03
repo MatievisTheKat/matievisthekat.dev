@@ -12,13 +12,6 @@ export class Util {
       : str;
   }
 
-  /**
-   * Load environment variables from a .env.json file
-   * @param {String} path The path to the .env.json file
-   * @returns {Object} The environment variables
-   * @public
-   * @static
-   */
   public static loadEnv(envPath: string): NodeJS.ProcessEnv {
     const env = require(envPath);
     if (!env) throw new Error("(Util#loadEnv) No environment variables to load");
