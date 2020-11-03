@@ -23,16 +23,28 @@ export default class Header extends React.Component<Props, State> {
       userMenuOpen: false,
     };
 
-    this.toggleMenu = this.toggleMenu.bind(this);
-    this.toggleUserMenu = this.toggleUserMenu.bind(this);
+    this.setMenuOpen = this.setMenuOpen.bind(this);
+    this.setUserMenuOpen = this.setUserMenuOpen.bind(this);
   }
 
-  toggleMenu() {
-    this.setState((state) => ({ menuOpen: !state.menuOpen }));
+  private setMenuOpen(menuOpen: boolean = !this.state.menuOpen) {
+    this.setState(() => ({ menuOpen }));
   }
 
-  toggleUserMenu() {
-    this.setState((state) => ({ userMenuOpen: !state.userMenuOpen }));
+  private setUserMenuOpen(userMenuOpen: boolean = !this.state.userMenuOpen) {
+    this.setState(() => ({ userMenuOpen }));
+  }
+
+  public componentDidMount() {
+    document.onclick = (e) => {
+      const target = e.target as HTMLElement;
+      const tag = target.tagName;
+      const id = target.id;
+
+      if (!(tag === "BUTTON" && id === "user-menu-button") && !(tag === "IMG" && id === "user-menu-img")) {
+        this.setUserMenuOpen(false);
+      }
+    };
   }
 
   public render() {
@@ -80,7 +92,7 @@ export default class Header extends React.Component<Props, State> {
                     className="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-700 focus:outline-none focus:bg-gray-700 focus:text-white transition duration-150 ease-in-out"
                     aria-label="Main menu"
                     aria-expanded={this.state.menuOpen}
-                    onClick={this.toggleMenu}
+                    onClick={() => this.setMenuOpen()}
                   >
                     <svg
                       className={`${this.state.menuOpen ? "hidden" : "block"} h-6 w-6`}
@@ -145,13 +157,14 @@ export default class Header extends React.Component<Props, State> {
                     <div>
                       <button
                         className="flex text-sm border-2 border-transparent rounded-full focus:outline-none focus:border-white transition duration-150 ease-in-out"
-                        id="user-menu"
+                        id="user-menu-button"
                         aria-label="User menu"
                         aria-haspopup="true"
-                        onClick={this.toggleUserMenu}
+                        onClick={() => this.setUserMenuOpen()}
                       >
                         <img
                           className="h-8 w-8 rounded-full"
+                          id="user-menu-img"
                           src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
                           alt=""
                         />
