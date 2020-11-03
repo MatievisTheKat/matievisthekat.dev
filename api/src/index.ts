@@ -7,9 +7,11 @@ import { Util } from "./util/Util";
 const app = express();
 const port = process.env.PORT || 3000;
 
+app.set("json spaces", 2);
+
 const routeFiles = Util.findNested(join(__dirname, "routes"));
 const routes: Route[] = routeFiles.map((f) => require(f).route).sort((a, b) => b.path.length - a.path.length);
-console.log(routes);
+
 for (const route of routes) {
   app.use(route.path, route.router);
 }
