@@ -30,7 +30,7 @@ export default class Layout extends React.Component<Props, State> {
           }
         `}
         render={({ site }) => {
-          const tab = this.props.tab ?? window.location.pathname.slice(1).replace(/\//gi, "-").toLowerCase();
+          const tab = this.props.tab ? toSlug(this.props.tab) : toSlug(window.location.pathname.slice(1));
           return (
             <>
               <Header title={site.siteMetadata?.title} tab={tab} />
