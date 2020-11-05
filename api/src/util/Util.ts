@@ -136,13 +136,11 @@ export class Util {
 
   public static async issueJwt(
     userOrId: IUser | string
-  ): Promise<
-    | {
-        token: string;
-        expires: string;
-      }
-    | { error: string }
-  > {
+  ): Promise<{
+    token?: string;
+    expires?: string;
+    error?: string;
+  }> {
     let user: IUser | null = null;
 
     if (typeof userOrId === "string") {
@@ -163,10 +161,7 @@ export class Util {
 
     const token = jwt.sign(payload, { key, passphrase }, { expiresIn: expires, algorithm: "RS256" });
 
-    return {
-      token,
-      expires,
-    };
+    return { token, expires };
   }
 
   public static httpCodes: Record<HTTPStatusCode, string> = {
