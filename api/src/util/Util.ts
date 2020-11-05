@@ -1,6 +1,11 @@
 import fs from "fs";
 import path from "path";
-import { HTTPStatusCode } from "../types";
+import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
+import { generateKeyPair } from "crypto";
+
+import { HTTPStatusCode, KeyPair } from "../types";
+import User, { IUser } from "../models/User";
 
 export class Util {
   public static capitalise(str: string): string {
@@ -43,6 +48,125 @@ export class Util {
     });
 
     return results;
+  }
+
+  public static async verifyPwdUsernameMatch(username: string, pwd: string): Promise<IUser | null> {
+    const user = await User.findOne({ username });
+    if (!user) return null;
+
+    const pwdMatch = await Util.comparePwd(pwd, user.pwdHash);
+    if (!pwdMatch) return null;
+
+    return user;
+  }
+
+  public static serializePwd(pwd: string): Promise<string> {
+    return new Promise((res, rej) => {
+      bcrypt.hash(pwd, parseInt(process.env["salt-rounds"] as string, 2), function (err, hash) {
+        if (err) return rej(err);
+        else res(hash);
+      });
+    });
+  }
+
+  public static comparePwd(pwd: string, hash: string): Promise<boolean> {
+    return new Promise((res, rej) => {
+      bcrypt.compare(pwd, hash, function (err, result) {
+        if (err) return rej(err);
+        else res(result);
+      });
+    });
+  }
+
+  public static async ensureDir(path: string): Promise<void> {
+    return new Promise((res, rej) => {
+      fs.access(path, (err) => {
+        if (err) {
+          fs.mkdir(path, (err) => {
+            if (err) return rej(err);
+            else res();
+          });
+        } else res();
+      });
+    });
+  }
+
+  public static genKeypair(dir: string): Promise<KeyPair> {
+    return new Promise(async (res, rej) => {
+      const pubPath = path.join(dir, "public.key");
+      const privPath = path.join(dir, "private.key");
+
+      await Util.ensureDir(dir);
+
+      const privExists = fs.existsSync(privPath);
+      const pubExists = fs.existsSync(pubPath);
+
+      if (privExists && pubExists)
+        return res({
+          pub: fs.readFileSync(pubPath).toString(),
+          pri: fs.readFileSync(privPath).toString(),
+        });
+
+      generateKeyPair(
+        "rsa",
+        {
+          modulusLength: 4096,
+          publicKeyEncoding: {
+            type: "spki",
+            format: "pem",
+          },
+          privateKeyEncoding: {
+            type: "pkcs8",
+            format: "pem",
+            cipher: "aes-256-cbc",
+            passphrase: process.env["keys.private.passphrase"] as string,
+          },
+        },
+        (err, pub, pri) => {
+          if (err) return rej(err);
+
+          fs.writeFileSync(pubPath, pub);
+          fs.writeFileSync(privPath, pri);
+
+          res({ pub, pri });
+        }
+      );
+    });
+  }
+
+  public static async issueJwt(
+    userOrId: IUser | string
+  ): Promise<
+    | {
+        token: string;
+        expires: string;
+      }
+    | { error: string }
+  > {
+    let user: IUser | null = null;
+
+    if (typeof userOrId === "string") {
+      user = await User.findOne({ id: userOrId }).exec();
+    } else user = userOrId;
+
+    if (!user) return { error: "No user found" };
+
+    const id = user.id;
+    const expires = "1d";
+    const passphrase = process.env["keys.private.passphrase"] as string;
+    const key = process.env["keys.private"] as string;
+
+    const payload = {
+      sub: id,
+      iat: Date.now(),
+    };
+
+    const token = jwt.sign(payload, { key, passphrase }, { expiresIn: expires, algorithm: "RS256" });
+
+    return {
+      token,
+      expires,
+    };
   }
 
   public static httpCodes: Record<HTTPStatusCode, string> = {

@@ -12,6 +12,11 @@ export interface ApiResponseOptions {
   data?: any;
 }
 
+export interface KeyPair {
+  pub: string;
+  pri: string;
+}
+
 export type HTTPStatusCode =
   | 100
   | 101
