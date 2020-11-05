@@ -1,4 +1,4 @@
 {
   "delay": "3000",
-  "ignore": "dist/*"
+  "watch": "src"
 }
