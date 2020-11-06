@@ -1,3 +1,13 @@
+@font-face {
+  font-family: "Nunito";
+  src: url("../fonts//Nunito/Nunito-Regular.ttf") format("opentype");
+  font-style: normal;
+}
+
+.font-nunito {
+  font-family: "Nunito", sans-serif;
+}
+
 .text-shadow-grey-light {
   text-shadow: 4px 4px 3px #b0bec5;
 }
