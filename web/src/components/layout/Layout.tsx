@@ -1,9 +1,7 @@
 import React from "react";
 import { StaticQuery, graphql } from "gatsby";
 
-import "../../assets/css/tailwind.css";
-
-import Header from "./Header";
+import Header from "./header/Header";
 
 interface State {}
 interface Props {
