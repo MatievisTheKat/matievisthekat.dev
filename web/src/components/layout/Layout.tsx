@@ -32,7 +32,7 @@ export default class Layout extends React.Component<Props, State> {
           return (
             <>
               <Header title={site.siteMetadata?.title} tab={tab} />
-              <main className="mx-20 my-10">{this.props.children}</main>
+              <main className="lg:mx-16 my-10 text-cente place-content-center">{this.props.children}</main>
             </>
           );
         }}

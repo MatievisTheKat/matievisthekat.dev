@@ -7,6 +7,8 @@ import NavBar from "./NavBar";
 import UserMenu from "./UserMenu";
 import NotifButton from "./NotifButton";
 
+import { User } from "../../../../types";
+
 interface State {
   userMenuOpen: boolean;
   menuOpen: boolean;
@@ -14,6 +16,7 @@ interface State {
 interface Props {
   title: string;
   tab: string;
+  user?: User
 }
 export interface Tab {
   name: string;
@@ -105,7 +108,3 @@ export default class Header extends React.Component<Props, State> {
     );
   }
 }
-
-/*
-
-*/

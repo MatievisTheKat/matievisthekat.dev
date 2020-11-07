@@ -25,6 +25,7 @@
   },
   "homepage": "https://github.com/MatievisTheKat/matievisthekat.dev#readme",
   "dependencies": {
+    "axios": "^0.20.0",
     "gatsby": "^2.24.91",
     "gatsby-image": "^2.4.21",
     "gatsby-plugin-manifest": "^2.4.37",
@@ -34,14 +35,17 @@
     "gatsby-plugin-sharp": "^2.6.43",
     "gatsby-source-filesystem": "^2.3.37",
     "gatsby-transformer-sharp": "^2.5.20",
+    "ms": "^2.1.2",
     "postcss": "^8.1.4",
     "prop-types": "^15.7.2",
     "querystring": "^0.2.0",
     "react": "^16.12.0",
     "react-dom": "^16.12.0",
-    "react-helmet": "^6.1.0"
+    "react-helmet": "^6.1.0",
+    "universal-cookie": "^4.0.4"
   },
   "devDependencies": {
+    "@types/ms": "^0.7.31",
     "@types/react-helmet": "^6.1.0",
     "eslint-plugin-react-hooks": "^1.7.0",
     "prettier": "2.1.2",

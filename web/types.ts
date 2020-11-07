@@ -1,3 +1,11 @@
+export interface User {
+  username: string;
+  email: string;
+  id: string;
+  pwdHash: string;
+  createdTimestamp: string;
+}
+
 export type HTTPStatusCode =
   | 100
   | 101

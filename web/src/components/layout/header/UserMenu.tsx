@@ -1,7 +1,14 @@
+import { Link } from "gatsby";
 import React from "react";
+import Cookies from "universal-cookie";
+
+import { User } from "../../../../types";
+
+const cookies = new Cookies();
 
 interface State {}
 interface Props {
+  user?: User;
   open: boolean;
   setOpen(open?: boolean): void;
 }
@@ -12,6 +19,8 @@ export default class UserMenu extends React.Component<Props, State> {
   }
 
   public render() {
+    const user = cookies.get("user");
+
     return (
       <div className="ml-3 relative">
         <div>
@@ -30,9 +39,7 @@ export default class UserMenu extends React.Component<Props, State> {
             />
           </button>
         </div>
-        <div
-          className={this.props.open ? "origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg" : "hidden"}
-        >
+        <div className={this.props.open ? "origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg" : "hidden"}>
           <div
             className="py-1 rounded-md bg-white shadow-xs"
             role="menu"
@@ -40,27 +47,39 @@ export default class UserMenu extends React.Component<Props, State> {
             aria-labelledby="user-menu"
             aria-expanded={this.props.open}
           >
-            <a
-              href="#"
-              className="block px-4 py-2 text-sm leading-5 text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 transition duration-150 ease-in-out"
-              role="menuitem"
-            >
-              Your Profile
-            </a>
-            <a
-              href="#"
-              className="block px-4 py-2 text-sm leading-5 text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 transition duration-150 ease-in-out"
-              role="menuitem"
-            >
-              Settings
-            </a>
-            <a
-              href="#"
-              className="block px-4 py-2 text-sm leading-5 text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 transition duration-150 ease-in-out"
-              role="menuitem"
-            >
-              Sign out
-            </a>
+            {user ? (
+              <>
+                <Link
+                  to="/me"
+                  className="block px-4 py-2 text-sm leading-5 text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 transition duration-150 ease-in-out"
+                  role="menuitem"
+                >
+                  Your Profile
+                </Link>
+                <Link
+                  to="#"
+                  className="block px-4 py-2 text-sm leading-5 text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 transition duration-150 ease-in-out"
+                  role="menuitem"
+                >
+                  Settings
+                </Link>
+                <Link
+                  to="#"
+                  className="block px-4 py-2 text-sm leading-5 text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 transition duration-150 ease-in-out"
+                  role="menuitem"
+                >
+                  Sign out
+                </Link>
+              </>
+            ) : (
+              <Link
+                to={`/login?continueTo=${window.location.pathname}`}
+                className="block px-4 py-2 text-sm leading-5 text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 transition duration-150 ease-in-out"
+                role="menuitem"
+              >
+                Login
+              </Link>
+            )}
           </div>
         </div>
       </div>
