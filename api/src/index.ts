@@ -5,6 +5,7 @@ import mongoose from "mongoose";
 import path from "path";
 import bodyParser from "body-parser";
 import morgan from "morgan";
+import cors from "cors";
 
 import { Route } from "./types";
 import { Logger } from "./util/Logger";
@@ -20,6 +21,7 @@ const port = process.env.PORT || 3000;
 app.set("json spaces", 2);
 
 app.use(morgan("dev"));
+app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(passport.initialize());
