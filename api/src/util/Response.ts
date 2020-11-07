@@ -18,6 +18,6 @@ export default class ApiResponse {
   }
 
   public send(res: Response) {
-    res.json(this);
+    res.status(this.status).json(this);
   }
 }
