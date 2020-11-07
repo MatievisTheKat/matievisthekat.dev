@@ -27,8 +27,8 @@ module.exports = {
     {
       resolve: "gatsby-source-filesystem",
       options: {
-        name: "images",
-        path: `${__dirname}/src/assets/images`,
+        name: "assets",
+        path: `${__dirname}/src/assets`,
       },
     },
     "gatsby-transformer-sharp",
@@ -36,8 +36,8 @@ module.exports = {
     {
       resolve: "gatsby-plugin-manifest",
       options: {
-        name: "gatsby-starter-default",
-        short_name: "starter",
+        name: "matievisthekat.dev",
+        short_name: "matievisthekat",
         start_url: "/",
         background_color: "#663399",
         theme_color: "#663399",
