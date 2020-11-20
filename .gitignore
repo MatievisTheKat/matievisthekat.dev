@@ -121,4 +121,4 @@ dist
 
 # GastbyJS files
 .cache/
-public
+web/public
