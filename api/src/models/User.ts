@@ -7,6 +7,7 @@ export interface IUser extends Document {
   email: string;
   createdTimestamp: string;
   pwdHash: string;
+  avatarUrl: string;
 }
 
 export default model<IUser>(
@@ -17,5 +18,6 @@ export default model<IUser>(
     email: { required: true, type: String },
     pwdHash: { required: true, type: String },
     createdTimestamp: { required: true, type: String, default: Date.now() },
+    avatarUrl: { required: true, type: String, default: "/avatars/default/random" },
   })
 );

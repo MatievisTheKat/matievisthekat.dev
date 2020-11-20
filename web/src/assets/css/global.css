@@ -15,3 +15,15 @@
 .text-shadow-grey-dark {
   text-shadow: 3px 3px #607d8b;
 }
+
+.hover-mouse-pointer:hover {
+  cursor: pointer;
+}
+
+.hover-mouse-not-allowed:hover {
+  cursor: not-allowed;
+}
+
+.hover-mouse-help:hover {
+  cursor: help;
+}

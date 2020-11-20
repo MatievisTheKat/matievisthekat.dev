@@ -16,10 +16,6 @@ interface Edge {
 }
 
 export default class Tabs extends React.Component<Props, State> {
-  constructor(props: Props | Readonly<Props>) {
-    super(props);
-  }
-
   public render() {
     return (
       <StaticQuery
@@ -38,16 +34,8 @@ export default class Tabs extends React.Component<Props, State> {
         render={({ allFile: { edges } }: { allFile: { edges: Edge[] } }) => (
           <div className="flex-1 flex items-center justify-center sm:items-stretch sm:justify-start">
             <div className="flex-shrink-0">
-              <img
-                className="block lg:hidden h-8 w-auto"
-                src={edges.find((e: Edge) => e.node.name === "logo")?.node.publicURL}
-                alt="Logo"
-              />
-              <img
-                className="hidden lg:block h-8 w-auto"
-                src={edges.find((e: Edge) => e.node.name === "logo")?.node.publicURL}
-                alt="Logo"
-              />
+              <img className="block lg:hidden h-8 w-auto" src={edges.find((e: Edge) => e.node.name === "logo")?.node.publicURL} alt="Logo" />
+              <img className="hidden lg:block h-8 w-auto" src={edges.find((e: Edge) => e.node.name === "logo")?.node.publicURL} alt="Logo" />
             </div>
             <div className="hidden sm:block sm:ml-6">
               <div className="flex">{this.props.formatTabs(false, this.props.navTabs)}</div>

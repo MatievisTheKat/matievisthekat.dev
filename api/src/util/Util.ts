@@ -1,4 +1,4 @@
-import fs from "fs";
+import fs from "fs-extra";
 import path from "path";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";

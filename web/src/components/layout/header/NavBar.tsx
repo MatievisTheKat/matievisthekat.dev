@@ -8,10 +8,6 @@ interface Props extends TabProps {
 }
 
 export default class NavBar extends React.Component<Props, State> {
-  constructor(props: Props | Readonly<Props>) {
-    super(props);
-  }
-
   public render() {
     return (
       <nav className="bg-gray-800">

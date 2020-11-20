@@ -4,22 +4,23 @@ module.exports = {
     description: "Freelance prgramming and development services",
     author: "@matievisthekat",
     navTabs: [
-      {
-        name: "Home",
-        slug: "",
-      },
-      {
-        name: "Products",
-        slug: "products",
-      },
-      {
-        name: "Services",
-        slug: "services",
-      },
-      {
-        name: "Dashboard",
-        slug: "dashboard",
-      },
+      { name: "Home", slug: "" },
+      { name: "Products", slug: "products" },
+      { name: "Services", slug: "services" },
+    ],
+    socialLinks: [
+      { name: "GitHub", url: "https://github.com/MatievisTheKat", slug: "github" },
+      { name: "Twitter", url: "https://twitter.com/matievisthekat", slug: "twitter" },
+      { name: "LinkedIn", url: "https://linkedin.com/in/matievisthekat/", slug: "linkedin" },
+      { name: "Facebook", url: "https://facebook.com/matthew.stead.9469/", slug: "facebook" },
+      { name: "Reddit", url: "https://reddit.com/u/MatievisTheKat", slug: "reddit" },
+      { name: "Instagram", url: "https://instagram.com/matievisthekat/", slug: "instagram" },
+      { name: "YouTube", url: "https://youtube.com/channel/UCMgFIRIW3WaAotLMqoFFTTw", slug: "youtube" },
+      { name: "Discord", url: "https://discord.gg/t65hRpd", slug: "discord" },
+    ],
+    userMenuLinks: [
+      { name: "Profile", url: "/me" },
+      { name: "Settings", url: "/me/settings" },
     ],
   },
   plugins: [
@@ -27,8 +28,22 @@ module.exports = {
     {
       resolve: "gatsby-source-filesystem",
       options: {
-        name: "assets",
-        path: `${__dirname}/src/assets`,
+        name: "css",
+        path: `${__dirname}/src/assets/css`,
+      },
+    },
+    {
+      resolve: "gatsby-source-filesystem",
+      options: {
+        name: "fonts",
+        path: `${__dirname}/src/assets/fonts`,
+      },
+    },
+    {
+      resolve: "gatsby-source-filesystem",
+      options: {
+        name: "images",
+        path: `${__dirname}/src/assets/images`,
       },
     },
     "gatsby-transformer-sharp",

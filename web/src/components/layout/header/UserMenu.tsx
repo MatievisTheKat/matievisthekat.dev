@@ -1,4 +1,4 @@
-import { Link } from "gatsby";
+import { Link, StaticQuery, graphql } from "gatsby";
 import React from "react";
 import Cookies from "universal-cookie";
 
@@ -12,14 +12,15 @@ interface Props {
   open: boolean;
   setOpen(open?: boolean): void;
 }
+interface UserLink {
+  url: string;
+  name: string;
+}
 
 export default class UserMenu extends React.Component<Props, State> {
-  constructor(props: Props | Readonly<Props>) {
-    super(props);
-  }
-
   public render() {
-    const user = cookies.get("user");
+    const user: User = cookies.get("user");
+    const pathname = window.location.pathname;
 
     return (
       <div className="ml-3 relative">
@@ -34,8 +35,8 @@ export default class UserMenu extends React.Component<Props, State> {
             <img
               className="h-8 w-8 rounded-full"
               id="user-menu-img"
-              src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-              alt=""
+              src={user ? `http://localhost:3000${user.avatarUrl}` : "http://localhost:3000/avatars/default"}
+              alt={`${user ? "User" : "Default"} avatar`}
             />
           </button>
         </div>
@@ -48,37 +49,52 @@ export default class UserMenu extends React.Component<Props, State> {
             aria-expanded={this.props.open}
           >
             {user ? (
+              <StaticQuery
+                query={graphql`
+                  query UserLinksQuery {
+                    site {
+                      siteMetadata {
+                        userMenuLinks {
+                          url
+                          name
+                        }
+                      }
+                    }
+                  }
+                `}
+                render={({ site }) => {
+                  const links: UserLink[] = site.siteMetadata.userMenuLinks;
+                  if (!links.find((l) => l.name.toLowerCase() === "sign out"))
+                    links.push({ name: "Sign Out", url: `/signout?continueTo=${pathname.startsWith("/me") ? "/" : pathname}` });
+
+                  return links.map((l) => (
+                    <Link
+                      to={l.url}
+                      className="block px-4 py-2 text-sm leading-5 text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 transition duration-150 ease-in-out"
+                      role="menuitem"
+                    >
+                      {l.name}
+                    </Link>
+                  ));
+                }}
+              />
+            ) : (
               <>
                 <Link
-                  to="/me"
-                  className="block px-4 py-2 text-sm leading-5 text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 transition duration-150 ease-in-out"
+                  to={`/register?continueTo=${pathname}`}
+                  className="block px-4 py-2 text-sm leading-5 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 transition duration-150 ease-in-out"
                   role="menuitem"
                 >
-                  Your Profile
+                  Register
                 </Link>
                 <Link
-                  to="#"
-                  className="block px-4 py-2 text-sm leading-5 text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 transition duration-150 ease-in-out"
+                  to={`/login?continueTo=${pathname}`}
+                  className="block px-4 py-2 text-sm leading-5 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 transition duration-150 ease-in-out"
                   role="menuitem"
                 >
-                  Settings
-                </Link>
-                <Link
-                  to="#"
-                  className="block px-4 py-2 text-sm leading-5 text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 transition duration-150 ease-in-out"
-                  role="menuitem"
-                >
-                  Sign out
+                  Login
                 </Link>
               </>
-            ) : (
-              <Link
-                to={`/login?continueTo=${window.location.pathname}`}
-                className="block px-4 py-2 text-sm leading-5 text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 transition duration-150 ease-in-out"
-                role="menuitem"
-              >
-                Login
-              </Link>
             )}
           </div>
         </div>

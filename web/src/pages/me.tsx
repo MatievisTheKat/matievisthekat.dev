@@ -11,15 +11,11 @@ interface State {}
 interface Props {}
 
 export default class Me extends React.Component<Props, State> {
-  constructor(props: Props | Readonly<Props>) {
-    super(props);
-  }
-
   public render() {
     const user = cookies.get("user");
 
     if (!user) {
-      window.location.href = "/login?continueTo=/me"
+      window.location.href = "/login?continueTo=/me";
     }
 
     return (
