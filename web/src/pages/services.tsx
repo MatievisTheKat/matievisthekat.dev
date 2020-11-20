@@ -7,10 +7,6 @@ interface State {}
 interface Props {}
 
 export default class Index extends React.Component<Props, State> {
-  constructor(props: Props | Readonly<Props>) {
-    super(props);
-  }
-
   public render() {
     return (
       <Layout>

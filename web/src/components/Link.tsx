@@ -8,10 +8,6 @@ interface Props extends GatsbyLinkProps<State> {
 }
 
 export default class Link extends React.Component<Props, State> {
-  constructor(props: Props | Readonly<Props>) {
-    super(props);
-  }
-
   public render() {
     return (
       <>

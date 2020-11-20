@@ -24,10 +24,6 @@ const icons: Record<string, any> = {
 };
 
 export default class Footer extends React.Component<Props, State> {
-  constructor(props: Props | Readonly<Props>) {
-    super(props);
-  }
-
   public render() {
     return (
       <StaticQuery

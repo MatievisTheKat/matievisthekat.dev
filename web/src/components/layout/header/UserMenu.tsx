@@ -14,10 +14,6 @@ interface Props {
 }
 
 export default class UserMenu extends React.Component<Props, State> {
-  constructor(props: Props | Readonly<Props>) {
-    super(props);
-  }
-
   public render() {
     const user: User = cookies.get("user");
 

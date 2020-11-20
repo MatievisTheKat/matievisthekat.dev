@@ -10,10 +10,6 @@ interface Props {
 }
 
 export default class Error extends React.Component<Props, State> {
-  constructor(props: Props | Readonly<Props>) {
-    super(props);
-  }
-
   public render() {
     return (
       <div className="container text-center">

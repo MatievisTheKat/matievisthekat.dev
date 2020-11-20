@@ -7,10 +7,6 @@ interface Props {
 }
 
 export default class Menu extends React.Component<Props, State> {
-  constructor(props: Props | Readonly<Props>) {
-    super(props);
-  }
-
   public render() {
     return (
       <div className="absolute inset-y-0 left-0 flex items-center sm:hidden">

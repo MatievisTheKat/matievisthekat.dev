@@ -10,10 +10,6 @@ interface Props {
 }
 
 export default class Layout extends React.Component<Props, State> {
-  constructor(props: Props | Readonly<Props>) {
-    super(props);
-  }
-
   public render() {
     const toSlug = (str: string) => str.trim().replace(/\//gi, "-").toLowerCase();
 
