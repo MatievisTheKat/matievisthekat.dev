@@ -2,6 +2,7 @@ import React from "react";
 import { StaticQuery, graphql } from "gatsby";
 
 import Header from "./header/Header";
+import Footer from "./Footer";
 
 interface State {}
 interface Props {
@@ -30,10 +31,12 @@ export default class Layout extends React.Component<Props, State> {
         render={({ site }) => {
           const tab = this.props.tab ? toSlug(this.props.tab) : toSlug(window.location.pathname.slice(1));
           return (
-            <>
+            <div className="flex flex-col h-screen justify-between">
               <Header title={site.siteMetadata?.title} tab={tab} />
-              <main className="lg:mx-16 my-10 text-cente place-content-center">{this.props.children}</main>
-            </>
+              {/* min-h-screen */}
+              <main className="mb-auto lg:mx-16 mt-10 text-center place-content-center">{this.props.children}</main>
+              <Footer />
+            </div>
           );
         }}
       />

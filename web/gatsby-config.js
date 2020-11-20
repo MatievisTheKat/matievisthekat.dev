@@ -4,18 +4,19 @@ module.exports = {
     description: "Freelance prgramming and development services",
     author: "@matievisthekat",
     navTabs: [
-      {
-        name: "Home",
-        slug: "",
-      },
-      {
-        name: "Products",
-        slug: "products",
-      },
-      {
-        name: "Services",
-        slug: "services",
-      },
+      { name: "Home", slug: "" },
+      { name: "Products", slug: "products" },
+      { name: "Services", slug: "services" },
+    ],
+    socialLinks: [
+      { name: "GitHub", link: "https://github.com/MatievisTheKat", slug: "github" },
+      { name: "Twitter", link: "https://twitter.com/matievisthekat", slug: "twitter" },
+      { name: "LinkedIn", link: "https://linkedin.com/in/matievisthekat/", slug: "linkedin" },
+      { name: "Facebook", link: "https://facebook.com/matthew.stead.9469/", slug: "facebook" },
+      { name: "Reddit", link: "https://reddit.com/u/MatievisTheKat", slug: "reddit" },
+      { name: "Instagram", link: "https://instagram.com/matievisthekat/", slug: "instagram" },
+      { name: "YouTube", link: "https://youtube.com/channel/UCMgFIRIW3WaAotLMqoFFTTw", slug: "youtube" },
+      { name: "Discord", link: "https://discord.gg/t65hRpd", slug: "discord" },
     ],
   },
   plugins: [
@@ -23,8 +24,22 @@ module.exports = {
     {
       resolve: "gatsby-source-filesystem",
       options: {
-        name: "assets",
-        path: `${__dirname}/src/assets`,
+        name: "css",
+        path: `${__dirname}/src/assets/css`,
+      },
+    },
+    {
+      resolve: "gatsby-source-filesystem",
+      options: {
+        name: "fonts",
+        path: `${__dirname}/src/assets/fonts`,
+      },
+    },
+    {
+      resolve: "gatsby-source-filesystem",
+      options: {
+        name: "images",
+        path: `${__dirname}/src/assets/images`,
       },
     },
     "gatsby-transformer-sharp",
