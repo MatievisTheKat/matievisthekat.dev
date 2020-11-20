@@ -34,7 +34,7 @@ export default class Layout extends React.Component<Props, State> {
             <div className="flex flex-col h-screen justify-between">
               <Header title={site.siteMetadata?.title} tab={tab} />
               {/* min-h-screen */}
-              <main className="mb-auto lg:mx-16 mt-10 text-center place-content-center">{this.props.children}</main>
+              <main className="mb-auto lg:mx-16 mt-10 text-center text-gray-700 place-content-center">{this.props.children}</main>
               <Footer />
             </div>
           );
