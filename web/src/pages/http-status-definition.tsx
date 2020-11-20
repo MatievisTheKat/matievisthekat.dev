@@ -1,7 +1,8 @@
 import React from "react";
 import qs from "querystring";
 
-import { httpDefinitions, HTTPStatusCode } from "../../types";
+import { HTTPStatusCode } from "../../types";
+import { httpDefinitions } from "../../util";
 
 import Layout from "../components/layout/Layout";
 import SEO from "../components/layout/SEO";

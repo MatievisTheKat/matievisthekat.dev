@@ -9,7 +9,7 @@ interface Props {}
 interface SocialLink {
   name: string;
   slug: string;
-  link: string;
+  url: string;
 }
 
 const icons: Record<string, any> = {
@@ -32,7 +32,7 @@ export default class Footer extends React.Component<Props, State> {
             site {
               siteMetadata {
                 socialLinks {
-                  link
+                  url
                   name
                   slug
                 }
@@ -49,7 +49,7 @@ export default class Footer extends React.Component<Props, State> {
                 {links.map((l: SocialLink, i) => {
                   if (icons[l.slug]) {
                     return (
-                      <Link external={true} to={l.link} title={l.name} className="mx-3 text-lg" key={i}>
+                      <Link external={true} to={l.url} title={l.name} className="mx-3 text-lg" key={i}>
                         <FontAwesomeIcon icon={icons[l.slug]} />
                       </Link>
                     );
