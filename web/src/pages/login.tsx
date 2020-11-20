@@ -8,6 +8,7 @@ import qs from "querystring";
 import Box from "../components/Box";
 import Layout from "../components/layout/Layout";
 import SEO from "../components/layout/SEO";
+import { User } from "../../types";
 
 const cookies = new Cookies();
 
@@ -23,6 +24,7 @@ interface State {
   loginErr?: string;
 
   rememberMe?: boolean;
+  rememberedLogin?: boolean;
 }
 interface Props {}
 
@@ -91,29 +93,20 @@ export default class Login extends React.Component<Props, State> {
           });
         }
 
-        Axios.get("http://localhost:3000/users/me", {
-          headers: {
-            Authorization: `Bearer ${data.token}`,
-          },
-        })
-          .then((res) => {
-            cookies.set("user", res.data.data);
-
-            const { continueTo } = qs.parse(window.location.href, "?") as Record<string, string>;
-
-            window.location.href = continueTo || "/me";
+        this.getUser(data.token)
+          .then((user) => {
+            cookies.set("user", user);
+            this.redirect();
           })
-          .catch((err) => {
-            this.setState({
-              loginErr: err.response.data.error,
-            });
-          });
+          .catch(this.handleError.bind(this));
       })
-      .catch((err) => {
-        this.setState({
-          loginErr: err.response.data.error,
-        });
-      });
+      .catch(this.handleError.bind(this));
+  }
+
+  private handleError(err: any) {
+    this.setState({
+      loginErr: err.response.data.error,
+    });
   }
 
   private handleRememberChange(e: ChangeEvent<HTMLInputElement>) {
@@ -122,20 +115,48 @@ export default class Login extends React.Component<Props, State> {
     });
   }
 
-  public componentDidMount() {
-    const jwt = cookies.get("jwt");
-    if (jwt) {
+  private redirect() {
+    const { continueTo } = qs.parse(window.location.href, "?") as Record<string, string>;
+    window.location.href = continueTo || "/me";
+  }
+
+  private async getUser(jwt: string): Promise<User> {
+    return new Promise((res, rej) => {
       Axios.get("http://localhost:3000/users/me", {
         headers: {
           Authorization: `Bearer ${jwt}`,
         },
       })
-        .then((res) => {
-          cookies.set("user", res.data);
-
-          window.location.href = "/me";
+        .then((user) => {
+          res(user.data.data);
         })
-        .catch(() => {});
+        .catch(rej);
+    });
+  }
+
+  public componentDidMount() {
+    const jwt = cookies.get("jwt");
+    if (jwt) {
+      this.setState({
+        rememberedLogin: true,
+      });
+      this.getUser(jwt)
+        .then((user) => {
+          if (user) {
+            cookies.set("user", user);
+            this.redirect();
+          } else {
+            this.setState({
+              rememberedLogin: false,
+            });
+          }
+        })
+        .catch((err) => {
+          this.handleError(err);
+          this.setState({
+            rememberedLogin: false,
+          });
+        });
     }
   }
 
@@ -144,62 +165,66 @@ export default class Login extends React.Component<Props, State> {
       <Layout>
         <SEO title="Login" />
         <Box>
-          <form className="text-center" onSubmit={this.handleSubmit.bind(this)}>
-            <div className="mb-8">
-              <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="username">
-                Username
-              </label>
-              <input
-                className="shadow appearance-none border rounded w-full max-w-xs py-2 px-3 text-gray-700 mb-2 leading-tight focus:outline-none focus:shadow-outline"
-                id="username"
-                type="text"
-                name="username"
-                placeholder="Username"
-                value={this.state.username}
-                onChange={this.handleUsernameChange.bind(this)}
-              />
-              {this.state.usernameValid === false ? <p className="text-red-500 text-xs italic">{this.state.usernameErr}</p> : null}
-            </div>
-            <div className="mb-8">
-              <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="password">
-                Password
-              </label>
-              <input
-                className="shadow appearance-none border rounded w-full max-w-xs py-2 px-3 text-gray-700 mb-2 leading-tight focus:outline-none focus:shadow-outline"
-                id="password"
-                type="password"
-                name="password"
-                placeholder="************"
-                value={this.state.password}
-                onChange={this.handlePwdChange.bind(this)}
-              />
-              {this.state.passwordValid === false ? <p className="text-red-500 text-xs italic">{this.state.passwordErr}</p> : null}
-            </div>
+          {this.state.rememberedLogin ? (
+            <div className="text-center">Logging in...</div>
+          ) : (
+            <form className="text-center" onSubmit={this.handleSubmit.bind(this)}>
+              <div className="mb-8">
+                <label className="block text-sm font-bold mb-2" htmlFor="username">
+                  Username
+                </label>
+                <input
+                  className="shadow appearance-none border rounded w-full max-w-xs py-2 px-3 mb-2 leading-tight focus:outline-none focus:shadow-outline"
+                  id="username"
+                  type="text"
+                  name="username"
+                  placeholder="Username"
+                  value={this.state.username}
+                  onChange={this.handleUsernameChange.bind(this)}
+                />
+                {this.state.usernameValid === false ? <p className="text-red-500 text-xs italic">{this.state.usernameErr}</p> : null}
+              </div>
+              <div className="mb-8">
+                <label className="block text-sm font-bold mb-2" htmlFor="password">
+                  Password
+                </label>
+                <input
+                  className="shadow appearance-none border rounded w-full max-w-xs py-2 px-3 mb-2 leading-tight focus:outline-none focus:shadow-outline"
+                  id="password"
+                  type="password"
+                  name="password"
+                  placeholder="************"
+                  value={this.state.password}
+                  onChange={this.handlePwdChange.bind(this)}
+                />
+                {this.state.passwordValid === false ? <p className="text-red-500 text-xs italic">{this.state.passwordErr}</p> : null}
+              </div>
 
-            {this.state.loginErr ? <p className="text-red-500 text-xs italic mb-4">{this.state.loginErr}</p> : null}
+              {this.state.loginErr ? <p className="text-red-500 text-xs italic mb-4">{this.state.loginErr}</p> : null}
 
-            <div className="flex items-center justify-between">
-              <button
-                className={`bg-blue-500 text-white font-bold py-2 px-4 rounded ${
-                  this.state.passwordValid && this.state.usernameValid
-                    ? "focus:outline-none focus:shadow-outline hover:bg-blue-700"
-                    : "opacity-50 cursor-not-allowed"
-                }`}
-                type="submit"
-              >
-                Login
-              </button>
+              <div className="flex items-center justify-between">
+                <button
+                  className={`bg-blue-500 text-white font-bold py-2 px-4 rounded ${
+                    this.state.passwordValid && this.state.usernameValid
+                      ? "focus:outline-none focus:shadow-outline hover:bg-blue-700"
+                      : "opacity-50 cursor-not-allowed"
+                  }`}
+                  type="submit"
+                >
+                  Login
+                </button>
 
-              <label className="md:w-2/3 block text-gray-700 font-bold">
-                <input className="mr-2 leading-tight" type="checkbox" onChange={this.handleRememberChange.bind(this)} />
-                <span className="text-sm">Remember me</span>
-              </label>
+                <label className="md:w-2/3 block font-bold">
+                  <input className="mr-2 leading-tight" type="checkbox" onChange={this.handleRememberChange.bind(this)} />
+                  <span className="text-sm">Remember me</span>
+                </label>
 
-              <Link className="inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800" to="#">
-                Forgot Password?
-              </Link>
-            </div>
-          </form>
+                <Link className="inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800" to="#">
+                  Forgot Password?
+                </Link>
+              </div>
+            </form>
+          )}
         </Box>
       </Layout>
     );
