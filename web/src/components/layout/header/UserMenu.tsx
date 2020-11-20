@@ -19,7 +19,7 @@ export default class UserMenu extends React.Component<Props, State> {
   }
 
   public render() {
-    const user = cookies.get("user");
+    const user: User = cookies.get("user");
 
     return (
       <div className="ml-3 relative">
@@ -34,8 +34,8 @@ export default class UserMenu extends React.Component<Props, State> {
             <img
               className="h-8 w-8 rounded-full"
               id="user-menu-img"
-              src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-              alt=""
+              src={user ? `http://localhost:3000${user.avatarUrl}` : "http://localhost:3000/avatars/default"}
+              alt={`${user ? "User" : "Default"} avatar`}
             />
           </button>
         </div>
@@ -57,14 +57,14 @@ export default class UserMenu extends React.Component<Props, State> {
                   Your Profile
                 </Link>
                 <Link
-                  to="#"
+                  to="/me/settings"
                   className="block px-4 py-2 text-sm leading-5 text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 transition duration-150 ease-in-out"
                   role="menuitem"
                 >
                   Settings
                 </Link>
                 <Link
-                  to="#"
+                  to="/signout"
                   className="block px-4 py-2 text-sm leading-5 text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 transition duration-150 ease-in-out"
                   role="menuitem"
                 >

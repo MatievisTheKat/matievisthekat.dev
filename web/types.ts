@@ -4,6 +4,7 @@ export interface User {
   id: string;
   pwdHash: string;
   createdTimestamp: string;
+  avatarUrl: string;
 }
 
 export type HTTPStatusCode =
