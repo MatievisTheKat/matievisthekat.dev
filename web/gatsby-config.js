@@ -16,10 +16,6 @@ module.exports = {
         name: "Services",
         slug: "services",
       },
-      {
-        name: "Dashboard",
-        slug: "dashboard",
-      },
     ],
   },
   plugins: [
