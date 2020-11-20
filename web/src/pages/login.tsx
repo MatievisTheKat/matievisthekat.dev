@@ -160,7 +160,7 @@ export default class Login extends React.Component<Props, State> {
               />
               {this.state.usernameValid === false ? <p className="text-red-500 text-xs italic">{this.state.usernameErr}</p> : null}
             </div>
-            <div className="mb-5">
+            <div className="mb-8">
               <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="password">
                 Password
               </label>
