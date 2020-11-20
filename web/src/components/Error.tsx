@@ -20,7 +20,7 @@ export default class Error extends React.Component<Props, State> {
         <h1 className="text-center text-4xl text-shadow-grey-light font-nunito">{this.props.code || "ERR"}</h1>
         <p className="text-center text-l mb-6 font-mono">
           {this.props.code ? httpPairs[this.props.code] : "Unknown error"}
-          <Link to={`/http-status-definition?code=${this.props.code}`} className="ml-2">
+          <Link to={`/http-status-definition?code=${this.props.code}`} className="ml-2 text-blue-400">
             (?)
           </Link>
         </p>

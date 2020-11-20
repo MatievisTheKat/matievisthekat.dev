@@ -2,7 +2,10 @@ import React from "react";
 import { Link as GatsbyLink, GatsbyLinkProps } from "gatsby";
 
 interface State {}
-interface Props extends GatsbyLinkProps<State> {}
+interface Props extends GatsbyLinkProps<State> {
+  external?: boolean;
+  title?: string;
+}
 
 export default class Link extends React.Component<Props, State> {
   constructor(props: Props | Readonly<Props>) {
@@ -11,9 +14,23 @@ export default class Link extends React.Component<Props, State> {
 
   public render() {
     return (
-      <GatsbyLink to={this.props.to} className={`text-blue-400 hover:underline italic ${this.props.className}`}>
-        {this.props.children}
-      </GatsbyLink>
+      <>
+        {this.props.external ? (
+          <a
+            href={this.props.to}
+            title={this.props.title || ""}
+            rel="noreferrer"
+            target="_blank"
+            className={`hover:underline italic text-current ${this.props.className}`}
+          >
+            {this.props.children}
+          </a>
+        ) : (
+          <GatsbyLink to={this.props.to} className={`hover:underline italic text-current ${this.props.className}`}>
+            {this.props.children}
+          </GatsbyLink>
+        )}
+      </>
     );
   }
 }
