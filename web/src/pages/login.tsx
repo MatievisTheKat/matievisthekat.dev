@@ -4,7 +4,7 @@ import qs from "querystring";
 import Box from "../components/Box";
 import Layout from "../components/layout/Layout";
 import SEO from "../components/layout/SEO";
-import LoginForm from "../components/LoginForm";
+import LoginForm from "../components/login/Form";
 
 interface State {}
 interface Props {}
