@@ -7,6 +7,17 @@ export interface User {
   avatarUrl: string;
 }
 
+export interface PrecompiledCss {
+  name: string;
+  styles: string;
+}
+
+export interface BaseLoaderProps {
+  colour?: string;
+  loading?: boolean;
+  css?: string | PrecompiledCss;
+}
+
 export type HTTPStatusCode =
   | 100
   | 101
