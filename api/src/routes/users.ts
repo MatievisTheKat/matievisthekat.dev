@@ -3,6 +3,7 @@ import { authenticate } from "passport";
 import User from "../models/User";
 import { Route } from "../types";
 import { Logger } from "../util/Logger";
+import { adminOnly } from "../util/middleware";
 import ApiResponse from "../util/Response";
 import { Util } from "../util/Util";
 
@@ -83,7 +84,23 @@ router.post("/login", async (req, res) => {
   }).send(res);
 });
 
-router.get("/:id", async (req, res) => {
+router.put("/update", authenticate("jwt"), async (req, res) => {
+  const user = req.user;
+  if (!user) return new ApiResponse({ status: 401 });
+
+  const { avatarUrl } = req.body;
+
+  if (avatarUrl) {
+    if (user.avatarUrl !== avatarUrl) {
+      user.avatarUrl = avatarUrl;
+      await user.save();
+    }
+
+    new ApiResponse({ status: 200, data: user }).send(res);
+  }
+});
+
+router.get("/:id", authenticate("jwt"), adminOnly, async (req, res) => {
   const user = await User.findOne({ id: req.params.id }).exec();
 
   new ApiResponse({

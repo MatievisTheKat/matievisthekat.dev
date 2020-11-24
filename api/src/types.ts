@@ -1,4 +1,5 @@
 import { Router } from "express";
+import { IUser } from "./models/User";
 
 export interface Route {
   path: string;
@@ -15,6 +16,12 @@ export interface ApiResponseOptions {
 export interface KeyPair {
   pub: string;
   pri: string;
+}
+
+declare global {
+  namespace Express {
+    interface User extends IUser {}
+  }
 }
 
 export type HTTPStatusCode =
