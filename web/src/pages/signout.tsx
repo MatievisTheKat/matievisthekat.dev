@@ -11,12 +11,13 @@ interface State {}
 interface Props {}
 
 export default class SignOut extends React.Component<Props, State> {
+  public componentDidMount() {
+    cookies.remove("user");
+  }
+
   public render() {
     const { continueTo } = qs.parse(window.location.href, "?") as Record<string, string>;
-
-    cookies.remove("user");
-
-    window.location.href = continueTo || "/";
+    window.location.href = continueTo.startsWith("/me") ? "/" : continueTo;
 
     return (
       <Layout>

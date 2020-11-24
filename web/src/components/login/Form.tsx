@@ -1,7 +1,7 @@
 import Axios from "axios";
 import ms from "ms";
 import React, { ChangeEvent, FormEvent } from "react";
-import { getUser, validatePassword, validateUsername } from "../../../util";
+import { getUser, saveUser, validatePassword, validateUsername } from "../../../util";
 import Cookies from "universal-cookie";
 
 import { User } from "../../../types";
@@ -98,18 +98,10 @@ export default class LoginForm extends React.Component<Props, State> {
       loading: true,
     });
 
-    if (overrideRemember || this.state.rememberMe) {
-      cookies.set("jwt", jwt, {
-        maxAge: expires ? ms(expires) / 1000 : undefined,
-      });
-    } else {
-      cookies.remove("jwt");
-    }
-
     getUser(jwt)
       .then((user) => {
         if (user) {
-          cookies.set("user", user);
+          saveUser(user, jwt, overrideRemember || this.state.rememberMe, expires);
           this.props.onLogin();
         } else {
           this.setState({

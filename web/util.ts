@@ -1,5 +1,17 @@
 import Axios from "axios";
+import ms from "ms";
+import Cookies from "universal-cookie";
+
 import { HTTPStatusCode, User } from "./types";
+
+const cookies = new Cookies();
+
+export function setCookie(name: string, content: any, maxAge?: number) {
+  cookies.set(name, content, {
+    maxAge,
+    path: "/",
+  });
+}
 
 export function getUser(jwt: string): Promise<User> {
   return new Promise((res, rej) => {
@@ -13,6 +25,33 @@ export function getUser(jwt: string): Promise<User> {
       })
       .catch(rej);
   });
+}
+
+export function getCurrentJwt() {
+  return (cookies.get("jwt") || "") as string;
+}
+
+export function refreshUser(remember?: boolean, expires?: string): Promise<void> {
+  return new Promise((res, rej) => {
+    const jwt = getCurrentJwt();
+
+    getUser(jwt)
+      .then((user) => {
+        saveUser(user, jwt, remember, expires);
+        res();
+      })
+      .catch(rej);
+  });
+}
+
+export function saveUser(user: User, jwt: string, remember?: boolean, expires?: string) {
+  setCookie("user", user);
+
+  if (remember) {
+    const maxAge = expires ? ms(expires) / 1000 : undefined;
+    setCookie("remember", true, maxAge);
+    setCookie("jwt", jwt, maxAge);
+  } else setCookie("jwt", jwt);
 }
 
 export function validateUsername(username: string): string | undefined {
@@ -33,6 +72,14 @@ export function validatePassword(password: string): string | undefined {
   else if (password.length < 6) error = "Password must be more than 6 characters.";
 
   if (error) return error;
+}
+
+export function getCurrentUser(): User | void {
+  const user: User = cookies.get("user");
+
+  if (!user) {
+    window.location.href = `/login?continueTo=${window.location.pathname}`;
+  } else return user;
 }
 
 export const httpDefinitions: Record<HTTPStatusCode, string> = {

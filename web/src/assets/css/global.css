@@ -27,3 +27,7 @@
 .hover-mouse-help:hover {
   cursor: help;
 }
+
+.border-radius-1\/2 {
+  border-radius: 50%;
+}
