@@ -57,7 +57,7 @@ export default class Settings extends React.Component<Props, State> {
 
   public render() {
     const user = getCurrentUser();
-    if (!user) return;
+    if (!user) return null;
 
     return (
       <Layout>

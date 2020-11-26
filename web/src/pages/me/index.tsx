@@ -1,5 +1,4 @@
 import React from "react";
-import Cookies from "universal-cookie";
 
 import { getCurrentUser } from "../../../util";
 
@@ -8,15 +7,13 @@ import Layout from "../../components/layout/Layout";
 import SEO from "../../components/layout/SEO";
 import UserAvatar from "../../components/UserAvatar";
 
-const cookies = new Cookies();
-
 interface State {}
 interface Props {}
 
 export default class Me extends React.Component<Props, State> {
   public render() {
     const user = getCurrentUser();
-    if (!user) return;
+    if (!user) return null;
 
     return (
       <Layout>
