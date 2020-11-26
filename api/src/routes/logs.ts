@@ -3,6 +3,8 @@ import { Route } from "../types";
 import fs from "fs-extra";
 import { resolve } from "path";
 import ApiResponse from "../util/Response";
+import { adminOnly } from "../util/middleware";
+import { authenticate } from "passport";
 
 const router = Router();
 const logs = resolve("logs");
@@ -10,6 +12,8 @@ const getLogs = async () => await fs.readdir(logs);
 
 fs.ensureDir(logs);
 
+router.use(authenticate("jwt"));
+router.use(adminOnly);
 router.use("/file", express.static(logs));
 
 router.get("/", async (req, res) => new ApiResponse({ status: 200, data: await getLogs() }).send(res));
