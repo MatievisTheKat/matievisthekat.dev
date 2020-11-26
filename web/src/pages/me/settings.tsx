@@ -63,12 +63,12 @@ export default class Settings extends React.Component<Props, State> {
       <Layout>
         <SEO title="User Settings" />
         <Box>
-          <UserAvatar src={user.avatarUrl} className="mx-auto mb-3" />
+          <UserAvatar src={user.avatar_url} className="mx-auto mb-3" />
           <p>Select an avatar:</p>
           {this.state.avatars && (
             <div className="flex-row flex overflow-x-auto rounded bg-gray-400 p-2 shadow-inner">
               {this.state.avatars.map((a, i) => {
-                if (a !== `${user.avatarUrl}.png`)
+                if (a !== `${user.avatar_url}${user.avatar_url.endsWith(".png") ? "" : ".png"}`)
                   return (
                     <UserAvatar
                       src={a}

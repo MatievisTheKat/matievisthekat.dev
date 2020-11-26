@@ -35,7 +35,7 @@ export default class UserMenu extends React.Component<Props, State> {
             <img
               className="h-8 w-8 rounded-full"
               id="user-menu-img"
-              src={user ? `http://localhost:3000${user.avatarUrl}` : "http://localhost:3000/avatars/default"}
+              src={user ? `http://localhost:3000${user.avatar_url}` : "http://localhost:3000/avatars/default"}
               alt={`${user ? "User" : "Default"} avatar`}
             />
           </button>

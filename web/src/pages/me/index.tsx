@@ -22,7 +22,7 @@ export default class Me extends React.Component<Props, State> {
       <Layout>
         <SEO title="Profile" />
         <Box>
-          <UserAvatar src={user.avatarUrl} className="mx-auto mb-3" />
+          <UserAvatar src={user.avatar_url} className="mx-auto mb-3" />
           <h1 className="font-bold">{user.username}</h1>
           <p className="text-gray-500 text-sm">{user.email}</p>
         </Box>
