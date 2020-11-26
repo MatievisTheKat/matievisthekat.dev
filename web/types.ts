@@ -2,9 +2,9 @@ export interface User {
   username: string;
   email: string;
   id: string;
-  pwdHash: string;
-  createdTimestamp: string;
-  avatarUrl: string;
+  password_hash: string;
+  created_timestamp: string;
+  avatar_url: string;
 }
 
 export interface PrecompiledCss {

@@ -1,9 +1,23 @@
 import { Router } from "express";
-import { IUser } from "./models/User";
+import { User as CustomUser } from "./tables/User";
 
 export interface Route {
   path: string;
   router: Router;
+}
+
+export interface Table {
+  name: string;
+  cols: {
+    [key: string]: TableCol;
+  };
+}
+
+export interface TableCol {
+  datatype: string;
+  default?: any;
+  primaryKey?: boolean;
+  required?: boolean;
 }
 
 export interface ApiResponseOptions {
@@ -20,7 +34,7 @@ export interface KeyPair {
 
 declare global {
   namespace Express {
-    interface User extends IUser {}
+    interface User extends CustomUser {}
   }
 }
 

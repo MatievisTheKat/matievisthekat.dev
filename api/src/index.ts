@@ -1,26 +1,24 @@
+require("dotenv").config();
+
 import express from "express";
 import passport from "passport";
 import { ExtractJwt, Strategy as JwtStrategy } from "passport-jwt";
-import mongoose from "mongoose";
-import path from "path";
 import bodyParser from "body-parser";
-import morgan from "morgan";
 import cors from "cors";
+import path from "path";
 
 import { Route } from "./types";
 import { Logger } from "./util/Logger";
 import ApiResponse from "./util/Response";
 import { Util } from "./util/Util";
-import User, { IUser } from "./models/User";
-
-Util.loadEnv(path.resolve("./.env.json"));
+import db, { parseTableToQuery } from "./util/database";
+import { User } from "./tables/User";
 
 const app = express();
 const port = process.env.PORT || 3000;
 
 app.set("json spaces", 2);
 
-app.use(morgan("dev"));
 app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -31,6 +29,14 @@ const routes: Route[] = routeFiles.map((f) => require(f).route).sort((a, b) => b
 
 for (const route of routes) {
   app.use(route.path, route.router);
+}
+
+const tableFiles = Util.findNested(path.join(__dirname, "tables"));
+const tables = tableFiles.map((f) => require(f).table);
+
+for (const table of tables) {
+  const tableQuery = parseTableToQuery(table);
+  db.query(tableQuery).catch((err) => Logger.error(err));
 }
 
 app.get("/", (req, res) => {
@@ -57,36 +63,16 @@ Util.genKeypair(path.resolve("./keys")).then((keys) => {
         algorithms: ["RS256"],
       },
       (payload, done) => {
-        passport.serializeUser((user: IUser, done) => {
-          done(null, user);
-        });
+        passport.serializeUser((user: User, done) => done(null, user));
 
         passport.deserializeUser((id: string, done) => {
-          User.findOne({ id })
-            .exec()
-            .then((user) => {
-              if (!user) return done(null, false);
-              else done(null, user);
-            });
+          Util.getUser(id).then((user) => done(null, user));
         });
 
-        User.findOne({ id: payload.sub })
-          .exec()
-          .then((user) => {
-            if (!user) return done(null, false);
-            else done(null, user);
-          });
+        Util.getUser(payload.sub).then((user) => done(null, user ?? false));
       }
     )
   );
 
-  mongoose
-    .connect(`mongodb://${process.env["db.user"]}:${escape(process.env["db.pwd"] ?? "")}@${process.env["db.host"]}/${process.env["db.name"]}`, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    })
-    .then(({ connections }) => {
-      Logger.log(`Connected to MongoDB on ${connections.map((con) => con.host).join(", ")}`);
-      app.listen(port, () => Logger.log(`Listening on port http://localhost:${port}/`));
-    });
+  app.listen(port, () => Logger.log(`Listening on port http://localhost:${port}/`));
 });

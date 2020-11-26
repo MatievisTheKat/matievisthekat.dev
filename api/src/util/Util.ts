@@ -5,7 +5,8 @@ import jwt from "jsonwebtoken";
 import { generateKeyPair } from "crypto";
 
 import { HTTPStatusCode, KeyPair } from "../types";
-import User, { IUser } from "../models/User";
+import { User } from "../tables/User";
+import db from "../util/database";
 
 export class Util {
   public static capitalise(str: string): string {
@@ -15,13 +16,6 @@ export class Util {
           .map((word: string) => word[0].toUpperCase() + word.slice(1).toLowerCase())
           .join(" ")
       : str;
-  }
-
-  public static loadEnv(envPath: string): NodeJS.ProcessEnv {
-    const env = require(envPath);
-    if (!env) throw new Error("(Util#loadEnv) No environment variables to load");
-
-    return Util.loadObjectToEnv(env);
   }
 
   public static loadObjectToEnv(obj: object): NodeJS.ProcessEnv {
@@ -50,17 +44,19 @@ export class Util {
     return results;
   }
 
-  public static async verifyPwdUsernameMatch(username: string, pwd: string): Promise<IUser | null> {
-    const user = await User.findOne({ username });
+  public static async getPasswordUsernameMatch(username: string, pwd: string): Promise<User | null> {
+    const res = await db.query("SELECT * FROM users WHERE username = $1;", [username]);
+
+    const user: User = res.rows[0];
     if (!user) return null;
 
-    const pwdMatch = await Util.comparePwd(pwd, user.pwdHash);
+    const pwdMatch = await Util.comparePassword(pwd, user.password_hash);
     if (!pwdMatch) return null;
 
     return user;
   }
 
-  public static serializePwd(pwd: string): Promise<string> {
+  public static serializePassword(pwd: string): Promise<string> {
     return new Promise((res, rej) => {
       bcrypt.hash(pwd, parseInt(process.env["salt-rounds"] as string, 2), function (err, hash) {
         if (err) return rej(err);
@@ -69,7 +65,7 @@ export class Util {
     });
   }
 
-  public static comparePwd(pwd: string, hash: string): Promise<boolean> {
+  public static comparePassword(pwd: string, hash: string): Promise<boolean> {
     return new Promise((res, rej) => {
       bcrypt.compare(pwd, hash, function (err, result) {
         if (err) return rej(err);
@@ -78,16 +74,39 @@ export class Util {
     });
   }
 
-  public static async ensureDir(path: string): Promise<void> {
+  public static getUser(value: string): Promise<User | undefined> {
     return new Promise((res, rej) => {
-      fs.access(path, (err) => {
-        if (err) {
-          fs.mkdir(path, (err) => {
-            if (err) return rej(err);
-            else res();
-          });
-        } else res();
-      });
+      db.query("SELECT * FROM users WHERE id = $1 OR username = $1 OR email = $1;", [value])
+        .then((result) => res(result.rows[0]))
+        .catch(rej);
+    });
+  }
+
+  public static updateUser(user: User, update: Record<string, any>): Promise<boolean | undefined> {
+    return new Promise((res, rej) => {
+      if (update.avatar_url) {
+        db.query("UPDATE users SET avatar_url = $1 WHERE id = $2;", [update.avatar_url, user.id])
+          .then(() => res(true))
+          .catch(rej);
+      } else rej("Invalid update props");
+    });
+  }
+
+  public static createUser(username: string, password: string, email: string): Promise<User> {
+    return new Promise(async (res, rej) => {
+      const userWithSameEmail = await Util.getUser(email);
+      if (userWithSameEmail) return rej({ status: 400, error: "A user with that email already exists" });
+
+      const userWithSameUsername = await Util.getUser(username);
+      if (userWithSameUsername) return rej({ status: 400, error: "That username is taken" });
+
+      const hash = await Util.serializePassword(password);
+
+      db.query("INSERT INTO users (username, password_hash, email) VALUES ($1, $2, $3);", [username, hash, email])
+        .then(async () => {
+          res(await Util.getUser(username));
+        })
+        .catch(rej);
     });
   }
 
@@ -96,7 +115,7 @@ export class Util {
       const pubPath = path.join(dir, "public.key");
       const privPath = path.join(dir, "private.key");
 
-      await Util.ensureDir(dir);
+      await fs.ensureDir(dir);
 
       const privExists = fs.existsSync(privPath);
       const pubExists = fs.existsSync(pubPath);
@@ -119,7 +138,7 @@ export class Util {
             type: "pkcs8",
             format: "pem",
             cipher: "aes-256-cbc",
-            passphrase: process.env["keys.private.passphrase"] as string,
+            passphrase: process.env["keys.passphrase"] as string,
           },
         },
         (err, pub, pri) => {
@@ -135,23 +154,23 @@ export class Util {
   }
 
   public static async issueJwt(
-    userOrId: IUser | string
+    userOrId: User | string
   ): Promise<{
     token?: string;
     expires?: string;
     error?: string;
   }> {
-    let user: IUser | null = null;
+    let user: User | null = null;
 
     if (typeof userOrId === "string") {
-      user = await User.findOne({ id: userOrId }).exec();
+      //user = await User.findOne({ id: userOrId }).exec();
     } else user = userOrId;
 
     if (!user) return { error: "No user found" };
 
     const id = user.id;
     const expires = "1d";
-    const passphrase = process.env["keys.private.passphrase"] as string;
+    const passphrase = process.env["keys.passphrase"] as string;
     const key = process.env["keys.private"] as string;
 
     const payload = {

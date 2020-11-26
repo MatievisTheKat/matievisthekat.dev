@@ -1,6 +1,5 @@
 import { Router } from "express";
 import { authenticate } from "passport";
-import User from "../models/User";
 import { Route } from "../types";
 import { Logger } from "../util/Logger";
 import { adminOnly } from "../util/middleware";
@@ -27,39 +26,32 @@ router.post("/register", async (req, res) => {
 
   if (password !== confirmPassword) return new ApiResponse({ status: 400, error: "Passwords do not match" }).send(res);
 
-  const userWithSameCreds = (await User.find().exec()).find((u) => u.username === username || u.email === email);
-  if (userWithSameCreds)
-    return new ApiResponse({
-      status: 403,
-      error: "A user with that username or email already exists",
-    }).send(res);
+  Util.createUser(username, password, email)
+    .then(async (user) => {
+      const jwt = await Util.issueJwt(user);
+      if (jwt.error) {
+        Logger.error(jwt.error);
+        return new ApiResponse({ status: 500, error: "Something went wrong on our end" });
+      }
 
-  const pwdHash = await Util.serializePwd(password);
-  const user = new User({ username, email, pwdHash });
-  const jwt = await Util.issueJwt(user);
-  if (jwt.error) {
-    Logger.error(jwt.error);
-    return new ApiResponse({ status: 500, error: "Something went wrong on our end" });
-  }
-
-  user
-    .save()
-    .then(async (saved) => {
       new ApiResponse({
         status: 201,
         message: "User successfully created",
         data: {
           token: jwt.token,
-          user: saved,
+          user,
         },
       }).send(res);
     })
     .catch((err) => {
-      Logger.error(err);
-      new ApiResponse({
-        status: 500,
-        error: "Something went wrong on our end",
-      }).send(res);
+      if (err.status && err.error) return new ApiResponse(err).send(res);
+      else {
+        Logger.error(err);
+        new ApiResponse({
+          status: 500,
+          error: "Something went wrong on our end",
+        }).send(res);
+      }
     });
 });
 
@@ -67,14 +59,14 @@ router.post("/login", async (req, res) => {
   const { username, password } = req.body;
   if (!username || !password) return new ApiResponse({ status: 400, error: "Missing `username` or `password` values" }).send(res);
 
-  const user = await User.findOne({ username }).exec();
+  const user = await Util.getUser(username);
   if (!user)
     return new ApiResponse({
       status: 404,
       error: "No user with that username found",
     }).send(res);
 
-  const pwdIsValid = await Util.comparePwd(password, user.pwdHash);
+  const pwdIsValid = await Util.comparePassword(password, user.password_hash);
   if (!pwdIsValid) return new ApiResponse({ status: 401, error: "Incorrect password" }).send(res);
 
   new ApiResponse({
@@ -91,17 +83,17 @@ router.put("/update", authenticate("jwt"), async (req, res) => {
   const { avatarUrl } = req.body;
 
   if (avatarUrl) {
-    if (user.avatarUrl !== avatarUrl) {
-      user.avatarUrl = avatarUrl;
-      await user.save();
+    if (user.avatar_url !== avatarUrl) {
+      user.avatar_url = avatarUrl;
+      await Util.updateUser(user, { avatar_url: avatarUrl });
     }
 
     new ApiResponse({ status: 200, data: user }).send(res);
-  }
+  } else new ApiResponse({ status: 400, message: "Invalid or missing update values" }).send(res);
 });
 
 router.get("/:id", authenticate("jwt"), adminOnly, async (req, res) => {
-  const user = await User.findOne({ id: req.params.id }).exec();
+  const user = await Util.getUser(req.params.id);
 
   new ApiResponse({
     status: user ? 200 : 404,
