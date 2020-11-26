@@ -19,6 +19,7 @@ const port = process.env.PORT || 3000;
 
 app.set("json spaces", 2);
 
+app.use(Logger.logRequest);
 app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
