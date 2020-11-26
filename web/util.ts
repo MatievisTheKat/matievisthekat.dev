@@ -13,6 +13,10 @@ export function setCookie(name: string, content: any, maxAge?: number) {
   });
 }
 
+export function getCookie(name: string) {
+  return cookies.get(name);
+}
+
 export function getUser(jwt: string): Promise<User> {
   return new Promise((res, rej) => {
     Axios.get("http://localhost:3000/users/me", {
@@ -74,10 +78,10 @@ export function validatePassword(password: string): string | undefined {
   if (error) return error;
 }
 
-export function getCurrentUser(): User | void {
+export function getCurrentUser(doNotLoginIfNotFound?: boolean): User | void {
   const user: User = cookies.get("user");
 
-  if (!user) {
+  if (!user && doNotLoginIfNotFound !== true) {
     window.location.href = `/login?continueTo=${window.location.pathname}`;
   } else return user;
 }

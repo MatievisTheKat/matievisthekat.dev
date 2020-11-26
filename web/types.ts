@@ -1,5 +1,6 @@
 export interface User {
   username: string;
+  admin?: boolean;
   email: string;
   id: string;
   password_hash: string;
