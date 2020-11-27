@@ -4,10 +4,8 @@ import { StaticQuery, graphql, Link } from "gatsby";
 import Menu from "./Menu";
 import Tabs from "./Tabs";
 import NavBar from "./NavBar";
-import UserMenu from "./UserMenu";
+import UserMenu from "./userMenu/UserMenu";
 import NotifButton from "./NotifButton";
-
-import { User } from "../../../../types";
 
 interface State {
   userMenuOpen: boolean;
@@ -16,7 +14,6 @@ interface State {
 interface Props {
   title: string;
   tab: string;
-  user?: User
 }
 export interface Tab {
   name: string;
@@ -48,10 +45,9 @@ export default class Header extends React.Component<Props, State> {
   public componentDidMount() {
     document.onclick = (e) => {
       const target = e.target as HTMLElement;
-      const tag = target.tagName;
-      const id = target.id;
 
-      if (!(tag === "BUTTON" && id === "user-menu-button") && !(tag === "IMG" && id === "user-menu-img")) {
+      const isTrigger = target.classList.contains("user-menu-trigger");
+      if (!isTrigger && this.state.userMenuOpen === true) {
         this.setUserMenuOpen(false);
       }
     };
@@ -81,18 +77,7 @@ export default class Header extends React.Component<Props, State> {
   public render() {
     return (
       <StaticQuery
-        query={graphql`
-          query {
-            site {
-              siteMetadata {
-                navTabs {
-                  name
-                  slug
-                }
-              }
-            }
-          }
-        `}
+        query={NavTabsQuery}
         render={({ site }) => (
           <NavBar menuOpen={this.state.menuOpen} formatTabs={this.formatTabs} navTabs={site.siteMetadata.navTabs}>
             <Menu open={this.state.menuOpen} setOpen={this.setMenuOpen} />
@@ -108,3 +93,16 @@ export default class Header extends React.Component<Props, State> {
     );
   }
 }
+
+export const NavTabsQuery = graphql`
+  query NavTabsQuery {
+    site {
+      siteMetadata {
+        navTabs {
+          name
+          slug
+        }
+      }
+    }
+  }
+`;
