@@ -34,17 +34,7 @@ export default class UserMenu extends React.Component<Props, State> {
             />
           </button>
         </div>
-        <div className={this.props.open ? "origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg" : "hidden"}>
-          <div
-            className="py-1 rounded-md bg-white shadow-xs"
-            role="menu"
-            aria-orientation="vertical"
-            aria-labelledby="user-menu"
-            aria-expanded={this.props.open}
-          >
-            <UserLinks loggedIn={user ? true : false} />
-          </div>
-        </div>
+        <UserLinks loggedIn={user ? true : false} open={this.props.open} />
       </div>
     );
   }

@@ -47,8 +47,6 @@ export default class LoginForm extends React.Component<Props, State> {
   }
 
   private onUsernameChange(e: ChangeEvent<HTMLInputElement>) {
-    e.preventDefault();
-
     const username = e.target.value;
     const usernameErr = validateUsername(username);
 
@@ -59,8 +57,6 @@ export default class LoginForm extends React.Component<Props, State> {
   }
 
   private onPasswordChange(e: ChangeEvent<HTMLInputElement>) {
-    e.preventDefault();
-
     const password = e.target.value;
     const passwordErr = validatePassword(password);
 

@@ -6,10 +6,6 @@ interface Props extends React.DetailedHTMLProps<React.ImgHTMLAttributes<HTMLImag
 }
 
 export default class UserAvatar extends React.Component<Props, State> {
-  constructor(props: Props | Readonly<Props>) {
-    super(props);
-  }
-
   public render() {
     return (
       <img

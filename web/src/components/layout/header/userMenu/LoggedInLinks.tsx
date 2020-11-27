@@ -9,10 +9,6 @@ interface UserLink {
 }
 
 export default class LoggedInLinks extends React.Component<Props, State> {
-  constructor(props: Props | Readonly<Props>) {
-    super(props);
-  }
-
   public render() {
     return (
       <StaticQuery
