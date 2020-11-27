@@ -12,8 +12,9 @@ import Back from "../components/Back";
 interface State {}
 interface Props {}
 
-export default class ErrorDefinition extends React.Component<Props, State> {
+export default class HTTPStateDefinition extends React.Component<Props, State> {
   public render() {
+    if (typeof window === "undefined") return null;
     const parsed = qs.parse(window.location.toString(), "?") as Record<string, string>;
 
     return (

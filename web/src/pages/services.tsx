@@ -6,7 +6,7 @@ import SEO from "../components/layout/SEO";
 interface State {}
 interface Props {}
 
-export default class Index extends React.Component<Props, State> {
+export default class Services extends React.Component<Props, State> {
   public render() {
     return (
       <Layout>

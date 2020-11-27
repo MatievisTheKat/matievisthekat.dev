@@ -54,6 +54,7 @@ export default class Settings extends React.Component<Props, State> {
   }
 
   public render() {
+    if (typeof window === "undefined") return null;
     const user = getCurrentUser();
     if (!user) return null;
 

@@ -11,19 +11,12 @@ interface Props {
 
 export default class Layout extends React.Component<Props, State> {
   public render() {
+    if (typeof window === "undefined") return null;
     const toSlug = (str: string) => str.trim().replace(/\//gi, "-").toLowerCase();
 
     return (
       <StaticQuery
-        query={graphql`
-          query SiteTitleQuery {
-            site {
-              siteMetadata {
-                title
-              }
-            }
-          }
-        `}
+        query={SiteTitleQuery}
         render={({ site }) => {
           const tab = this.props.tab ? toSlug(this.props.tab) : toSlug(window.location.pathname.slice(1));
           return (
@@ -38,3 +31,13 @@ export default class Layout extends React.Component<Props, State> {
     );
   }
 }
+
+export const SiteTitleQuery = graphql`
+  query SiteTitleQuery {
+    site {
+      siteMetadata {
+        title
+      }
+    }
+  }
+`;

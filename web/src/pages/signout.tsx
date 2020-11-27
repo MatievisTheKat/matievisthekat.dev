@@ -16,6 +16,7 @@ export default class SignOut extends React.Component<Props, State> {
   }
 
   public render() {
+    if (typeof window === "undefined") return null;
     const { continueTo } = qs.parse(window.location.href, "?") as Record<string, string>;
     window.location.href = continueTo.startsWith("/me") ? "/" : continueTo;
 
