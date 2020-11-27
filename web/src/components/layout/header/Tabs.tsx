@@ -19,18 +19,7 @@ export default class Tabs extends React.Component<Props, State> {
   public render() {
     return (
       <StaticQuery
-        query={graphql`
-          query Assets {
-            allFile {
-              edges {
-                node {
-                  publicURL
-                  name
-                }
-              }
-            }
-          }
-        `}
+        query={AssetsQuery}
         render={({ allFile: { edges } }: { allFile: { edges: Edge[] } }) => {
           const src = edges.find((e: Edge) => e.node.name === "logo")?.node.publicURL;
 
@@ -50,3 +39,16 @@ export default class Tabs extends React.Component<Props, State> {
     );
   }
 }
+
+export const AssetsQuery = graphql`
+  query AssetsQuery {
+    allFile {
+      edges {
+        node {
+          publicURL
+          name
+        }
+      }
+    }
+  }
+`;

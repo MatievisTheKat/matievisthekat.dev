@@ -2,7 +2,8 @@ import React from "react";
 import { StaticQuery, graphql } from "gatsby";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faGithub, faFacebook, faDiscord, faInstagram, faYoutube, faLinkedin, faTwitter, faReddit } from "@fortawesome/free-brands-svg-icons";
-import Link from "../Link";
+import Link from "../../Link";
+import Copyright from "./Copyright";
 
 interface State {}
 interface Props {}
@@ -27,19 +28,7 @@ export default class Footer extends React.Component<Props, State> {
   public render() {
     return (
       <StaticQuery
-        query={graphql`
-          query MyQuery {
-            site {
-              siteMetadata {
-                socialLinks {
-                  url
-                  name
-                  slug
-                }
-              }
-            }
-          }
-        `}
+        query={SocialLinksQuery}
         render={({ site }) => {
           const links: SocialLink[] = site.siteMetadata.socialLinks;
 
@@ -57,18 +46,7 @@ export default class Footer extends React.Component<Props, State> {
                 })}
               </div>
 
-              <span className="mt-auto text-xs">
-                © Copyright MatievisTheKat 2020
-                <br />
-                Icons made by{" "}
-                <Link className="text-gray-700" to="https://www.flaticon.com/authors/freepik" external={true} title="Freepik">
-                  Freepik
-                </Link>{" "}
-                from{" "}
-                <Link to="https://www.flaticon.com/" external={true} title="Flaticon">
-                  www.flaticon.com
-                </Link>
-              </span>
+              <Copyright />
             </footer>
           );
         }}
@@ -76,3 +54,17 @@ export default class Footer extends React.Component<Props, State> {
     );
   }
 }
+
+export const SocialLinksQuery = graphql`
+  query SocialLinksQuery {
+    site {
+      siteMetadata {
+        socialLinks {
+          url
+          name
+          slug
+        }
+      }
+    }
+  }
+`;

@@ -110,7 +110,27 @@ export class Util {
     });
   }
 
-  public static genKeypair(dir: string): Promise<KeyPair> {
+  public static genKeyPair(cb: (err: Error | null, pub: string, pri: string) => void) {
+    generateKeyPair(
+      "rsa",
+      {
+        modulusLength: 4096,
+        publicKeyEncoding: {
+          type: "spki",
+          format: "pem",
+        },
+        privateKeyEncoding: {
+          type: "pkcs8",
+          format: "pem",
+          cipher: "aes-256-cbc",
+          passphrase: process.env["keys.passphrase"] as string,
+        },
+      },
+      cb
+    );
+  }
+
+  public static saveKeypair(dir: string): Promise<KeyPair> {
     return new Promise(async (res, rej) => {
       const pubPath = path.join(dir, "public.key");
       const privPath = path.join(dir, "private.key");
@@ -126,30 +146,14 @@ export class Util {
           pri: fs.readFileSync(privPath).toString(),
         });
 
-      generateKeyPair(
-        "rsa",
-        {
-          modulusLength: 4096,
-          publicKeyEncoding: {
-            type: "spki",
-            format: "pem",
-          },
-          privateKeyEncoding: {
-            type: "pkcs8",
-            format: "pem",
-            cipher: "aes-256-cbc",
-            passphrase: process.env["keys.passphrase"] as string,
-          },
-        },
-        (err, pub, pri) => {
-          if (err) return rej(err);
+      Util.genKeyPair((err, pub, pri) => {
+        if (err) return rej(err);
 
-          fs.writeFileSync(pubPath, pub);
-          fs.writeFileSync(privPath, pri);
+        fs.writeFileSync(pubPath, pub);
+        fs.writeFileSync(privPath, pri);
 
-          res({ pub, pri });
-        }
-      );
+        res({ pub, pri });
+      });
     });
   }
 
@@ -160,10 +164,10 @@ export class Util {
     expires?: string;
     error?: string;
   }> {
-    let user: User | null = null;
+    let user: User | undefined;
 
     if (typeof userOrId === "string") {
-      //user = await User.findOne({ id: userOrId }).exec();
+      user = await Util.getUser(userOrId);
     } else user = userOrId;
 
     if (!user) return { error: "No user found" };

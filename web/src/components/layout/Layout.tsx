@@ -2,7 +2,7 @@ import React from "react";
 import { StaticQuery, graphql } from "gatsby";
 
 import Header from "./header/Header";
-import Footer from "./Footer";
+import Footer from "./footer/Footer";
 
 interface State {}
 interface Props {

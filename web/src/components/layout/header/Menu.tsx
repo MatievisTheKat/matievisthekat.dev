@@ -1,5 +1,8 @@
 import React from "react";
 
+import BurgerSvg from "../../svg/Burger";
+import CrossSvg from "../../svg/Cross";
+
 interface State {}
 interface Props {
   setOpen(menuOpen?: boolean): void;
@@ -16,25 +19,8 @@ export default class Menu extends React.Component<Props, State> {
           aria-expanded={this.props.open}
           onClick={() => this.props.setOpen()}
         >
-          <svg
-            className={`${this.props.open ? "hidden" : "block"} h-6 w-6`}
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16" />
-          </svg>
-
-          <svg
-            className={`${!this.props.open ? "hidden" : "block"} h-6 w-6`}
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
-          </svg>
+          <CrossSvg className={`${this.props.open ? "hidden" : "block"} h-6 w-6`} />
+          <BurgerSvg className={`${this.props.open ? "block" : "hidden"} h-6 w-6`} />
         </button>
       </div>
     );

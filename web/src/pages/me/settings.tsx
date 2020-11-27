@@ -1,15 +1,13 @@
 import React from "react";
 import Axios from "axios";
-import Cookies from "universal-cookie";
 
-import { getCurrentUser, getCurrentJwt, refreshUser } from "../../../util";
+import { getCurrentUser, getCurrentJwt, refreshUser, getCookie } from "../../../util";
 
 import Layout from "../../components/layout/Layout";
 import SEO from "../../components/layout/SEO";
 import Box from "../../components/Box";
 import UserAvatar from "../../components/UserAvatar";
-
-const cookies = new Cookies();
+import AvatarSelection from "../../components/AvatarSelection";
 
 interface State {
   avatars?: string[];
@@ -38,7 +36,7 @@ export default class Settings extends React.Component<Props, State> {
       }
     )
       .then(() => {
-        refreshUser(cookies.get("remember") === "true").then(() => {
+        refreshUser(getCookie("remember") === "true").then(() => {
           this.forceUpdate();
         });
       })
@@ -66,23 +64,11 @@ export default class Settings extends React.Component<Props, State> {
           <UserAvatar src={user.avatar_url} className="mx-auto mb-3" />
           <p>Select an avatar:</p>
           {this.state.avatars && (
-            <div className="flex-row flex overflow-x-auto rounded bg-gray-400 p-2 shadow-inner">
-              {this.state.avatars.map((a, i) => {
-                if (a !== `${user.avatar_url}${user.avatar_url.endsWith(".png") ? "" : ".png"}`)
-                  return (
-                    <UserAvatar
-                      src={a}
-                      width="12"
-                      className="mx-1 hover-mouse-pointer hover:shadow-lg"
-                      key={i}
-                      onClick={(e) => {
-                        e.preventDefault();
-                        this.updateAvatar(a);
-                      }}
-                    />
-                  );
-              })}
-            </div>
+            <AvatarSelection
+              exclude={`${user.avatar_url}${user.avatar_url.endsWith(".png") ? "" : ".png"}`}
+              avatars={this.state.avatars}
+              onClick={this.updateAvatar.bind(this)}
+            />
           )}
         </Box>
       </Layout>
