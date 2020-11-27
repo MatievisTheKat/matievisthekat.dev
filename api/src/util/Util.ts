@@ -104,13 +104,14 @@ export class Util {
 
       db.query("INSERT INTO users (username, password_hash, email) VALUES ($1, $2, $3);", [username, hash, email])
         .then(async () => {
-          res(await Util.getUser(username));
+          const user = await Util.getUser(username) as User;
+          res(user);
         })
         .catch(rej);
     });
   }
 
-  public static genKeyPair(cb: (err: Error | null, pub: string, pri: string) => void) {
+  public static genKeypair(cb: (err: Error | null, pub: string, pri: string) => void) {
     generateKeyPair(
       "rsa",
       {
@@ -146,7 +147,7 @@ export class Util {
           pri: fs.readFileSync(privPath).toString(),
         });
 
-      Util.genKeyPair((err, pub, pri) => {
+      Util.genKeypair((err, pub, pri) => {
         if (err) return rej(err);
 
         fs.writeFileSync(pubPath, pub);

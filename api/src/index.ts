@@ -48,7 +48,7 @@ app.get("/", (req, res) => {
 });
 
 Logger.log("Generating keys...");
-Util.genKeypair(path.resolve("./keys")).then((keys) => {
+Util.saveKeypair(path.resolve("./keys")).then((keys) => {
   Util.loadObjectToEnv({
     "keys.public": keys.pub,
     "keys.private": keys.pri,
