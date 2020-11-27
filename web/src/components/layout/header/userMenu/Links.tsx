@@ -15,13 +15,7 @@ export default class UserLinks extends React.Component<Props, State> {
 
     return (
       <div className={this.props.open ? "origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg" : "hidden"}>
-        <div
-          className="py-1 rounded-md bg-white shadow-xs"
-          role="menu"
-          aria-orientation="vertical"
-          aria-labelledby="user-menu"
-          aria-expanded={this.props.open}
-        >
+        <div className="py-1 rounded-md bg-white shadow-xs">
           {this.props.loggedIn ? (
             <LoggedInLinks />
           ) : (
