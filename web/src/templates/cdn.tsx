@@ -17,7 +17,7 @@ export default class CDNFile extends React.Component<Props, State> {
 
     return (
       <Layout>
-        <SEO title="" />
+        <SEO title="Content Delivery Network" />
         <Box>
           <h1>Redirecting. Please wait...</h1>
         </Box>
