@@ -12,6 +12,16 @@ interface Props {
   tab?: string;
 }
 
+const SiteTitleQuery = graphql`
+  query SiteTitleQuery {
+    site {
+      siteMetadata {
+        title
+      }
+    }
+  }
+`;
+
 export default class Layout extends React.Component<Props, State> {
   public render() {
     if (typeof window === "undefined") return null;
@@ -34,13 +44,3 @@ export default class Layout extends React.Component<Props, State> {
     );
   }
 }
-
-export const SiteTitleQuery = graphql`
-  query SiteTitleQuery {
-    site {
-      siteMetadata {
-        title
-      }
-    }
-  }
-`;

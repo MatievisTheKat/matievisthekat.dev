@@ -1,7 +1,7 @@
 import React, { ReactNode } from "react";
 import { StaticQuery, graphql } from "gatsby";
 
-import { Tab } from "./Header";
+import { Tab } from "../../../../types";
 
 interface State {}
 export interface Props {
@@ -14,6 +14,19 @@ interface Edge {
     publicURL: string;
   };
 }
+
+const AssetsQuery = graphql`
+  query AssetsQuery {
+    allFile {
+      edges {
+        node {
+          publicURL
+          name
+        }
+      }
+    }
+  }
+`;
 
 export default class Tabs extends React.Component<Props, State> {
   public render() {
@@ -39,16 +52,3 @@ export default class Tabs extends React.Component<Props, State> {
     );
   }
 }
-
-export const AssetsQuery = graphql`
-  query AssetsQuery {
-    allFile {
-      edges {
-        node {
-          publicURL
-          name
-        }
-      }
-    }
-  }
-`;

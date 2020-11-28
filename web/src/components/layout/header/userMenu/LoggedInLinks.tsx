@@ -8,6 +8,19 @@ interface UserLink {
   name: string;
 }
 
+const UserLinksQuery = graphql`
+  query UserLinksQuery {
+    site {
+      siteMetadata {
+        userMenuLinks {
+          url
+          name
+        }
+      }
+    }
+  }
+`;
+
 export default class LoggedInLinks extends React.Component<Props, State> {
   public render() {
     return (
@@ -33,16 +46,3 @@ export default class LoggedInLinks extends React.Component<Props, State> {
     );
   }
 }
-
-export const UserLinksQuery = graphql`
-  query UserLinksQuery {
-    site {
-      siteMetadata {
-        userMenuLinks {
-          url
-          name
-        }
-      }
-    }
-  }
-`;

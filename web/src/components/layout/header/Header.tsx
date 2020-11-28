@@ -6,7 +6,9 @@ import Tabs from "./Tabs";
 import NavBar from "./NavBar";
 import UserMenu from "./userMenu/UserMenu";
 import NotifButton from "./NotifButton";
+
 import { getCurrentUser } from "../../../../util";
+import { Tab } from "../../../../types";
 
 interface State {
   userMenuOpen: boolean;
@@ -16,11 +18,20 @@ interface Props {
   title: string;
   tab: string;
 }
-export interface Tab {
-  name: string;
-  slug: string;
-  admin?: boolean;
-}
+
+const NavTabsQuery = graphql`
+  query NavTabsQuery {
+    site {
+      siteMetadata {
+        navTabs {
+          name
+          slug
+          admin
+        }
+      }
+    }
+  }
+`;
 
 export default class Header extends React.Component<Props, State> {
   constructor(props: Props | Readonly<Props>) {
@@ -99,17 +110,3 @@ export default class Header extends React.Component<Props, State> {
     );
   }
 }
-
-export const NavTabsQuery = graphql`
-  query NavTabsQuery {
-    site {
-      siteMetadata {
-        navTabs {
-          name
-          slug
-          admin
-        }
-      }
-    }
-  }
-`;

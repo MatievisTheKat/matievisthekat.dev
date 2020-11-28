@@ -24,6 +24,20 @@ const icons: Record<string, any> = {
   reddit: faReddit,
 };
 
+const SocialLinksQuery = graphql`
+  query SocialLinksQuery {
+    site {
+      siteMetadata {
+        socialLinks {
+          url
+          name
+          slug
+        }
+      }
+    }
+  }
+`;
+
 export default class Footer extends React.Component<Props, State> {
   public render() {
     return (
@@ -54,17 +68,3 @@ export default class Footer extends React.Component<Props, State> {
     );
   }
 }
-
-export const SocialLinksQuery = graphql`
-  query SocialLinksQuery {
-    site {
-      siteMetadata {
-        socialLinks {
-          url
-          name
-          slug
-        }
-      }
-    }
-  }
-`;

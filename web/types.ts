@@ -16,6 +16,12 @@ export interface ApiResponse {
   message?: string;
 }
 
+export interface Tab {
+  name: string;
+  slug: string;
+  admin?: boolean;
+}
+
 export interface PrecompiledCss {
   name: string;
   styles: string;
