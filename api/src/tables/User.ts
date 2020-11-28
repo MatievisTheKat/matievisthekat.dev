@@ -1,4 +1,3 @@
-import { v4 as uuid } from "uuid";
 import { Table } from "../types";
 
 export interface User {
@@ -16,7 +15,6 @@ export const table: Table = {
   cols: {
     id: {
       datatype: "text",
-      default: uuid(),
       required: true,
       primaryKey: true,
     },
@@ -37,7 +35,6 @@ export const table: Table = {
     },
     created_timestamp: {
       datatype: "text",
-      default: Date.now().toString(),
       required: true,
     },
     avatar_url: {

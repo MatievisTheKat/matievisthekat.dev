@@ -8,6 +8,14 @@ export interface User {
   avatar_url: string;
 }
 
+export interface ApiResponse {
+  status: HTTPStatusCode;
+  statusText: string;
+  data?: any;
+  error?: string;
+  message?: string;
+}
+
 export interface PrecompiledCss {
   name: string;
   styles: string;

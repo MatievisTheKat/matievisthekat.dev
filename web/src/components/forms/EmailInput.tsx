@@ -24,7 +24,6 @@ export default class EmailInput extends React.Component<Props, State> {
         </label>
         <TextInput
           className="mb-1"
-          id="email"
           type="email"
           name="email"
           placeholder="admin@example.com"

@@ -20,7 +20,6 @@ export default class UsernameInput extends React.Component<Props, State> {
         </label>
         <TextInput
           className="mb-1"
-          id="username"
           type="text"
           name="username"
           placeholder="Username"

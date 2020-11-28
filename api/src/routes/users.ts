@@ -38,7 +38,7 @@ router.post("/register", async (req, res) => {
         status: 201,
         message: "User successfully created",
         data: {
-          token: jwt.token,
+          jwt: { token: jwt.token, expires: jwt.expires },
           user,
         },
       }).send(res);

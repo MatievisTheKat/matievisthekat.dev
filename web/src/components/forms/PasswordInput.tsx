@@ -20,7 +20,6 @@ export default class PasswordInput extends React.Component<Props, State> {
         </label>
         <TextInput
           className="mb-1"
-          id="password"
           type="password"
           name="password"
           placeholder="************"
