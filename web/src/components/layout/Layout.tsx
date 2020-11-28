@@ -4,6 +4,9 @@ import { StaticQuery, graphql } from "gatsby";
 import Header from "./header/Header";
 import Footer from "./footer/Footer";
 
+import "../../assets/css/global.css";
+import "../../assets/css/tailwind.css";
+
 interface State {}
 interface Props {
   tab?: string;

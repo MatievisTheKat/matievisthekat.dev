@@ -1,13 +1,10 @@
 import React, { ChangeEvent } from "react";
-import Cookies from "universal-cookie";
 
 import RememberedLogin from "./RemeberedLogin";
 import Form from "./Form";
 
-import { getUser, saveUser, validatePassword, validateUsername } from "../../../util";
+import { getCurrentJwt, getCurrentUser, getUser, saveUser, validatePassword, validateUsername } from "../../../util";
 import { User } from "../../../types";
-
-const cookies = new Cookies();
 
 interface State {
   passwordErr?: string;
@@ -111,11 +108,11 @@ export default class LoginForm extends React.Component<Props, State> {
   }
 
   public componentDidMount() {
-    const user = cookies.get("user");
+    const user = getCurrentUser();
     if (user) {
       this.props.onLogin();
     } else {
-      const jwt = cookies.get("jwt");
+      const jwt = getCurrentJwt();
       if (jwt) {
         getUser(jwt)
           .then((user) => {

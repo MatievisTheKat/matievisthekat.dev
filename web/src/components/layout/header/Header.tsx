@@ -6,6 +6,7 @@ import Tabs from "./Tabs";
 import NavBar from "./NavBar";
 import UserMenu from "./userMenu/UserMenu";
 import NotifButton from "./NotifButton";
+import { getCurrentUser } from "../../../../util";
 
 interface State {
   userMenuOpen: boolean;
@@ -18,6 +19,7 @@ interface Props {
 export interface Tab {
   name: string;
   slug: string;
+  admin?: boolean;
 }
 
 export default class Header extends React.Component<Props, State> {
@@ -29,8 +31,6 @@ export default class Header extends React.Component<Props, State> {
       userMenuOpen: false,
     };
 
-    this.setMenuOpen = this.setMenuOpen.bind(this);
-    this.setUserMenuOpen = this.setUserMenuOpen.bind(this);
     this.formatTabs = this.formatTabs.bind(this);
   }
 
@@ -56,22 +56,28 @@ export default class Header extends React.Component<Props, State> {
   private formatTabs(sm = false, navTabs: Tab[]): ReactNode {
     const activeTab = "text-white bg-gray-900";
     const notActiveTab = "text-gray-300 hover:text-white hover:bg-gray-700";
+    const user = getCurrentUser();
 
-    return navTabs.map((tab: Tab, i: number) => (
-      <Link
-        key={i}
-        to={`/${tab.slug}`}
-        className={`${
-          sm
-            ? `${i !== 0 ? "mt-1" : ""} block px-3 py-2 rounded-md text-base font-medium`
-            : `${i !== 0 ? "ml-3" : ""} px-3 py-2 rounded-md text-sm font-medium leading-5`
-        } ${
-          this.props.tab === tab.slug ? activeTab : notActiveTab
-        } focus:outline-none focus:text-white focus:bg-gray-700 transition duration-150 ease-in-out`}
-      >
-        {tab.name}
-      </Link>
-    ));
+    return navTabs.map((tab: Tab, i: number) => {
+      if (tab.admin && (!user || !user.admin)) return;
+      else {
+        return (
+          <Link
+            key={i}
+            to={`/${tab.slug}`}
+            className={`${
+              sm
+                ? `${i !== 0 ? "mt-1" : ""} block px-3 py-2 rounded-md text-base font-medium`
+                : `${i !== 0 ? "ml-3" : ""} px-3 py-2 rounded-md text-sm font-medium leading-5`
+            } ${
+              this.props.tab === tab.slug ? activeTab : notActiveTab
+            } focus:outline-none focus:text-white focus:bg-gray-700 transition duration-150 ease-in-out`}
+          >
+            {tab.name}
+          </Link>
+        );
+      }
+    });
   }
 
   public render() {
@@ -80,12 +86,12 @@ export default class Header extends React.Component<Props, State> {
         query={NavTabsQuery}
         render={({ site }) => (
           <NavBar menuOpen={this.state.menuOpen} formatTabs={this.formatTabs} navTabs={site.siteMetadata.navTabs}>
-            <Menu open={this.state.menuOpen} setOpen={this.setMenuOpen} />
+            <Menu open={this.state.menuOpen} setOpen={this.setMenuOpen.bind(this)} />
             <Tabs formatTabs={this.formatTabs} navTabs={site.siteMetadata.navTabs} />
 
             <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
               <NotifButton />
-              <UserMenu open={this.state.userMenuOpen} setOpen={this.setUserMenuOpen} />
+              <UserMenu open={this.state.userMenuOpen} setOpen={this.setUserMenuOpen.bind(this)} />
             </div>
           </NavBar>
         )}
@@ -101,6 +107,7 @@ export const NavTabsQuery = graphql`
         navTabs {
           name
           slug
+          admin
         }
       }
     }

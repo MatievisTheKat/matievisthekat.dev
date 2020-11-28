@@ -1,5 +1,6 @@
 const axios = require("axios");
 const path = require("path");
+const fs = require("fs-extra");
 
 exports.createPages = async function ({ actions }) {
   return axios
@@ -28,4 +29,9 @@ exports.createPages = async function ({ actions }) {
       }
     })
     .catch(console.error);
+};
+
+exports.onPostBuild = async function () {
+  const public = path.join(__dirname, "public");
+  await fs.copy(public, process.env.POST_BUILD_DIR, { overwrite: true });
 };

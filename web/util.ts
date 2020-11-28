@@ -7,14 +7,15 @@ import { HTTPStatusCode, User } from "./types";
 const cookies = new Cookies();
 
 export function setCookie(name: string, content: any, maxAge?: number) {
-  cookies.set(name, content, {
-    maxAge,
-    path: "/",
-  });
+  cookies.set(name, content, { maxAge, path: "/" });
 }
 
 export function getCookie(name: string) {
   return cookies.get(name);
+}
+
+export function removeCookie(name: string) {
+  cookies.remove(name, { path: "/" });
 }
 
 export function getUser(jwt: string): Promise<User> {
@@ -29,10 +30,6 @@ export function getUser(jwt: string): Promise<User> {
       })
       .catch(rej);
   });
-}
-
-export function getCurrentJwt() {
-  return (cookies.get("jwt") || "") as string;
 }
 
 export function refreshUser(remember?: boolean, expires?: string): Promise<void> {
@@ -86,6 +83,10 @@ export function getCurrentUser(loginIfNotFound?: boolean): User | void {
   if (!user && loginIfNotFound) {
     window.location.href = `/login?continueTo=${window.location.pathname}`;
   } else return user;
+}
+
+export function getCurrentJwt() {
+  return (cookies.get("jwt") || "") as string;
 }
 
 export const httpDefinitions: Record<HTTPStatusCode, string> = {

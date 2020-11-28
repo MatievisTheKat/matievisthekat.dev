@@ -11,6 +11,7 @@ module.exports = {
       { name: "Home", slug: "" },
       { name: "Products", slug: "products" },
       { name: "Services", slug: "services" },
+      { name: "CDN", slug: "cdn", admin: true },
     ],
     socialLinks: [
       { name: "GitHub", url: "https://github.com/MatievisTheKat", slug: "github" },

@@ -1,23 +1,22 @@
 import React from "react";
-import Cookies from "universal-cookie";
 import qs from "querystring";
 
 import Layout from "../components/layout/Layout";
 import SEO from "../components/layout/SEO";
 
-const cookies = new Cookies();
+import { removeCookie } from "../../util";
 
 interface State {}
 interface Props {}
 
 export default class SignOut extends React.Component<Props, State> {
   public componentDidMount() {
-    cookies.remove("user");
+    removeCookie("user");
   }
 
   public render() {
     if (typeof window === "undefined") return null;
-    const { continueTo } = qs.parse(window.location.href, "?") as Record<string, string>;
+    const continueTo = (qs.parse(window.location.href, "?") as Record<string, string>).continueTo || "/";
     window.location.href = continueTo.startsWith("/me") ? "/" : continueTo;
 
     return (

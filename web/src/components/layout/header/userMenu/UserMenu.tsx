@@ -13,7 +13,7 @@ interface Props {
 
 export default class UserMenu extends React.Component<Props, State> {
   public render() {
-    const user = getCurrentUser(true);
+    const user = getCurrentUser();
 
     return (
       <div className="ml-3 relative">
