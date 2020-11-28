@@ -79,6 +79,8 @@ export function validatePassword(password: string): string | undefined {
 }
 
 export function getCurrentUser(loginIfNotFound?: boolean): User | void {
+  if (typeof window === "undefined") return;
+
   const user: User = cookies.get("user");
 
   if (!user && loginIfNotFound) {
