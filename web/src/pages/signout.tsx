@@ -4,7 +4,7 @@ import qs from "querystring";
 import Layout from "../components/layout/Layout";
 import SEO from "../components/layout/SEO";
 
-import { removeCookie } from "../../util";
+import { getCookie, removeCookie } from "../../util";
 
 interface State {}
 interface Props {}
@@ -12,6 +12,7 @@ interface Props {}
 export default class SignOut extends React.Component<Props, State> {
   public componentDidMount() {
     removeCookie("user");
+    if (!getCookie("remember")) removeCookie("jwt");
   }
 
   public render() {

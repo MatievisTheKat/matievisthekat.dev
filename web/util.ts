@@ -1,5 +1,6 @@
 import Axios from "axios";
 import ms from "ms";
+import { ChangeEvent, Component } from "react";
 import Cookies from "universal-cookie";
 
 import { HTTPStatusCode, User } from "./types";
@@ -16,6 +17,54 @@ export function getCookie(name: string) {
 
 export function removeCookie(name: string) {
   cookies.remove(name, { path: "/" });
+}
+
+export function validateUsername(username: string): string | undefined {
+  let error = undefined;
+
+  if (!username) error = "Please provide a username.";
+  else if (username.length < 4) error = "Username must be more than 4 characters.";
+  else if (username.length > 18) error = "Username must be less than 16 characters.";
+  else if (!/^[A-Za-z0-9_-]*$/.test(username)) error = "Username may only contain letters, numbers, underscores and dashes.";
+
+  if (error) return error;
+}
+
+export function validatePassword(password: string): string | undefined {
+  let error = undefined;
+
+  if (!password) error = "Please provide a password.";
+  else if (password.length < 6) error = "Password must be more than 6 characters.";
+
+  if (error) return error;
+}
+
+export function validateEmail(email: string): string | undefined {
+  let error = undefined;
+
+  if (!email) error = "Please provide your email address.";
+  else if (
+    !/(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/g.test(
+      email
+    )
+  )
+    error = "Please provide a valid email address.";
+
+  return error;
+}
+
+export function getCurrentUser(loginIfNotFound?: boolean): User | void {
+  if (typeof window === "undefined") return;
+
+  const user: User = cookies.get("user");
+
+  if (!user && loginIfNotFound) {
+    window.location.href = `/login?continueTo=${window.location.pathname}`;
+  } else return user;
+}
+
+export function getCurrentJwt() {
+  return (cookies.get("jwt") || "") as string;
 }
 
 export function getUser(jwt: string): Promise<User> {
@@ -52,41 +101,31 @@ export function saveUser(user: User, jwt: string, remember?: boolean, expires?: 
     const maxAge = expires ? ms(expires) / 1000 : undefined;
     setCookie("remember", true, maxAge);
     setCookie("jwt", jwt, maxAge);
-  } else setCookie("jwt", jwt);
+  } else {
+    removeCookie("remember");
+    setCookie("jwt", jwt);
+  }
 }
 
-export function validateUsername(username: string): string | undefined {
-  let error = undefined;
-
-  if (!username) error = "Please provide a username.";
-  else if (username.length < 4) error = "Username must be more than 4 characters.";
-  else if (username.length > 18) error = "Username must be less than 16 characters.";
-  else if (!/^[A-Za-z0-9_-]*$/.test(username)) error = "Username may only contain letters, numbers, underscores and dashes.";
-
-  if (error) return error;
+export function saveLogin(this: Component, jwt: string, expires?: string, overrideRemember?: boolean): Promise<User | void> {
+  return new Promise((res, rej) => {
+    getUser(jwt)
+      .then((user) => {
+        if (user) {
+          saveUser(user, jwt, overrideRemember, expires);
+          res(user);
+        } else res();
+      })
+      .catch(rej);
+  });
 }
 
-export function validatePassword(password: string): string | undefined {
-  let error = undefined;
-
-  if (!password) error = "Please provide a password.";
-  else if (password.length < 6) error = "Password must be more than 6 characters.";
-
-  if (error) return error;
-}
-
-export function getCurrentUser(loginIfNotFound?: boolean): User | void {
-  if (typeof window === "undefined") return;
-
-  const user: User = cookies.get("user");
-
-  if (!user && loginIfNotFound) {
-    window.location.href = `/login?continueTo=${window.location.pathname}`;
-  } else return user;
-}
-
-export function getCurrentJwt() {
-  return (cookies.get("jwt") || "") as string;
+export function onInputChange(key: string, errKey: string, validate: (value: string) => string | undefined) {
+  return function (this: Component, e: ChangeEvent<HTMLInputElement>) {
+    const value = e.target.value;
+    const err = validate(value);
+    this.setState({ [key]: value, [errKey]: err });
+  };
 }
 
 export const httpDefinitions: Record<HTTPStatusCode, string> = {

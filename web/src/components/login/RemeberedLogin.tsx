@@ -8,7 +8,7 @@ interface State {}
 interface Props {
   username: string;
   login(): void;
-  setRemembered(user?: User, jwt?: string): void;
+  resetRemembered(user?: User, jwt?: string): void;
 }
 
 export default class RememberedLogin extends React.Component<Props, State> {
@@ -20,7 +20,7 @@ export default class RememberedLogin extends React.Component<Props, State> {
           <Button colour="blue" className="mx-1" onClick={(e) => this.props.login()}>
             Yes
           </Button>
-          <Button colour="red" className="mx-1" onClick={(e) => this.props.setRemembered(undefined)}>
+          <Button colour="red" className="mx-1" onClick={(e) => this.props.resetRemembered()}>
             No
           </Button>
         </div>

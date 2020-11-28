@@ -2,9 +2,9 @@ import Axios from "axios";
 import React, { ChangeEvent, FormEvent } from "react";
 
 import Link from "../Link";
-import PasswordInput from "./PasswordInput";
-import SubmitButton from "./SubmitButton";
-import UsernameInput from "./UsernameInput";
+import PasswordInput from "../forms/PasswordInput";
+import SubmitButton from "../forms/SubmitButton";
+import UsernameInput from "../forms/UsernameInput";
 
 interface State {}
 interface Props {
@@ -22,10 +22,9 @@ interface Props {
   onPasswordChange(e: ChangeEvent<HTMLInputElement>): void;
 }
 
-export default class Form extends React.Component<Props, State> {
+export default class LoginForm extends React.Component<Props, State> {
   private onSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
-
     if (this.props.usernameErr || this.props.passwordErr || !this.props.username || !this.props.password) return;
 
     Axios.post(`${process.env.API}/users/login`, {
@@ -42,20 +41,16 @@ export default class Form extends React.Component<Props, State> {
   public render() {
     return (
       <form className="text-center" onSubmit={this.onSubmit.bind(this)}>
-        <div className="mb-8">
-          <UsernameInput username={this.props.username} error={this.props.usernameErr} onChange={this.props.onUsernameChange} />
-        </div>
-        <div className="mb-8">
-          <PasswordInput password={this.props.password} error={this.props.passwordErr} onChange={this.props.onPasswordChange} />
-        </div>
+        <UsernameInput value={this.props.username} error={this.props.usernameErr} onChange={this.props.onUsernameChange} className="mb-5" />
+        <PasswordInput value={this.props.password} error={this.props.passwordErr} onChange={this.props.onPasswordChange} className="mb-5" />
 
         {this.props.loginErr && <p className="text-red-500 text-xs italic mb-4">{this.props.loginErr}</p>}
 
         <div className="flex items-center justify-between">
           <SubmitButton
+            label="Login"
             loading={this.props.loading}
-            passwordErr={this.props.passwordErr || !this.props.password ? true : false}
-            usernameErr={this.props.usernameErr || !this.props.username ? true : false}
+            error={(this.props.passwordErr || !this.props.password ? true : false) || (this.props.usernameErr || !this.props.username ? true : false)}
           />
           <label className="md:w-2/3 block font-bold">
             <input className="mr-2 leading-tight" type="checkbox" onChange={this.props.onRememberChange} />
