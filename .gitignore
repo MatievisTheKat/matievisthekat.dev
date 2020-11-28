@@ -1,6 +1,7 @@
 package-lock.json
 keys
 api/public/cdn
+*.env.*
 
 # Logs
 logs

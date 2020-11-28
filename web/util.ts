@@ -19,7 +19,7 @@ export function getCookie(name: string) {
 
 export function getUser(jwt: string): Promise<User> {
   return new Promise((res, rej) => {
-    Axios.get("http://localhost:3000/users/me", {
+    Axios.get(`${process.env.API}/users/me`, {
       headers: {
         Authorization: `Bearer ${jwt}`,
       },

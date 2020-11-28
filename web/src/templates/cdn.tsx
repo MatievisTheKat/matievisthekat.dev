@@ -13,7 +13,7 @@ export default class CDNFile extends React.Component<Props, State> {
   public render() {
     if (typeof window === "undefined") return null;
     const path = this.props.path;
-    window.location.href = `http://localhost:3000${path}`;
+    window.location.href = `${process.env.API}${path}`;
 
     return (
       <Layout>

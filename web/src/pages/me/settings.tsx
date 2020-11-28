@@ -27,7 +27,7 @@ export default class Settings extends React.Component<Props, State> {
     const jwt = getCurrentJwt();
 
     Axios.put(
-      "http://localhost:3000/users/update",
+      `${process.env.API}/users/update`,
       { avatarUrl: av },
       {
         headers: {
@@ -44,7 +44,7 @@ export default class Settings extends React.Component<Props, State> {
   }
 
   public componentDidMount() {
-    Axios.get("http://localhost:3000/avatars")
+    Axios.get(`${process.env.API}/avatars`)
       .then((res) => {
         this.setState({
           avatars: res.data.data,
