@@ -1,0 +1,9 @@
+version: "2"
+exclude_patterns:
+  - "node_modules/"
+  - ".cache/"
+  - "web/public/"
+  - "package-lock.json"
+  - "keys/"
+  - "logs/"
+  - "dist/"
