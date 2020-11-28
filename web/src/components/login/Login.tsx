@@ -147,6 +147,7 @@ export default class LoginForm extends React.Component<Props, State> {
             password={this.state.password}
             passwordErr={this.state.passwordErr}
             loading={this.state.loading}
+            loginErr={this.state.loginErr}
           />
         )}
       </>

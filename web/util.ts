@@ -78,10 +78,10 @@ export function validatePassword(password: string): string | undefined {
   if (error) return error;
 }
 
-export function getCurrentUser(doNotLoginIfNotFound?: boolean): User | void {
+export function getCurrentUser(loginIfNotFound?: boolean): User | void {
   const user: User = cookies.get("user");
 
-  if (!user && doNotLoginIfNotFound !== true) {
+  if (!user && loginIfNotFound) {
     window.location.href = `/login?continueTo=${window.location.pathname}`;
   } else return user;
 }

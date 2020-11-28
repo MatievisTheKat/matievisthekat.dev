@@ -7,10 +7,20 @@ import { join } from "path";
 import { authenticate } from "passport";
 
 const router = Router();
+const cdn = join("public", "cdn");
+
+router.get("/list", authenticate("jwt"), adminOnly, async (req, res) => {
+  const files = await fs.readdir(cdn);
+  new ApiResponse({ status: 200, data: files }).send(res);
+});
 
 router.get("/:id", (req, res) => {
   const { id } = req.params;
-  res.redirect(`/public/cdn/${id}`);
+  const { dl } = req.query;
+  const path = `/public/cdn/${id}`;
+
+  if (dl) res.download(`.${path}`);
+  else res.redirect(path);
 });
 
 router.post("/upload", upload("cdn").array("file"), authenticate("jwt"), adminOnly, async (req, res) => {
@@ -19,7 +29,7 @@ router.post("/upload", upload("cdn").array("file"), authenticate("jwt"), adminOn
 
 router.delete("/delete", authenticate("jwt"), adminOnly, async (req, res) => {
   const { name } = req.body;
-  const path = join("public", "cdn", name);
+  const path = join(cdn, name);
 
   fs.access(path, async (err) => {
     if (err) return new ApiResponse({ status: 404, error: err.message }).send(res);

@@ -24,6 +24,8 @@ interface Props {
 
 export default class Form extends React.Component<Props, State> {
   private onSubmit(e: FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    
     if (this.props.usernameErr || this.props.passwordErr || !this.props.username || !this.props.password) return;
 
     Axios.post("http://localhost:3000/users/login", {
