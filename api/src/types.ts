@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { User as CustomUser } from "./tables/User";
+import { User as CustomUser } from "./tables/user";
 
 export interface Route {
   path: string;
@@ -31,6 +31,8 @@ export interface KeyPair {
   pub: string;
   pri: string;
 }
+
+export type VerificationLevel = "not_sent" | "pending" | "verified";
 
 declare global {
   namespace Express {

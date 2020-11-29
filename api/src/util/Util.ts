@@ -6,7 +6,7 @@ import { generateKeyPair } from "crypto";
 import { v4 as uuid } from "uuid";
 
 import { HTTPStatusCode, KeyPair } from "../types";
-import { User } from "../tables/User";
+import { User } from "../tables/user";
 import db from "../util/database";
 
 export class Util {
@@ -103,13 +103,7 @@ export class Util {
 
       const hash = await Util.serializePassword(password);
 
-      db.query("INSERT INTO users (id, username, password_hash, email, created_timestamp) VALUES ($1, $2, $3, $4, $5);", [
-        uuid(),
-        username,
-        hash,
-        email,
-        Date.now().toString(),
-      ])
+      db.query("INSERT INTO users (username, password_hash, email) VALUES ($1, $2, $3);", [username, hash, email])
         .then(async () => {
           const user = (await Util.getUser(username)) as User;
           res(user);
