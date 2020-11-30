@@ -8,6 +8,7 @@ import { HTTPStatusCode, KeyPair, VerificationLevel } from "../types";
 import { User } from "../tables/users";
 import { VerificationCode } from "../tables/verification_codes";
 import db from "./database";
+import mail from "./mail";
 
 namespace util {
   export function loadObjectToEnv(obj: object): NodeJS.ProcessEnv {
@@ -156,8 +157,17 @@ namespace util {
     return new Promise<VerificationCode>((res, rej) => {
       db.query("INSERT INTO verification_codes (email, code) VALUES ($1, $2);", [email, generateRandomCode(255)])
         .then(async () => {
-          const code = (await getVerificationCode(email)) as VerificationCode;
-          res(code);
+          const verif = (await getVerificationCode(email)) as VerificationCode;
+
+          await mail.send({
+            to: email,
+            subject: "Verify Email Address | matievisthekat.dev",
+            html: `<div style="background-color: rgba(243, 244, 246);text-align: center;font-size: larger;margin-x: 10%;padding: 5%;">Please verify your email address by clicking the button below<br /><br /><a style="background-color: rgba(59, 130, 246); border-radius: 0.25rem; color: rgba(255, 255, 255); padding: 10px; border: none; shadow: 2px 2px rgba(243, 244, 246); text-decoration: none; color: white;" href="${
+              process.env.NODE_ENV === "development" ? "http://localhost:8000" : "https://new.matievisthekat.dev"
+            }/verify?code=${verif.code}" target="_blank" rel=noreferrer">Confirm Address</a></div>`,
+          });
+
+          res(verif);
         })
         .catch(rej);
     });

@@ -34,6 +34,8 @@ router.post("/register", async (req, res) => {
         return new ApiResponse({ status: 500, error: "Something went wrong on our end" });
       }
 
+      await util.createVerificationCode(user.email);
+
       new ApiResponse({
         status: 201,
         message: "User successfully created",
