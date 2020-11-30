@@ -1,5 +1,5 @@
 import { NextFunction, Router, Request, Response } from "express";
-import { User as CustomUser } from "./tables/user";
+import { User as CustomUser } from "./tables/users";
 
 export interface Route {
   path: string;

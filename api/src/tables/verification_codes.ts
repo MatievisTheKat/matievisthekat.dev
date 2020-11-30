@@ -3,7 +3,7 @@ import { Table } from "../types";
 export interface VerificationCode {
   code: string;
   email: string;
-  created_timestamp: string;
+  created_timestamp: Date;
   expires_in: number;
 }
 

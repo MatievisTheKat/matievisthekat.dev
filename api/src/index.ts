@@ -10,9 +10,9 @@ import path from "path";
 import { Route } from "./types";
 import { Logger } from "./util/Logger";
 import ApiResponse from "./util/Response";
-import util from "./util/Util";
+import util from "./util/util";
 import db from "./util/database";
-import { User } from "./tables/user";
+import { User } from "./tables/users";
 
 const app = express();
 const port = process.env.PORT || 3000;

@@ -5,7 +5,7 @@ export interface User {
   admin: boolean;
   username: string;
   email: string;
-  created_timestamp: string;
+  created_timestamp: Date;
   password_hash: string;
   avatar_url: string;
   verification: VerificationLevel;

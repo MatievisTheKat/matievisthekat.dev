@@ -4,10 +4,10 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { generateKeyPair, createCipheriv, randomBytes } from "crypto";
 
-import { HTTPStatusCode, KeyPair } from "../types";
-import { User } from "../tables/user";
+import { HTTPStatusCode, KeyPair, VerificationLevel } from "../types";
+import { User } from "../tables/users";
 import { VerificationCode } from "../tables/verification_codes";
-import db from "../util/database";
+import db from "./database";
 
 namespace util {
   export function loadObjectToEnv(obj: object): NodeJS.ProcessEnv {
@@ -103,10 +103,51 @@ namespace util {
     });
   }
 
-  export function getVerificationCode(email: string) {
+  export function deleteVerificationCode(emailOrCode: string, code?: string) {
+    return new Promise<boolean>(async (res, rej) => {
+      const verif = await getVerificationCode(emailOrCode, code, true).catch(rej);
+      if (!verif) return res(false);
+
+      db.query(
+        `DELETE FROM verification_codes WHERE ${code ? "email = $1 AND code = $2" : "email = $1 OR code = $1"}`,
+        code ? [emailOrCode, code] : [emailOrCode]
+      )
+        .then(() => res(true))
+        .catch(rej);
+    });
+  }
+
+  export function updateVerificationStatus(email: string, code: string, level: VerificationLevel) {
+    return new Promise<boolean>(async (res, rej) => {
+      const verif = await getVerificationCode(email, code);
+      if (!verif) return res(false);
+
+      db.query("UPDATE users SET verification = $1 WHERE email = $2;", [level, email])
+        .then(async () => {
+          await deleteVerificationCode(email, code);
+          res(true);
+        })
+        .catch(rej);
+    });
+  }
+
+  export function getVerificationCode(emailOrCode: string, code?: string, doNotDeleteOverride?: boolean) {
     return new Promise<VerificationCode | undefined>((res, rej) => {
-      db.query("SELECT * FROM verification_codes WHERE email = $1;", [email])
-        .then((result) => res(result.rows[0]))
+      db.query(
+        `SELECT * FROM verification_codes WHERE ${code ? "email = $1 AND code = $2" : "email = $1 OR code = $1"};`,
+        code ? [emailOrCode, code] : [emailOrCode]
+      )
+        .then(async (result) => {
+          if (result.rows[0]) {
+            const verif = result.rows[0] as VerificationCode;
+            const expired = hasExpired(verif.created_timestamp, verif.expires_in);
+
+            if (expired && !doNotDeleteOverride) {
+              await deleteVerificationCode(emailOrCode, code);
+              res(undefined);
+            } else res(verif);
+          } else res(undefined);
+        })
         .catch(rej);
     });
   }
@@ -120,6 +161,11 @@ namespace util {
         })
         .catch(rej);
     });
+  }
+
+  export function hasExpired(createdTimestamp: Date, expiresIn: number) {
+    const created = Date.parse(createdTimestamp.toString());
+    return created + expiresIn < Date.now();
   }
 
   export function generateRandomCode(length?: number) {

@@ -1,5 +1,5 @@
 import { HTTPStatusCode, ApiResponseOptions } from "../types";
-import util from "./Util";
+import util from "./util";
 import { Response } from "express";
 
 export default class ApiResponse {

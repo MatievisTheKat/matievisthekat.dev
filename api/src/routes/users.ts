@@ -3,7 +3,7 @@ import { Route } from "../types";
 import { Logger } from "../util/Logger";
 import { adminOnly, auth } from "../util/middleware";
 import ApiResponse from "../util/Response";
-import util from "../util/Util";
+import util from "../util/util";
 
 const router = Router();
 
