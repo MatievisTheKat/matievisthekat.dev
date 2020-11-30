@@ -1,5 +1,5 @@
 import { HTTPStatusCode, ApiResponseOptions } from "../types";
-import { Util } from "./Util";
+import util from "./Util";
 import { Response } from "express";
 
 export default class ApiResponse {
@@ -11,7 +11,7 @@ export default class ApiResponse {
 
   constructor(opts: ApiResponseOptions) {
     this.status = opts.status;
-    this.statusText = Util.httpCodes[this.status];
+    this.statusText = util.httpCodes[this.status];
     this.message = opts.message;
     this.error = opts.error;
     this.data = opts.data;

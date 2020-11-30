@@ -1,13 +1,20 @@
 import { NextFunction, Request, Response } from "express";
 import fs from "fs-extra";
 import multer from "multer";
+import { authenticate } from "passport";
 import { join } from "path";
 import shortid from "shortid";
+import { MiddlewareFunction } from "../types";
 import ApiResponse from "./Response";
 
 export function adminOnly(req: Request, res: Response, next: NextFunction) {
   if (req.user && req.user.admin) next();
   else new ApiResponse({ status: 401, error: "This endpoint requires admin credentials" }).send(res);
+}
+
+export function auth(admin?: boolean): MiddlewareFunction[] {
+  if (!admin) return [authenticate("jwt")];
+  else return [authenticate("jwt"), adminOnly];
 }
 
 export function upload(subdir: string): multer.Multer {

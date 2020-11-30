@@ -10,7 +10,7 @@ import path from "path";
 import { Route } from "./types";
 import { Logger } from "./util/Logger";
 import ApiResponse from "./util/Response";
-import { Util } from "./util/Util";
+import util from "./util/Util";
 import db from "./util/database";
 import { User } from "./tables/user";
 
@@ -25,14 +25,14 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(passport.initialize());
 
-const routeFiles = Util.findNested(path.join(__dirname, "routes"));
+const routeFiles = util.findNested(path.join(__dirname, "routes"));
 const routes: Route[] = routeFiles.map((f) => require(f).route).sort((a, b) => b.path.length - a.path.length);
 
 for (const route of routes) {
   app.use(route.path, route.router);
 }
 
-const tableFiles = Util.findNested(path.join(__dirname, "tables"));
+const tableFiles = util.findNested(path.join(__dirname, "tables"));
 const tables = tableFiles.map((f) => require(f).table);
 
 for (const table of tables) {
@@ -49,8 +49,8 @@ app.get("/", (req, res) => {
 });
 
 Logger.log("Generating keys...");
-Util.saveKeypair(path.resolve("./keys")).then((keys) => {
-  Util.loadObjectToEnv({
+util.saveKeypair(path.resolve("./keys")).then((keys) => {
+  util.loadObjectToEnv({
     "keys.public": keys.pub,
     "keys.private": keys.pri,
   });
@@ -68,10 +68,10 @@ Util.saveKeypair(path.resolve("./keys")).then((keys) => {
         passport.serializeUser((user: User, done) => done(null, user));
 
         passport.deserializeUser((id: string, done) => {
-          Util.getUser(id).then((user) => done(null, user));
+          util.getUser(id).then((user) => done(null, user));
         });
 
-        Util.getUser(payload.sub).then((user) => done(null, user ?? false));
+        util.getUser(payload.sub).then((user) => done(null, user ?? false));
       }
     )
   );

@@ -1,4 +1,4 @@
-import { Router } from "express";
+import { NextFunction, Router, Request, Response } from "express";
 import { User as CustomUser } from "./tables/user";
 
 export interface Route {
@@ -35,6 +35,8 @@ export interface KeyPair {
 }
 
 export type VerificationLevel = "not_sent" | "pending" | "verified";
+
+export type MiddlewareFunction = (req: Request, res: Response, next: NextFunction) => any;
 
 declare global {
   namespace Express {

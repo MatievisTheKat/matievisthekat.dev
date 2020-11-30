@@ -1,14 +1,13 @@
 import { Router } from "express";
-import { authenticate } from "passport";
 import { Route } from "../types";
 import { Logger } from "../util/Logger";
-import { adminOnly } from "../util/middleware";
+import { adminOnly, auth } from "../util/middleware";
 import ApiResponse from "../util/Response";
-import { Util } from "../util/Util";
+import util from "../util/Util";
 
 const router = Router();
 
-router.get("/me", authenticate("jwt"), (req, res) => {
+router.get("/me", ...auth(), (req, res) => {
   new ApiResponse({ status: req.user ? 200 : 404, data: req.user, message: req.user ? undefined : "No current logged in user" }).send(res);
 });
 
@@ -26,9 +25,10 @@ router.post("/register", async (req, res) => {
 
   if (password !== confirmPassword) return new ApiResponse({ status: 400, error: "Passwords do not match" }).send(res);
 
-  Util.createUser(username, password, email)
+  util
+    .createUser(username, password, email)
     .then(async (user) => {
-      const jwt = await Util.issueJwt(user);
+      const jwt = await util.issueJwt(user);
       if (jwt.error) {
         Logger.error(jwt.error);
         return new ApiResponse({ status: 500, error: "Something went wrong on our end" });
@@ -59,24 +59,24 @@ router.post("/login", async (req, res) => {
   const { username, password } = req.body;
   if (!username || !password) return new ApiResponse({ status: 400, error: "Missing `username` or `password` values" }).send(res);
 
-  const user = await Util.getUser(username);
+  const user = await util.getUser(username);
   if (!user)
     return new ApiResponse({
       status: 404,
       error: "No user with that username found",
     }).send(res);
 
-  const pwdIsValid = await Util.comparePassword(password, user.password_hash);
+  const pwdIsValid = await util.comparePassword(password, user.password_hash);
   if (!pwdIsValid) return new ApiResponse({ status: 401, error: "Incorrect password" }).send(res);
 
   new ApiResponse({
     status: 200,
     message: "Successfully logged in",
-    data: await Util.issueJwt(user),
+    data: await util.issueJwt(user),
   }).send(res);
 });
 
-router.put("/update", authenticate("jwt"), async (req, res) => {
+router.put("/update", ...auth(), async (req, res) => {
   const user = req.user;
   if (!user) return new ApiResponse({ status: 401 });
 
@@ -85,15 +85,15 @@ router.put("/update", authenticate("jwt"), async (req, res) => {
   if (avatarUrl) {
     if (user.avatar_url !== avatarUrl) {
       user.avatar_url = avatarUrl;
-      await Util.updateUser(user, { avatar_url: avatarUrl });
+      await util.updateUser(user, { avatar_url: avatarUrl });
     }
 
     new ApiResponse({ status: 200, data: user }).send(res);
   } else new ApiResponse({ status: 400, message: "Invalid or missing update values" }).send(res);
 });
 
-router.get("/:id", authenticate("jwt"), adminOnly, async (req, res) => {
-  const user = await Util.getUser(req.params.id);
+router.get("/:id", ...auth(), adminOnly, async (req, res) => {
+  const user = await util.getUser(req.params.id);
 
   new ApiResponse({
     status: user ? 200 : 404,

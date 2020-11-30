@@ -9,20 +9,11 @@ import { User } from "../tables/user";
 import { VerificationCode } from "../tables/verification_codes";
 import db from "../util/database";
 
-export class Util {
-  public static capitalise(str: string) {
-    return str.length > 0
-      ? str
-          .split(/ +/gi)
-          .map((word: string) => word[0].toUpperCase() + word.slice(1).toLowerCase())
-          .join(" ")
-      : str;
-  }
-
-  public static loadObjectToEnv(obj: object): NodeJS.ProcessEnv {
+namespace util {
+  export function loadObjectToEnv(obj: object): NodeJS.ProcessEnv {
     for (const entry of Object.entries(obj)) {
       if (typeof entry[1] === "object") {
-        Util.loadObjectToEnv(entry[1]);
+        loadObjectToEnv(entry[1]);
       } else {
         process.env[entry[0]] = entry[1].toString();
       }
@@ -30,14 +21,14 @@ export class Util {
     return process.env;
   }
 
-  public static findNested(dir: string, pattern: string = "js") {
+  export function findNested(dir: string, pattern: string = "js") {
     let results: string[] = [];
 
     fs.readdirSync(dir).forEach((innerDir) => {
       innerDir = path.resolve(dir, innerDir);
       const stat = fs.statSync(innerDir);
 
-      if (stat.isDirectory()) results = results.concat(Util.findNested(innerDir, pattern));
+      if (stat.isDirectory()) results = results.concat(findNested(innerDir, pattern));
 
       if (stat.isFile() && innerDir.split(".").pop() === pattern) results.push(innerDir);
     });
@@ -45,19 +36,19 @@ export class Util {
     return results;
   }
 
-  public static async getPasswordUsernameMatch(username: string, password: string) {
+  export async function getPasswordUsernameMatch(username: string, password: string) {
     const res = await db.query("SELECT * FROM users WHERE username = $1;", [username]);
 
     const user: User = res.rows[0];
     if (!user) return null;
 
-    const passwordMatch = await Util.comparePassword(password, user.password_hash);
+    const passwordMatch = await comparePassword(password, user.password_hash);
     if (!passwordMatch) return null;
 
     return user;
   }
 
-  public static serializePassword(password: string) {
+  export function serializePassword(password: string) {
     return new Promise<string>((res, rej) => {
       bcrypt.hash(password, parseInt(process.env["salt-rounds"] as string, 2), (err, hash) => {
         if (err) return rej(err);
@@ -66,7 +57,7 @@ export class Util {
     });
   }
 
-  public static comparePassword(password: string, hash: string) {
+  export function comparePassword(password: string, hash: string) {
     return new Promise<boolean>((res, rej) => {
       bcrypt.compare(password, hash, (err, result) => {
         if (err) return rej(err);
@@ -75,7 +66,7 @@ export class Util {
     });
   }
 
-  public static getUser(value: string) {
+  export function getUser(value: string) {
     return new Promise<User | undefined>((res, rej) => {
       db.query("SELECT * FROM users WHERE id = $1 OR username = $1 OR email = $1;", [value])
         .then((result) => res(result.rows[0]))
@@ -83,7 +74,7 @@ export class Util {
     });
   }
 
-  public static updateUser(user: User, update: Record<string, any>) {
+  export function updateUser(user: User, update: Record<string, any>) {
     return new Promise<boolean | undefined>((res, rej) => {
       if (update.avatar_url) {
         db.query("UPDATE users SET avatar_url = $1 WHERE id = $2;", [update.avatar_url, user.id])
@@ -93,45 +84,45 @@ export class Util {
     });
   }
 
-  public static createUser(username: string, password: string, email: string) {
+  export function createUser(username: string, password: string, email: string) {
     return new Promise<User>(async (res, rej) => {
-      const userWithSameEmail = await Util.getUser(email);
+      const userWithSameEmail = await getUser(email);
       if (userWithSameEmail) return rej({ status: 400, error: "A user with that email already exists" });
 
-      const userWithSameUsername = await Util.getUser(username);
+      const userWithSameUsername = await getUser(username);
       if (userWithSameUsername) return rej({ status: 400, error: "That username is taken" });
 
-      const hash = await Util.serializePassword(password);
+      const hash = await serializePassword(password);
 
       db.query("INSERT INTO users (username, password_hash, email) VALUES ($1, $2, $3);", [username, hash, email])
         .then(async () => {
-          const user = (await Util.getUser(username)) as User;
+          const user = (await getUser(username)) as User;
           res(user);
         })
         .catch(rej);
     });
   }
 
-  public static getVerificationCode(email: string) {
-    return new Promise<VerificationCode>((res, rej) => {
+  export function getVerificationCode(email: string) {
+    return new Promise<VerificationCode | undefined>((res, rej) => {
       db.query("SELECT * FROM verification_codes WHERE email = $1;", [email])
         .then((result) => res(result.rows[0]))
         .catch(rej);
     });
   }
 
-  public static createVerificationCode(email: string) {
+  export function createVerificationCode(email: string) {
     return new Promise<VerificationCode>((res, rej) => {
-      db.query("INSERT INTO verification_codes (email, code) VALUES ($1, $2);", [email, Util.generateRandomCode(255)])
+      db.query("INSERT INTO verification_codes (email, code) VALUES ($1, $2);", [email, generateRandomCode(255)])
         .then(async () => {
-          const code = await Util.getVerificationCode(email);
+          const code = (await getVerificationCode(email)) as VerificationCode;
           res(code);
         })
         .catch(rej);
     });
   }
 
-  public static generateRandomCode(length?: number) {
+  export function generateRandomCode(length?: number) {
     const algo = "aes-256-cbc";
     const iv = randomBytes(16);
     const key = randomBytes(32);
@@ -143,7 +134,7 @@ export class Util {
     return encrypted.toString("hex");
   }
 
-  public static genKeypair(cb: (err: Error | null, pub: string, pri: string) => void) {
+  export function genKeypair(cb: (err: Error | null, pub: string, pri: string) => void) {
     generateKeyPair(
       "rsa",
       {
@@ -163,7 +154,7 @@ export class Util {
     );
   }
 
-  public static saveKeypair(dir: string) {
+  export function saveKeypair(dir: string) {
     return new Promise<KeyPair>(async (res, rej) => {
       const pubPath = path.join(dir, "public.key");
       const privPath = path.join(dir, "private.key");
@@ -179,7 +170,7 @@ export class Util {
           pri: fs.readFileSync(privPath).toString(),
         });
 
-      Util.genKeypair((err, pub, pri) => {
+      genKeypair((err, pub, pri) => {
         if (err) return rej(err);
 
         fs.writeFileSync(pubPath, pub);
@@ -190,11 +181,11 @@ export class Util {
     });
   }
 
-  public static async issueJwt(userOrId: User | string) {
+  export async function issueJwt(userOrId: User | string) {
     let user: User | undefined;
 
     if (typeof userOrId === "string") {
-      user = await Util.getUser(userOrId);
+      user = await getUser(userOrId);
     } else user = userOrId;
 
     if (!user) return { error: "No user found" };
@@ -214,7 +205,7 @@ export class Util {
     return { token, expires };
   }
 
-  public static httpCodes: Record<HTTPStatusCode, string> = {
+  export const httpCodes: Record<HTTPStatusCode, string> = {
     // 1×× Informational
     100: "Continue",
     101: "Switching Protocols",
@@ -286,3 +277,5 @@ export class Util {
     599: "Network Connect Timeout Error",
   };
 }
+
+export default util;

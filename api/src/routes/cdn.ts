@@ -1,15 +1,14 @@
 import { Router } from "express";
 import { Route } from "../types";
-import { adminOnly, upload } from "../util/middleware";
+import { auth, upload } from "../util/middleware";
 import ApiResponse from "../util/Response";
 import fs from "fs-extra";
 import { join } from "path";
-import { authenticate } from "passport";
 
 const router = Router();
 const cdn = join("public", "cdn");
 
-router.get("/list", authenticate("jwt"), adminOnly, async (req, res) => {
+router.get("/list", ...auth(true), async (req, res) => {
   const files = await fs.readdir(cdn);
   new ApiResponse({ status: 200, data: files }).send(res);
 });
@@ -23,11 +22,11 @@ router.get("/:id", (req, res) => {
   else res.redirect(path);
 });
 
-router.post("/upload", upload("cdn").array("file"), authenticate("jwt"), adminOnly, async (req, res) => {
+router.post("/upload", upload("cdn").array("file"), ...auth(true), async (req, res) => {
   new ApiResponse({ status: 201, data: req.files }).send(res);
 });
 
-router.delete("/delete", authenticate("jwt"), adminOnly, async (req, res) => {
+router.delete("/delete", ...auth(true), async (req, res) => {
   const { name } = req.body;
   const path = join(cdn, name);
 
