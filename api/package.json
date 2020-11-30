@@ -34,8 +34,7 @@
     "passport": "^0.4.1",
     "passport-jwt": "^4.0.0",
     "pg": "^8.5.1",
-    "shortid": "^2.2.16",
-    "uuid": "^8.3.1"
+    "shortid": "^2.2.16"
   },
   "devDependencies": {
     "@types/bcrypt": "^3.0.0",
@@ -52,7 +51,6 @@
     "@types/passport-local": "^1.0.33",
     "@types/pg": "^7.14.7",
     "@types/shortid": "0.0.29",
-    "@types/uuid": "^8.3.0",
     "nodemon": "^2.0.6",
     "typescript": "^4.1.2"
   }

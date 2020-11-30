@@ -11,7 +11,7 @@ import { Route } from "./types";
 import { Logger } from "./util/Logger";
 import ApiResponse from "./util/Response";
 import { Util } from "./util/Util";
-import db, { parseTableToQuery } from "./util/database";
+import db from "./util/database";
 import { User } from "./tables/user";
 
 const app = express();
@@ -36,7 +36,7 @@ const tableFiles = Util.findNested(path.join(__dirname, "tables"));
 const tables = tableFiles.map((f) => require(f).table);
 
 for (const table of tables) {
-  parseTableToQuery(table).then((tableQuery) => {
+  db.parseTableToQuery(table).then((tableQuery) => {
     db.query(tableQuery).catch((err) => Logger.error(err));
   });
 }

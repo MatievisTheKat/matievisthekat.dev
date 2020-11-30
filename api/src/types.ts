@@ -17,7 +17,9 @@ export interface TableCol {
   datatype: string;
   default?: any;
   primaryKey?: boolean;
+  foreignKey?: string;
   required?: boolean;
+  unique?: boolean;
 }
 
 export interface ApiResponseOptions {

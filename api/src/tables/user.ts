@@ -1,5 +1,4 @@
 import { Table, VerificationLevel } from "../types";
-import { v4 as uuid } from "uuid";
 
 export interface User {
   id: string;
@@ -27,10 +26,13 @@ export const table: Table = {
     },
     username: {
       datatype: "TEXT",
+      required: true,
+      unique: true,
     },
     email: {
       datatype: "TEXT",
       required: true,
+      unique: true,
     },
     password_hash: {
       datatype: "TEXT",
