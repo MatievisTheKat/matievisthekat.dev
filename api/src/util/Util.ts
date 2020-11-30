@@ -2,15 +2,15 @@ import fs from "fs-extra";
 import path from "path";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import { generateKeyPair } from "crypto";
-import { v4 as uuid } from "uuid";
+import { generateKeyPair, createCipheriv, randomBytes } from "crypto";
 
 import { HTTPStatusCode, KeyPair } from "../types";
 import { User } from "../tables/user";
+import { VerificationCode } from "../tables/verification_codes";
 import db from "../util/database";
 
 export class Util {
-  public static capitalise(str: string): string {
+  public static capitalise(str: string) {
     return str.length > 0
       ? str
           .split(/ +/gi)
@@ -30,7 +30,7 @@ export class Util {
     return process.env;
   }
 
-  public static findNested(dir: string, pattern: string = "js"): string[] {
+  public static findNested(dir: string, pattern: string = "js") {
     let results: string[] = [];
 
     fs.readdirSync(dir).forEach((innerDir) => {
@@ -45,46 +45,46 @@ export class Util {
     return results;
   }
 
-  public static async getPasswordUsernameMatch(username: string, pwd: string): Promise<User | null> {
+  public static async getPasswordUsernameMatch(username: string, password: string) {
     const res = await db.query("SELECT * FROM users WHERE username = $1;", [username]);
 
     const user: User = res.rows[0];
     if (!user) return null;
 
-    const pwdMatch = await Util.comparePassword(pwd, user.password_hash);
-    if (!pwdMatch) return null;
+    const passwordMatch = await Util.comparePassword(password, user.password_hash);
+    if (!passwordMatch) return null;
 
     return user;
   }
 
-  public static serializePassword(pwd: string): Promise<string> {
-    return new Promise((res, rej) => {
-      bcrypt.hash(pwd, parseInt(process.env["salt-rounds"] as string, 2), function (err, hash) {
+  public static serializePassword(password: string) {
+    return new Promise<string>((res, rej) => {
+      bcrypt.hash(password, parseInt(process.env["salt-rounds"] as string, 2), (err, hash) => {
         if (err) return rej(err);
         else res(hash);
       });
     });
   }
 
-  public static comparePassword(pwd: string, hash: string): Promise<boolean> {
-    return new Promise((res, rej) => {
-      bcrypt.compare(pwd, hash, function (err, result) {
+  public static comparePassword(password: string, hash: string) {
+    return new Promise<boolean>((res, rej) => {
+      bcrypt.compare(password, hash, (err, result) => {
         if (err) return rej(err);
         else res(result);
       });
     });
   }
 
-  public static getUser(value: string): Promise<User | undefined> {
-    return new Promise((res, rej) => {
+  public static getUser(value: string) {
+    return new Promise<User | undefined>((res, rej) => {
       db.query("SELECT * FROM users WHERE id = $1 OR username = $1 OR email = $1;", [value])
         .then((result) => res(result.rows[0]))
         .catch(rej);
     });
   }
 
-  public static updateUser(user: User, update: Record<string, any>): Promise<boolean | undefined> {
-    return new Promise((res, rej) => {
+  public static updateUser(user: User, update: Record<string, any>) {
+    return new Promise<boolean | undefined>((res, rej) => {
       if (update.avatar_url) {
         db.query("UPDATE users SET avatar_url = $1 WHERE id = $2;", [update.avatar_url, user.id])
           .then(() => res(true))
@@ -93,8 +93,8 @@ export class Util {
     });
   }
 
-  public static createUser(username: string, password: string, email: string): Promise<User> {
-    return new Promise(async (res, rej) => {
+  public static createUser(username: string, password: string, email: string) {
+    return new Promise<User>(async (res, rej) => {
       const userWithSameEmail = await Util.getUser(email);
       if (userWithSameEmail) return rej({ status: 400, error: "A user with that email already exists" });
 
@@ -110,6 +110,37 @@ export class Util {
         })
         .catch(rej);
     });
+  }
+
+  public static getVerificationCode(email: string) {
+    return new Promise<VerificationCode>((res, rej) => {
+      db.query("SELECT * FROM verification_codes WHERE email = $1;", [email])
+        .then((result) => res(result.rows[0]))
+        .catch(rej);
+    });
+  }
+
+  public static createVerificationCode(email: string) {
+    return new Promise<VerificationCode>((res, rej) => {
+      db.query("INSERT INTO verification_codes (email, code) VALUES ($1, $2);", [email, Util.generateRandomCode(255)])
+        .then(async () => {
+          const code = await Util.getVerificationCode(email);
+          res(code);
+        })
+        .catch(rej);
+    });
+  }
+
+  public static generateRandomCode(length?: number) {
+    const algo = "aes-256-cbc";
+    const iv = randomBytes(16);
+    const key = randomBytes(32);
+    const value = randomBytes(length ?? 256);
+
+    const cipher = createCipheriv(algo, Buffer.from(key), iv);
+    const encrypted = Buffer.concat([cipher.update(value), cipher.final()]);
+
+    return encrypted.toString("hex");
   }
 
   public static genKeypair(cb: (err: Error | null, pub: string, pri: string) => void) {
@@ -132,8 +163,8 @@ export class Util {
     );
   }
 
-  public static saveKeypair(dir: string): Promise<KeyPair> {
-    return new Promise(async (res, rej) => {
+  public static saveKeypair(dir: string) {
+    return new Promise<KeyPair>(async (res, rej) => {
       const pubPath = path.join(dir, "public.key");
       const privPath = path.join(dir, "private.key");
 
@@ -159,13 +190,7 @@ export class Util {
     });
   }
 
-  public static async issueJwt(
-    userOrId: User | string
-  ): Promise<{
-    token?: string;
-    expires?: string;
-    error?: string;
-  }> {
+  public static async issueJwt(userOrId: User | string) {
     let user: User | undefined;
 
     if (typeof userOrId === "string") {
