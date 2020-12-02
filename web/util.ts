@@ -3,7 +3,7 @@ import ms from "ms";
 import { ChangeEvent, Component } from "react";
 import Cookies from "universal-cookie";
 
-import { HTTPStatusCode, User } from "./types";
+import { ApiResponse, HTTPStatusCode, User } from "./types";
 
 const cookies = new Cookies();
 
@@ -69,14 +69,12 @@ export function getCurrentJwt() {
 
 export function getUser(jwt: string): Promise<User> {
   return new Promise((res, rej) => {
-    Axios.get(`${process.env.API}/users/me`, {
+    Axios.get<ApiResponse>(`${process.env.API}/users/me`, {
       headers: {
         Authorization: `Bearer ${jwt}`,
       },
     })
-      .then((user) => {
-        res(user.data.data);
-      })
+      .then((user) => res(user.data.data))
       .catch(rej);
   });
 }

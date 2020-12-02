@@ -5,6 +5,7 @@ import Link from "../Link";
 import PasswordInput from "../forms/PasswordInput";
 import SubmitButton from "../forms/SubmitButton";
 import UsernameInput from "../forms/UsernameInput";
+import { ApiResponse } from "../../../types";
 
 interface State {}
 interface Props {
@@ -27,7 +28,7 @@ export default class LoginForm extends React.Component<Props, State> {
     e.preventDefault();
     if (this.props.usernameErr || this.props.passwordErr || !this.props.username || !this.props.password) return;
 
-    Axios.post(`${process.env.API}/users/login`, {
+    Axios.post<ApiResponse>(`${process.env.API}/users/login`, {
       username: this.props.username,
       password: this.props.password,
     })

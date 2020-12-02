@@ -8,6 +8,7 @@ import SEO from "../../components/layout/SEO";
 import Box from "../../components/Box";
 import UserAvatar from "../../components/UserAvatar";
 import AvatarSelection from "../../components/AvatarSelection";
+import { ApiResponse } from "../../../types";
 
 interface State {
   avatars?: string[];
@@ -26,7 +27,7 @@ export default class Settings extends React.Component<Props, State> {
   private updateAvatar(av: string) {
     const jwt = getCurrentJwt();
 
-    Axios.put(
+    Axios.put<ApiResponse>(
       `${process.env.API}/users/update`,
       { avatarUrl: av },
       {
@@ -44,7 +45,7 @@ export default class Settings extends React.Component<Props, State> {
   }
 
   public componentDidMount() {
-    Axios.get(`${process.env.API}/avatars`)
+    Axios.get<ApiResponse>(`${process.env.API}/avatars`)
       .then((res) => {
         this.setState({
           avatars: res.data.data,

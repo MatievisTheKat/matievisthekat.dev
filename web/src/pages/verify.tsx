@@ -7,6 +7,7 @@ import Box from "../components/Box";
 
 import { getCurrentJwt, getCurrentUser } from "../../util";
 import Axios from "axios";
+import { ApiResponse } from "../../types";
 
 interface State {
   error?: string;
@@ -29,7 +30,7 @@ export default class Verify extends React.Component<Props, State> {
     if (!code) {
       this.setState({ error: "No verification code recognized." });
     } else {
-      Axios.put(
+      Axios.put<ApiResponse>(
         `${process.env.API}/verify/${code}`,
         {},
         {
@@ -38,7 +39,7 @@ export default class Verify extends React.Component<Props, State> {
           },
         }
       )
-        .then((res) => this.setState({ done: true }))
+        .then(() => this.setState({ done: true }))
         .catch((err) => this.setState({ error: err.response.data.error }));
     }
   }
@@ -46,7 +47,7 @@ export default class Verify extends React.Component<Props, State> {
   public render() {
     if (typeof window === "undefined") return;
     const user = getCurrentUser(true);
-    if (!user) return;
+    if (!user) return null;
 
     return (
       <Layout>
