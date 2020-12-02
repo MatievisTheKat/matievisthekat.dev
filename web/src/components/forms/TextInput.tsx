@@ -16,8 +16,8 @@ export default class TextInput extends React.Component<Props, State> {
     };
   }
 
-  private toggleShow() {
-    this.setState({ show: !this.state.show });
+  set show(show: boolean) {
+    this.setState({ show });
   }
 
   public render() {
@@ -36,7 +36,7 @@ export default class TextInput extends React.Component<Props, State> {
         {this.props.type === "password" ? (
           <div
             className="absolute inset-y-0 right-0 pr-3 -mt-1 flex items-center text-sm leading-5 hover-mouse-pointer"
-            onClick={this.toggleShow.bind(this)}
+            onClick={() => (this.show = !this.state.show)}
           >
             <FontAwesomeIcon icon={this.state.show ? faEye : faEyeSlash} className="h-6 text-gray-700" />
           </div>

@@ -45,7 +45,7 @@ export default class Verify extends React.Component<Props, State> {
   }
 
   public render() {
-    if (typeof window === "undefined") return;
+    if (typeof window === "undefined") return null;
     const user = getCurrentUser(true);
     if (!user) return null;
 

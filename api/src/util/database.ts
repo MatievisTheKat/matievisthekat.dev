@@ -1,6 +1,6 @@
 import { Pool, QueryResult } from "pg";
 import { Table, TableCol } from "../types";
-import { Logger } from "./Logger";
+// import { Logger } from "./Logger";
 
 const pool = new Pool({
   host: process.env["db.host"],
@@ -86,7 +86,7 @@ namespace db {
       pool.query(queryString, values ?? [], (err, result) => {
         if (err) return rej(err);
 
-        const duration = Date.now() - start;
+        // const duration = Date.now() - start;
         // Logger.info(`Executed database query '${Array.isArray(result) ? result.map((r) => r.command).join(", ") : result.command}': ${duration}ms`);
 
         res(result);
