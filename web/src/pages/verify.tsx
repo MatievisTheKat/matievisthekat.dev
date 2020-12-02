@@ -1,12 +1,12 @@
 import React from "react";
 import qs from "querystring";
+import Axios from "axios";
 
 import Layout from "../components/layout/Layout";
 import SEO from "../components/layout/SEO";
 import Box from "../components/Box";
 
 import { getCurrentJwt, getCurrentUser } from "../../util";
-import Axios from "axios";
 import { ApiResponse } from "../../types";
 
 interface State {

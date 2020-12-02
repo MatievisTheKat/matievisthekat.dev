@@ -1,13 +1,13 @@
 import React from "react";
 import Axios from "axios";
 
-import { getCurrentUser, getCurrentJwt, refreshUser, getCookie } from "../../../util";
-
 import Layout from "../../components/layout/Layout";
 import SEO from "../../components/layout/SEO";
 import Box from "../../components/Box";
 import UserAvatar from "../../components/UserAvatar";
 import AvatarSelection from "../../components/AvatarSelection";
+
+import { getCurrentUser, getCurrentJwt, refreshUser, getCookie } from "../../../util";
 import { ApiResponse } from "../../../types";
 
 interface State {

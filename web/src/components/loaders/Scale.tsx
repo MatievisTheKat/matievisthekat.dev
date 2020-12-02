@@ -11,11 +11,15 @@ interface Props extends BaseLoaderProps {
 }
 
 export default class ScaleLoader extends React.Component<Props, State> {
+  static defaultProps = {
+    colour: "blue",
+  };
+
   public render() {
     return (
       <RSScaleLoader
         css={this.props.css}
-        color={this.props.colour || "blue"}
+        color={this.props.colour}
         loading={this.props.loading}
         radius={this.props.radius}
         margin={this.props.margin}

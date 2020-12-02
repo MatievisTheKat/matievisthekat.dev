@@ -9,14 +9,12 @@ interface Props extends BaseLoaderProps {
 }
 
 export default class BarLoader extends React.Component<Props, State> {
+  static defaultProps = {
+    colour: "blue",
+    width: NaN,
+  };
+
   public render() {
-    return (
-      <RSBarLoader
-        color={this.props.colour || "blue"}
-        loading={this.props.loading}
-        width={this.props.width}
-        height={this.props.height}
-      />
-    );
+    return <RSBarLoader color={this.props.colour} loading={this.props.loading} width={this.props.width} height={this.props.height} />;
   }
 }

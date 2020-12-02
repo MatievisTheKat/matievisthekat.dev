@@ -8,7 +8,11 @@ interface Props extends BaseLoaderProps {
 }
 
 export default class SpinLoader extends React.Component<Props, State> {
+  static defaultProps = {
+    colour: "blue",
+  };
+
   public render() {
-    return <MoonLoader color={this.props.colour || "blue"} loading={this.props.loading} css={this.props.css} size={this.props.size} />;
+    return <MoonLoader color={this.props.colour} loading={this.props.loading} css={this.props.css} size={this.props.size} />;
   }
 }

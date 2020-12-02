@@ -1,11 +1,11 @@
 import React from "react";
 
-import { getCurrentUser } from "../../../util";
-
 import Box from "../../components/Box";
 import Layout from "../../components/layout/Layout";
 import SEO from "../../components/layout/SEO";
 import UserAvatar from "../../components/UserAvatar";
+
+import { getCurrentUser } from "../../../util";
 
 interface State {}
 interface Props {}

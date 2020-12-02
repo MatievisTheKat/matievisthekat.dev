@@ -4,14 +4,20 @@ interface State {}
 interface Props extends React.DetailedHTMLProps<React.ButtonHTMLAttributes<HTMLButtonElement>, HTMLButtonElement> {
   loading?: boolean;
   colour?: string;
-  colourDarkness?: number;
-  padding?: PaddingSize;
+  colourDarkness: number;
+  padding: PaddingSize;
 }
 type PaddingSize = "lg" | "md" | "sm";
 
 export default class Button extends React.Component<Props, State> {
+  static defaultProps = {
+    colourDarkness: 500,
+    colour: "blue",
+    padding: "lg",
+  };
+
   public render() {
-    const colourDarkness = this.props.colourDarkness ?? 500;
+    const colourDarkness = this.props.colourDarkness;
     const paddings: Record<PaddingSize, string> = {
       lg: "py-2 px-4",
       md: "py-2 px-3",
@@ -24,7 +30,7 @@ export default class Button extends React.Component<Props, State> {
         onClick={(e) => {
           if (!this.props.disabled && this.props.onClick) this.props.onClick(e);
         }}
-        className={`bg-${this.props.colour}-${colourDarkness} text-white font-bold ${paddings[this.props.padding || "lg"]} rounded ${
+        className={`bg-${this.props.colour}-${colourDarkness} text-white font-bold ${paddings[this.props.padding]} rounded ${
           this.props.disabled
             ? "opacity-50 cursor-not-allowed"
             : `focus:outline-none focus:shadow-outline hover:bg-${this.props.colour}-${colourDarkness + 200}`

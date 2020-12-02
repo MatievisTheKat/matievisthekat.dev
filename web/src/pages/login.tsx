@@ -7,7 +7,7 @@ import SEO from "../components/layout/SEO";
 import LoginForm from "../components/login/Form";
 import RememberedLogin from "../components/login/RemeberedLogin";
 
-import { getUser, saveUser, getCurrentUser, getCurrentJwt, onInputChange, validatePassword, validateUsername, saveLogin } from "../../util";
+import { getUser, getCurrentUser, getCurrentJwt, onInputChange, validatePassword, validateUsername, saveLogin } from "../../util";
 import { User } from "../../types";
 
 interface State {
