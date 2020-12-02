@@ -29,21 +29,6 @@ router.post("/create", ...auth(), async (req, res) => {
   }
 });
 
-router.get("/me", ...auth(), (req, res) => {
-  const user = req.user as User;
-
-  if (user.verification === "verified") new ApiResponse({ status: 400, error: "You are already verified" });
-  else {
-    util
-      .getVerificationCode(user.email)
-      .then((result) => new ApiResponse({ status: result ? 200 : 404, data: result }).send(res))
-      .catch((err) => {
-        Logger.error(err);
-        new ApiResponse({ status: 500, error: "Something went wrong on our side" });
-      });
-  }
-});
-
 router.get("/view/:code", ...auth(true), (req, res) => {
   util
     .getVerificationCode(req.params.code)
