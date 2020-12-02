@@ -27,11 +27,10 @@
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^1.2.32",
     "@fortawesome/free-brands-svg-icons": "^5.15.1",
+    "@fortawesome/free-regular-svg-icons": "^5.15.1",
     "@fortawesome/free-solid-svg-icons": "^5.15.1",
     "@fortawesome/react-fontawesome": "^0.1.13",
     "axios": "^0.21.0",
-    "dotenv": "^8.2.0",
-    "fs-extra": "^9.0.1",
     "gatsby": "^2.27.4",
     "gatsby-image": "^2.6.0",
     "gatsby-plugin-manifest": "^2.7.0",
@@ -42,7 +41,6 @@
     "gatsby-source-filesystem": "^2.6.1",
     "gatsby-transformer-sharp": "^2.7.0",
     "ms": "^2.1.2",
-    "postcss": "^8.1.10",
     "prop-types": "^15.7.2",
     "querystring": "^0.2.0",
     "react": "^17.0.1",
@@ -54,7 +52,10 @@
   "devDependencies": {
     "@types/ms": "^0.7.31",
     "@types/react-helmet": "^6.1.0",
+    "dotenv": "^8.2.0",
     "eslint-plugin-react-hooks": "^4.2.0",
+    "fs-extra": "^9.0.1",
+    "postcss": "^8.1.10",
     "prettier": "^2.2.0",
     "tailwindcss": "^2.0.1"
   }
