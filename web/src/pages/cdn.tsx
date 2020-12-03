@@ -1,8 +1,8 @@
 import React, { ChangeEvent } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTimes } from "@fortawesome/free-solid-svg-icons";
-import { faCopy } from "@fortawesome/free-regular-svg-icons";
 import Axios from "axios";
+import qs from "querystring";
 
 import Layout from "../components/layout/Layout";
 import SEO from "../components/layout/SEO";
@@ -10,28 +10,20 @@ import Box from "../components/Box";
 import Error from "../components/Error";
 import Button from "../components/Button";
 import BarLoader from "../components/loaders/Bar";
-import Link from "../components/Link";
+import CDNFile from "../components/CdnFile";
+import FileList from "../components/cdn/FileList";
 
 import { getCurrentJwt, getCurrentUser } from "../../util";
-import { ApiResponse } from "../../types";
+import { ApiResponse, FileResponse } from "../../types";
 
 interface State {
   files?: File[];
   loading: boolean;
   error?: string;
-  uploaded?: ResponseFile[];
+  uploaded?: FileResponse[];
+  viewFiles?: string[];
 }
 interface Props {}
-interface ResponseFile {
-  destination: string;
-  encoding: string;
-  fieldname: string;
-  filename: string;
-  mimetype: string;
-  originalname: string;
-  path: string;
-  size: number;
-}
 
 export default class ContentDeliveryNetwork extends React.Component<Props, State> {
   constructor(props: Props | Readonly<Props>) {
@@ -42,6 +34,7 @@ export default class ContentDeliveryNetwork extends React.Component<Props, State
       loading: false,
       error: undefined,
       uploaded: undefined,
+      viewFiles: undefined,
     };
   }
 
@@ -49,26 +42,30 @@ export default class ContentDeliveryNetwork extends React.Component<Props, State
     this.setState({ loading });
   }
 
-  private onInputChange(e: ChangeEvent<HTMLInputElement>) {
-    e.preventDefault();
-
+  private removeFile(i: number, stateProp: "uploaded" | "files" | "viewFiles" = "files") {
     this.loading = true;
+    const state = this.state[stateProp];
 
-    const files = e.target.files;
-    if (files) this.setState({ files: [...files] });
+    if (state) {
+      state.splice(i, 1);
+      ///@ts-ignore
+      this.setState({ [stateProp]: state });
+    }
 
     this.loading = false;
   }
 
-  private removeFile(i: number) {
+  private viewFiles() {
     this.loading = true;
 
-    if (this.state.files) {
-      this.state.files.splice(i, 1);
-      this.setState({ files: this.state.files });
-
-      this.loading = false;
-    }
+    Axios.get<ApiResponse>(`${process.env.API}/cdn/list`, {
+      headers: {
+        Authorization: `Bearer ${getCurrentJwt()}`,
+      },
+    })
+      .then((res) => this.setState({ viewFiles: res.data.data }))
+      .catch(this.handleErr.bind(this))
+      .finally(() => (this.loading = false));
   }
 
   private onUpload(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
@@ -86,13 +83,33 @@ export default class ContentDeliveryNetwork extends React.Component<Props, State
           Authorization: `Bearer ${getCurrentJwt()}`,
         },
       })
-        .then((res) => this.setState({ files: undefined, uploaded: res.data.data as ResponseFile[] }))
-        .catch((err) => this.setState({ error: err.response.data.error }))
+        .then((res) => this.setState({ files: undefined, uploaded: res.data.data as FileResponse[] }))
+        .catch(this.handleErr.bind(this))
         .finally(() => (this.loading = false));
     }
   }
 
+  private handleErr(err: any) {
+    this.setState({ error: err.response.data.error });
+  }
+
+  private onInputChange(e: ChangeEvent<HTMLInputElement>) {
+    e.preventDefault();
+
+    this.loading = true;
+
+    const files = e.target.files;
+    if (files) this.setState({ files: [...files] });
+
+    this.loading = false;
+  }
+
   public render() {
+    if (typeof window === "undefined") return null;
+
+    const { f } = qs.parse(window.location.href, "?") as Record<string, string>;
+    if (f) return <CDNFile file={f} />;
+
     const user = getCurrentUser(true);
     if (!user) return null;
 
@@ -104,42 +121,59 @@ export default class ContentDeliveryNetwork extends React.Component<Props, State
         ) : (
           <Box>
             <h1>Content Delviery Network</h1>
-            {this.state.loading && <BarLoader width={NaN} />}
+            {this.state.loading && <BarLoader />}
+
             <p className="text-sm mt-4">
-              <label className="hover-mouse-pointer mt-3 bg-blue-500 text-white font-bold shadow appearance-none rounded w-full max-w-xs py-2 px-3 leading-tight hover:bg-blue-700">
+              <label className="hover-mouse-pointer mt-3 mx-1 bg-blue-500 text-white font-bold shadow appearance-none rounded w-full max-w-xs py-2 px-3 leading-tight hover:bg-blue-700">
                 {this.state.files && this.state.files.length > 0 ? `${this.state.files.length} files selected` : "Select file(s)"}
                 <input type="file" multiple={true} className="hidden" onChange={this.onInputChange.bind(this)} />
               </label>
+              <Button padding="py-2 px-3" className="mt-3 mx-1 shadow appearance-none rounded leading-tight" onClick={this.viewFiles.bind(this)}>
+                File List
+              </Button>
             </p>
+
             <ul className="mt-3 content-center">
               {this.state.files &&
                 this.state.files.map((f, i) => (
                   <li key={i}>
                     {f.name}
                     <span className="ml-2">
-                      <FontAwesomeIcon className="text-red-500 hover-mouse-pointer" icon={faTimes} onClick={(e) => this.removeFile(i)} />
+                      <FontAwesomeIcon className="text-red-500 hover-mouse-pointer" icon={faTimes} onClick={() => this.removeFile(i)} />
                     </span>
                   </li>
                 ))}
             </ul>
+
             {this.state.files && this.state.files.length > 0 && (
               <Button className="mt-3 text-sm" padding="md" colour="green" onClick={this.onUpload.bind(this)}>
                 Upload
               </Button>
             )}
-            {this.state.error && <p className="mt-3 text-red-500">{this.state.error}</p>}
-            {this.state.uploaded && (
-              <ul className="mt-3 content-center text-blue-400">
-                {this.state.uploaded.map((file, i) => (
-                  <li key={i}>
-                    <Link to={`/cdn/${file.filename}`}>{file.filename}</Link>
-                    <span className="ml-2">
-                      <FontAwesomeIcon icon={faCopy} />
-                    </span>
-                  </li>
-                ))}
-              </ul>
+
+            {this.state.uploaded && !this.state.files && (
+              <FileList
+                files={this.state.uploaded}
+                onError={this.handleErr.bind(this)}
+                onFileRemove={(name) => {
+                  const { uploaded } = this.state;
+                  if (uploaded) this.removeFile(uploaded.indexOf(uploaded.find((f) => f.filename === name) as FileResponse), "uploaded");
+                }}
+              />
             )}
+
+            {this.state.viewFiles && !this.state.files && (
+              <FileList
+                files={this.state.viewFiles}
+                onError={this.handleErr.bind(this)}
+                onFileRemove={(name) => {
+                  const { viewFiles } = this.state;
+                  if (viewFiles) this.removeFile(viewFiles.indexOf(name), "viewFiles");
+                }}
+              />
+            )}
+
+            {this.state.error && <p className="mt-3 text-red-500">{this.state.error}</p>}
           </Box>
         )}
       </Layout>

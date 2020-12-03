@@ -1,19 +1,19 @@
 import React from "react";
 
-import Layout from "../components/layout/Layout";
-import SEO from "../components/layout/SEO";
-import Box from "../components/Box";
+import Layout from "./layout/Layout";
+import SEO from "./layout/SEO";
+import Box from "./Box";
 
 interface State {}
 interface Props {
-  path: string;
+  file: string;
 }
 
 export default class CDNFile extends React.Component<Props, State> {
   public render() {
     if (typeof window === "undefined") return null;
-    const path = this.props.path;
-    window.location.href = `${process.env.API}${path}`;
+    const file = this.props.file;
+    window.location.href = `${process.env.API}/cdn/${file}`;
 
     return (
       <Layout>

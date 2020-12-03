@@ -4,6 +4,7 @@ import { auth, upload } from "../util/middleware";
 import ApiResponse from "../util/Response";
 import fs from "fs-extra";
 import { join } from "path";
+import { Logger } from "../util/Logger";
 
 const router = Router();
 const cdn = join("public", "cdn");
@@ -31,8 +32,10 @@ router.delete("/delete", ...auth(true), async (req, res) => {
   const path = join(cdn, name);
 
   fs.access(path, async (err) => {
-    if (err) return new ApiResponse({ status: 404, error: err.message }).send(res);
-    else {
+    if (err) {
+      Logger.error(err);
+      return new ApiResponse({ status: 404, error: "Cannot access requested file" }).send(res);
+    } else {
       await fs.remove(path);
       new ApiResponse({ status: 200, message: `${name} successfully removed` }).send(res);
     }
