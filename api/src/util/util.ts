@@ -11,7 +11,7 @@ import db from "./database";
 import mail from "./mail";
 
 namespace util {
-  export function loadObjectToEnv(obj: object): NodeJS.ProcessEnv {
+  export function loadObjectToEnv(obj: object) {
     for (const entry of Object.entries(obj)) {
       if (typeof entry[1] === "object") {
         loadObjectToEnv(entry[1]);
