@@ -1,31 +1,20 @@
 version: "2"
 checks:
-  complex-logic:
-    config:
-      threshold: 4
   file-lines:
     config:
-      threshold: 250
+      threshold: 500
   method-complexity:
     config:
       threshold: 10
-  method-count:
-    config:
-      threshold: 20
   method-lines:
     config:
       threshold: 80
-  similar-code:
-    config:
-      threshold: 2
-  identical-code:
-    config:
-      threshold: 2
 exclude_patterns:
-  - "node_modules/"
-  - ".cache/"
+  - "api/node_modules/"
+  - "api/keys/"
+  - "api/logs/"
+  - "api/dist/"
+  - "web/node_modules/"
+  - "web/.cache/"
   - "web/public/"
-  - "package-lock.json"
-  - "keys/"
-  - "logs/"
-  - "dist/"
+  - "web/tailwind.config.js"
