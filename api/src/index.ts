@@ -32,14 +32,15 @@ for (const route of routes) {
   app.use(route.path, route.router);
 }
 
-const tableFiles = util.findNested(path.join(__dirname, "tables"));
+// TODO: Find way to do this better
+/* const tableFiles = util.findNested(path.join(__dirname, "tables"));
 const tables = tableFiles.map((f) => require(f).table);
 
 for (const table of tables) {
   db.parseTableToQuery(table).then((tableQuery) => {
     db.query(tableQuery).catch((err) => Logger.error(err));
   });
-}
+} */
 
 app.get("/", (req, res) => {
   new ApiResponse({

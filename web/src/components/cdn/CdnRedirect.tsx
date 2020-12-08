@@ -1,8 +1,8 @@
 import React from "react";
 
-import Layout from "./layout/Layout";
-import SEO from "./layout/SEO";
-import Box from "./Box";
+import Layout from "../layout/Layout";
+import SEO from "../layout/SEO";
+import Box from "../Box";
 
 interface State {}
 interface Props {

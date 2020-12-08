@@ -10,7 +10,7 @@ import Box from "../components/Box";
 import Error from "../components/Error";
 import Button from "../components/Button";
 import BarLoader from "../components/loaders/Bar";
-import CDNFile from "../components/CdnFile";
+import CDNFile from "../components/cdn/CdnRedirect";
 import FileList from "../components/cdn/FileList";
 
 import { getCurrentJwt, getCurrentUser } from "../../util";
@@ -63,7 +63,7 @@ export default class ContentDeliveryNetwork extends React.Component<Props, State
         Authorization: `Bearer ${getCurrentJwt()}`,
       },
     })
-      .then((res) => this.setState({ viewFiles: res.data.data }))
+      .then((res) => this.setState({ viewFiles: res.data.data, uploaded: undefined, files: undefined }))
       .catch(this.handleErr.bind(this))
       .finally(() => (this.loading = false));
   }
@@ -83,7 +83,7 @@ export default class ContentDeliveryNetwork extends React.Component<Props, State
           Authorization: `Bearer ${getCurrentJwt()}`,
         },
       })
-        .then((res) => this.setState({ files: undefined, uploaded: res.data.data as FileResponse[] }))
+        .then((res) => this.setState({ files: undefined, viewFiles: undefined, uploaded: res.data.data as FileResponse[] }))
         .catch(this.handleErr.bind(this))
         .finally(() => (this.loading = false));
     }
@@ -162,7 +162,7 @@ export default class ContentDeliveryNetwork extends React.Component<Props, State
               />
             )}
 
-            {this.state.viewFiles && !this.state.files && (
+            {this.state.viewFiles && !this.state.files && !this.state.uploaded && (
               <FileList
                 files={this.state.viewFiles}
                 onError={this.handleErr.bind(this)}
