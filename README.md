@@ -74,7 +74,7 @@ $ cd matievisthekat.dev
 
   keys.passphrase="super_secret_passphrase" # JWT private key passphrase
 
-  slat-rounds="25" # Salt rounds to serialize passwords with
+  salt-rounds="25" # Salt rounds to serialize passwords with
 
   mail.user="admin@yoursite.org" # Mail username
   mail.password="1234" # Mail user password
