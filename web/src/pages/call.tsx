@@ -1,25 +1,43 @@
 import React from "react";
 import Peer from "peerjs";
 import qs from "querystring";
+import hark from "hark";
 
 import Layout from "../components/layout/Layout";
 import SEO from "../components/layout/SEO";
 import Box from "../components/Box";
+import Button from "../components/Button";
 
 import { getCurrentUser } from "../../util";
-import Button from "../components/Button";
+import { User } from "../../types";
 
 interface State {
   localStream?: any;
+  localSpeaking: boolean;
   remoteStream?: any;
-
+  remoteSpeaking: boolean;
   peer?: Peer;
+  call?: Peer.MediaConnection;
+  calling: boolean;
 }
 interface Props {}
 
 export default class Call extends React.Component<Props, State> {
+  private user = getCurrentUser(true) as User;
+
   constructor(props: Props | Readonly<Props>) {
     super(props);
+
+    this.state = {
+      remoteSpeaking: false,
+      localSpeaking: false,
+      calling: false,
+    };
+  }
+
+  private endCall() {
+    const { call } = this.state;
+    if (call) call.close();
   }
 
   private call(id: string) {
@@ -27,91 +45,88 @@ export default class Call extends React.Component<Props, State> {
 
     if (localStream && peer) {
       const call = peer.call(id, localStream);
-      console.log(`Calling ${id}`);
+      this.setState({ calling: true, call });
 
       call.on("stream", (stream) => {
         const video = document.querySelector("video#remote") as HTMLVideoElement | null;
-        if (video) {
-          video.srcObject = stream;
-        } else console.warn("Remote video element not found");
+        if (video) video.srcObject = stream;
+      });
+
+      call.on("close", () => {
+        this.setState({ calling: false });
+        peer.destroy();
       });
     }
   }
 
+  public componentWillUnmount() {
+    const { peer } = this.state;
+    if (peer) peer.destroy();
+  }
+
   public componentDidMount() {
-    if (typeof window === "undefined") return null;
-
-    const user = getCurrentUser(true);
-    if (!user) return null;
-
-    const peer = new Peer(user.id, {
-      host: "/",
-      port: 3001,
+    const peer = new Peer(this.user.username, {
+      host: process.env.PEER_HOST,
+      port: process.env.PEER_PORT ? parseInt(process.env.PEER_PORT) : undefined,
+      path: process.env.PEER_PATH,
     });
 
     this.setState({ peer });
 
     peer.on("call", (call) => {
-      console.log(`Call from ${call.peer}`);
-      navigator.mediaDevices
-        .getUserMedia({ video: true, audio: true })
-        .then((stream) => {
-          const video = document.querySelector(`video#remote`) as HTMLVideoElement | null;
-          call.answer(stream);
-          call.on("stream", (remoteStream) => {
-            if (video) {
-              video.srcObject = remoteStream;
-            } else console.warn("Local video element not found");
-          });
-        })
-        .catch((err) => {
-          console.error("Failed to get local stream", err);
+      navigator.mediaDevices.getUserMedia({ video: true, audio: true }).then((stream) => {
+        const video = document.querySelector(`video#remote`) as HTMLVideoElement | null;
+
+        call.answer(stream);
+        call.on("stream", (remoteStream) => {
+          if (video) {
+            video.srcObject = remoteStream;
+          } else console.warn("Local video element not found");
+
+          const remoteSpeechEvents = hark(stream);
+          remoteSpeechEvents.on("speaking", () => this.setState({ remoteSpeaking: true }));
+          remoteSpeechEvents.on("stopped_speaking", () => this.setState({ remoteSpeaking: false }));
         });
+      });
     });
 
-    navigator.mediaDevices
-      .getUserMedia({ video: true, audio: true })
-      .then((stream) => {
-        this.setState({ localStream: stream });
+    navigator.mediaDevices.getUserMedia({ video: true, audio: true }).then((stream) => {
+      this.setState({ localStream: stream });
 
-        const video = document.querySelector(`video#local`) as HTMLVideoElement | null;
-        if (video) {
-          video.srcObject = stream;
-          video.addEventListener("loadedmetadata", () => {
-            video.play();
-          });
-        } else console.warn("No local video element");
-      })
-      .catch((err) => {
-        console.error("Failed to get local stream", err);
-      });
+      const video = document.querySelector(`video#local`) as HTMLVideoElement | null;
+      const localSpeechEvents = hark(stream);
+
+      localSpeechEvents.on("speaking", () => this.setState({ localSpeaking: true }));
+      localSpeechEvents.on("stopped_speaking", () => this.setState({ localSpeaking: false }));
+
+      if (video) video.srcObject = stream;
+    });
   }
 
   public render() {
     if (typeof window === "undefined") return null;
-
     const { id } = qs.parse(window.location.href, "?") as Record<string, string>;
 
     return (
       <Layout>
         <SEO title="Video Call" />
-        <Box>
-          <Button
-            onClick={(e) => {
-              e.preventDefault();
-
-              this.call(id);
-            }}
-          >
+        <Box className="max-w-full">
+          <Button disabled={this.state.calling} onClick={() => this.call(id)}>
             Call
           </Button>
-          <p className="mx-auto">Local</p>
-          <video id="local" autoPlay={true} className="mx-auto flex-row" />
-          <br />
-          <br />
-          <br />
-          <p className="mx-auto">Remote</p>
-          <video id="remote" autoPlay={true} className="mx-auto flex-row" />
+          <Button disabled={!this.state.calling} colour="red" onClick={() => this.endCall()}>
+            End Call
+          </Button>
+          <div className="flex flex-row mt-3">
+            <video
+              muted={true}
+              title={this.user.username}
+              id="local"
+              autoPlay={true}
+              className={`${this.state.localSpeaking ? "border-yellow-400 border-4" : ""} w-1/2`}
+            />
+            <video title={id} id="remote" autoPlay={true} className={`${this.state.remoteSpeaking ? "border-yellow-400 border-4" : ""} w-1/2`} />
+          </div>
         </Box>
       </Layout>
     );
