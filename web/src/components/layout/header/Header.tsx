@@ -41,8 +41,6 @@ export default class Header extends React.Component<Props, State> {
       menuOpen: false,
       userMenuOpen: false,
     };
-
-    this.formatTabs = this.formatTabs.bind(this);
   }
 
   private setMenuOpen(menuOpen: boolean = !this.state.menuOpen) {
@@ -96,9 +94,9 @@ export default class Header extends React.Component<Props, State> {
       <StaticQuery
         query={NavTabsQuery}
         render={({ site }) => (
-          <NavBar menuOpen={this.state.menuOpen} formatTabs={this.formatTabs} navTabs={site.siteMetadata.navTabs}>
+          <NavBar menuOpen={this.state.menuOpen} formatTabs={this.formatTabs.bind(this)} navTabs={site.siteMetadata.navTabs}>
             <Menu open={this.state.menuOpen} setOpen={this.setMenuOpen.bind(this)} />
-            <Tabs formatTabs={this.formatTabs} navTabs={site.siteMetadata.navTabs} />
+            <Tabs formatTabs={this.formatTabs.bind(this)} navTabs={site.siteMetadata.navTabs} />
 
             <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
               <NotifButton />

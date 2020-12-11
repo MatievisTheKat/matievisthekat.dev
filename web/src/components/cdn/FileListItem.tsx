@@ -23,7 +23,9 @@ export default class FileListItem extends React.Component<Props, State> {
   constructor(props: Props | Readonly<Props>) {
     super(props);
 
-    this.state = { deleting: false };
+    this.state = {
+      deleting: false,
+    };
   }
 
   set deleting(deleting: boolean) {
@@ -32,7 +34,6 @@ export default class FileListItem extends React.Component<Props, State> {
 
   private removeFile(name: string) {
     if (this.deleting) return;
-
     this.deleting = true;
 
     Axios.delete<ApiResponse>(`${process.env.API}/cdn/delete`, {
@@ -41,9 +42,14 @@ export default class FileListItem extends React.Component<Props, State> {
       },
       data: { name },
     })
-      .then((res) => this.props.onRemove(res, name))
-      .catch(this.props.onError)
-      .finally(() => (this.deleting = false));
+      .then((res) => {
+        this.deleting = false;
+        this.props.onRemove(res, name);
+      })
+      .catch((err) => {
+        this.deleting = false;
+        this.props.onError(err);
+      });
   }
 
   public render() {
