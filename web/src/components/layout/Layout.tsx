@@ -3,6 +3,7 @@ import { StaticQuery, graphql } from "gatsby";
 
 import Header from "./header/Header";
 import Footer from "./footer/Footer";
+import VideoCallBox from "./VideoCallBox";
 
 import "../../assets/css/global.css";
 import "../../assets/css/tailwind.css";
@@ -37,6 +38,7 @@ export default class Layout extends React.Component<Props, State> {
               <Header title={site.siteMetadata?.title} tab={tab} />
               <main className="mb-auto lg:mx-48 mt-10 text-center text-gray-600 place-content-center">{this.props.children}</main>
               <Footer />
+              <VideoCallBox />
             </div>
           );
         }}
