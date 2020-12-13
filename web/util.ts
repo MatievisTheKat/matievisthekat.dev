@@ -6,9 +6,10 @@ import Cookies from "universal-cookie";
 import { ApiResponse, HTTPStatusCode, User } from "./types";
 
 const cookies = new Cookies();
+const jsonFlag = "--JSON";
 
 export function setCookie(name: string, content: any, maxAge?: number) {
-  cookies.set(name, content, { maxAge, path: "/" });
+  return cookies.set(name, content, { maxAge, path: "/" });
 }
 
 export function getCookie(name: string) {
@@ -16,7 +17,27 @@ export function getCookie(name: string) {
 }
 
 export function removeCookie(name: string) {
-  cookies.remove(name, { path: "/" });
+  return cookies.remove(name, { path: "/" });
+}
+
+export function setSessionItem(name: string, value: string | Record<string, any>, json?: boolean) {
+  return window.sessionStorage.setItem(name, json ? `${jsonFlag}${JSON.stringify(value)}` : value.toString());
+}
+
+export function getSessionItem(name: string): null | string | Record<string, any> {
+  const value = window.sessionStorage.getItem(name);
+
+  if (value && value.startsWith(jsonFlag)) {
+    return JSON.parse(value.slice(jsonFlag.length));
+  } else return value;
+}
+
+export function removeSessionItem(name: string) {
+  return window.sessionStorage.removeItem(name);
+}
+
+export function clearSession() {
+  return window.sessionStorage.clear();
 }
 
 export function validateUsername(username: string): string | undefined {
