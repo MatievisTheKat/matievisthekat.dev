@@ -177,7 +177,7 @@ export default class VideoCallBox extends React.Component<Props, State> {
           id="remote"
           autoPlay={true}
           muted={false}
-          title="Them"
+          title={this.state.callUsername}
           className={!this.state.fullScreen ? "rounded" : undefined}
           onClick={(_) => {
             if (!this.state.fullScreen) this.fullScreen = true;
