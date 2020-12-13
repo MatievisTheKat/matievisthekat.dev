@@ -72,7 +72,5 @@ module.exports = {
   ],
   flags: {
     PRESERVE_WEBPACK_CACHE: true,
-    FAST_REFRESH: true,
-    QUERY_ON_DEMAND: true
   },
 };
