@@ -1,9 +1,13 @@
 import React from "react";
 import { StaticQuery, graphql } from "gatsby";
+import { ToastProvider } from "react-toast-notifications";
 
 import Header from "./header/Header";
 import Footer from "./footer/Footer";
 import VideoCallBox from "./VideoCallBox";
+import ConnectivityListener from "./ConnectivityListener";
+
+import { getCurrentUser } from "../../../util";
 
 import "../../assets/css/global.css";
 import "../../assets/css/tailwind.css";
@@ -34,12 +38,18 @@ export default class Layout extends React.Component<Props, State> {
         render={({ site }) => {
           const tab = this.props.tab ? toSlug(this.props.tab) : toSlug(window.location.pathname.slice(1));
           return (
-            <div className="flex flex-col h-screen justify-between">
-              <Header title={site.siteMetadata?.title} tab={tab} />
-              <main className="mb-auto lg:mx-48 mt-10 text-center text-gray-600 place-content-center">{this.props.children}</main>
-              <Footer />
-              <VideoCallBox />
-            </div>
+            <ToastProvider placement="top-right" autoDismiss={true}>
+              <div className="flex flex-col h-screen justify-between">
+                <Header title={site.siteMetadata?.title} tab={tab} />
+                <main className="mb-auto lg:mx-48 mt-10 text-center text-gray-600 place-content-center">{this.props.children}</main>
+                <Footer />
+                <VideoCallBox
+                  localUser={getCurrentUser()}
+                />
+
+                <ConnectivityListener />
+              </div>
+            </ToastProvider>
           );
         }}
       />
