@@ -49,6 +49,7 @@
     "react-helmet": "^6.1.0",
     "react-spinners": "^0.9.0",
     "react-toast-notifications": "^2.4.0",
+    "reactjs-popup": "^2.0.4",
     "universal-cookie": "^4.0.4"
   },
   "devDependencies": {

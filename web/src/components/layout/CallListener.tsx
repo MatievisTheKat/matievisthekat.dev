@@ -10,7 +10,7 @@ interface Props {
 }
 
 const CallListener: React.FC<Props> = ({ peer, acceptCall }) => {
-  const { addToast, removeToast } = useToasts();
+  const { addToast } = useToasts();
   const [receivingCall, setReceivingCall] = useState<MediaConnection>();
 
   peer.on("call", (call) => setReceivingCall(call));

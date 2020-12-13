@@ -1,31 +1,34 @@
-import hark from "hark";
 import React from "react";
+import hark from "hark";
+import Popup from "reactjs-popup";
 import Peer, { MediaConnection } from "peerjs";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCompress } from "@fortawesome/free-solid-svg-icons";
+import { faCompress, faPhoneAlt } from "@fortawesome/free-solid-svg-icons";
 
-import Button from "../Button";
-import TextInput from "../forms/TextInput";
 import CallListener from "./CallListener";
 
 import { User } from "../../../types";
-import { setSessionItem } from "../../../util";
+import { onInputChange, setSessionItem, validateUsername } from "../../../util";
+import UsernameInput from "../forms/UsernameInput";
+import Button from "../Button";
 
 interface State {
   speaking: boolean;
   streamStatus: StreamStatus;
   remoteSpeaking: boolean;
   fullScreen: boolean;
+  onCall: boolean;
   error?: string;
+  callUsername: string;
+  callUsernameError?: string;
 }
 interface Props {
-  localUser?: User | void;
-  remoteUser?: User | void;
+  user?: User | void;
 }
 type StreamStatus = "not_found" | "looking" | "found";
 
 export default class VideoCallBox extends React.Component<Props, State> {
-  private user = this.props.localUser;
+  private user = this.props.user;
   private peer = this.user
     ? new Peer(this.user.username, {
         host: process.env.PEER_HOST,
@@ -47,6 +50,8 @@ export default class VideoCallBox extends React.Component<Props, State> {
       fullScreen: false,
       remoteSpeaking: false,
       streamStatus: "looking",
+      onCall: false,
+      callUsername: "",
     };
   }
 
@@ -57,11 +62,16 @@ export default class VideoCallBox extends React.Component<Props, State> {
 
   private set remoteStream(stream: MediaStream) {
     this.streams.remote = stream;
+    this.onCall = true;
     this.updateVideo("remote", stream);
   }
 
   private set fullScreen(fullScreen: boolean) {
     this.setState({ fullScreen }, () => this.updateAllVideos());
+  }
+
+  private set onCall(onCall: boolean) {
+    this.setState({ onCall });
   }
 
   private handleErr(err: Error) {
@@ -82,19 +92,21 @@ export default class VideoCallBox extends React.Component<Props, State> {
 
   private async call(id: string) {
     const peer = this.peer;
-    if (!peer) return false;
+    if (!peer || !this.user) return false;
+    if (peer && peer.disconnected) peer.connect(this.user.username);
 
     const stream = this.streams.local || (await this.initLocalStream());
-    const call = peer.call(id, stream);
+    const call = peer.call(id, stream, { metadata: this.user });
 
     if (call) {
-      setSessionItem("vc-remote-id", id);
+      // TODO: A way to storage call in session to reload doesn't close the call
+      // setSessionItem("vc-remote-id", id);
 
-      call.on("close", () => console.log(`Call closed with ${call.peer}`));
-      call.on("stream", this.onCallStream.bind(this))
+      call.on("close", () => (this.onCall = false));
+      call.on("stream", this.onCallStream.bind(this));
 
       window.addEventListener("close", () => call.close());
-    }
+    } else console.warn("Call failed");
   }
 
   private updateVideo(id: string, stream: MediaStream, cb?: () => void) {
@@ -136,15 +148,15 @@ export default class VideoCallBox extends React.Component<Props, State> {
     if (this.streams.remote) this.updateVideo("remote", this.streams.remote);
   }
 
-  public componentDidMount() {
-    if (this.user && this.peer /*&& this.streams.remote*/) {
+  public async componentDidMount() {
+    if (this.user && this.peer && this.streams.remote) {
       this.initLocalStream();
       this.updateAllVideos();
     }
   }
 
   public render() {
-    if (!this.user /* || !this.streams.local || !this.streams.remote*/) return null;
+    if (!this.user) return null;
 
     const localVideo = (
       <div className={this.state.fullScreen ? `mx-auto my-auto rounded ${this.state.speaking ? "border-yellow-400 border-4" : undefined}` : "hidden"}>
@@ -157,7 +169,7 @@ export default class VideoCallBox extends React.Component<Props, State> {
         className={
           (this.state.fullScreen
             ? "mx-auto my-auto rounded"
-            : "absolute rounded shadow bottom-4 left-4 max-w-sm w-full max-h-sm hover:shadow-xl hover-mouse-pointer") +
+            : "fixed rounded shadow bottom-4 left-4 max-w-sm w-full max-h-sm hover:shadow-xl hover-mouse-pointer") +
           (this.state.remoteSpeaking ? "border-yellow-400 border-4" : "")
         }
       >
@@ -177,31 +189,51 @@ export default class VideoCallBox extends React.Component<Props, State> {
     return (
       <>
         {this.peer && <CallListener peer={this.peer} acceptCall={this.acceptCall.bind(this)} />}
-        {this.state.fullScreen ? (
-          <div className="bg-black absolute w-screen h-screen overflow-y-auto">
-            <TextInput id="ruid" />
-            <Button
-              onClick={async (_) => {
-                // TODO: Make a better way to get a user to call
-                const ruid = document.querySelector<HTMLInputElement>("#ruid");
-                if (ruid) await this.call(ruid.value);
-              }}
-            >
-              Call
-            </Button>
-            <div className="text-center md:text-right md:mr-6 mt-3 p-5 text-white">
-              <span className="hover-mouse-pointer p-2" onClick={(_) => (this.fullScreen = false)}>
-                <FontAwesomeIcon icon={faCompress} />
-              </span>
+
+        {!this.state.onCall && (
+          <Popup
+            trigger={
+              <div className="fixed left-8 bottom-8 rounded-full shadow bg-gray-600 w-16 h-16 text-center hover-mouse-pointer hover:shadow-2xl">
+                <FontAwesomeIcon icon={faPhoneAlt} className="text-gray-300 w-full h-full font-bold" size="lg" />
+              </div>
+            }
+            position="right center"
+          >
+            <div className="inline-block relative">
+              <UsernameInput
+                className="mr-0"
+                onChange={onInputChange("callUsername", "callUsernameError", validateUsername).bind(this)}
+                value={this.state.callUsername}
+                showLabel={false}
+              />
+              <Button
+                padding="px-3 py-2"
+                disabled={!!this.state.callUsernameError || !!!this.state.callUsername}
+                onClick={async (_) => await this.call(this.state.callUsername)}
+                className="absolute inset-y-0 -right-12 mb-1 text-xs hover-mouse-pointer"
+              >
+                Call
+              </Button>
             </div>
-            <div className="flex flex-col md:flex-row">
-              {localVideo}
-              {remoteVideo}
-            </div>
-          </div>
-        ) : (
-          remoteVideo
+          </Popup>
         )}
+
+        {this.state.onCall &&
+          (this.state.fullScreen ? (
+            <div className="bg-black fixed w-screen h-screen overflow-y-auto">
+              <div className="text-center md:text-right md:mr-6 mt-3 p-5 text-white">
+                <span className="hover-mouse-pointer p-2" onClick={(_) => (this.fullScreen = false)}>
+                  <FontAwesomeIcon icon={faCompress} />
+                </span>
+              </div>
+              <div className="flex flex-col md:flex-row">
+                {localVideo}
+                {remoteVideo}
+              </div>
+            </div>
+          ) : (
+            remoteVideo
+          ))}
       </>
     );
   }
