@@ -43,9 +43,7 @@ export default class Layout extends React.Component<Props, State> {
                 <Header title={site.siteMetadata?.title} tab={tab} />
                 <main className="mb-auto lg:mx-48 mt-10 text-center text-gray-600 place-content-center">{this.props.children}</main>
                 <Footer />
-                <VideoCallBox
-                  localUser={getCurrentUser()}
-                />
+                <VideoCallBox user={getCurrentUser()} />
 
                 <ConnectivityListener />
               </div>
