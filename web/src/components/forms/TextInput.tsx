@@ -21,16 +21,13 @@ export default class TextInput extends React.Component<Props, State> {
   }
 
   public render() {
+    this.props.className;
     return (
       <div className="max-w-xs mx-auto relative">
         <input
-          id={this.props.id}
-          dir={this.props.dir}
+          {...this.props}
           type={this.props.type === "password" && this.state.show ? "text" : this.props.type}
           className={`py-2 px-3 w-full shadow appearance-none border rounded leading-tight focus:outline-none focus:shadow-outline ${this.props.className}`}
-          value={this.props.value}
-          placeholder={this.props.placeholder}
-          onChange={this.props.onChange}
         />
 
         {this.props.type === "password" ? (
