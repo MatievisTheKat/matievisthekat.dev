@@ -8,7 +8,7 @@ import { faCompress, faPhoneAlt } from "@fortawesome/free-solid-svg-icons";
 import CallListener from "./CallListener";
 
 import { User } from "../../../types";
-import { onInputChange, setSessionItem, validateUsername } from "../../../util";
+import { onInputChange, validateUsername } from "../../../util";
 import UsernameInput from "../forms/UsernameInput";
 import Button from "../Button";
 
@@ -27,6 +27,10 @@ interface Props {
 }
 type StreamStatus = "not_found" | "looking" | "found";
 
+let onCall = false;
+let remoteStream: MediaStream;
+let localStream: MediaStream;
+
 export default class VideoCallBox extends React.Component<Props, State> {
   private user = this.props.user;
   private peer = this.user
@@ -37,11 +41,6 @@ export default class VideoCallBox extends React.Component<Props, State> {
       })
     : undefined;
 
-  private streams: {
-    local?: MediaStream;
-    remote?: MediaStream;
-  } = {};
-
   constructor(props: Props | Readonly<Props>) {
     super(props);
 
@@ -50,19 +49,18 @@ export default class VideoCallBox extends React.Component<Props, State> {
       fullScreen: false,
       remoteSpeaking: false,
       streamStatus: "looking",
-      onCall: false,
+      onCall,
       callUsername: "",
     };
   }
 
   private set localStream(stream: MediaStream) {
-    this.streams.local = stream;
+    localStream = stream;
     this.updateVideo("local", stream);
   }
 
   private set remoteStream(stream: MediaStream) {
-    this.streams.remote = stream;
-    this.onCall = true;
+    remoteStream = stream;
     this.updateVideo("remote", stream);
   }
 
@@ -70,7 +68,8 @@ export default class VideoCallBox extends React.Component<Props, State> {
     this.setState({ fullScreen }, () => this.updateAllVideos());
   }
 
-  private set onCall(onCall: boolean) {
+  private set onCall(oc: boolean) {
+    onCall = oc;
     this.setState({ onCall });
   }
 
@@ -80,32 +79,41 @@ export default class VideoCallBox extends React.Component<Props, State> {
 
   private onCallStream(stream: MediaStream) {
     this.remoteStream = stream;
+    this.onCall = true;
   }
 
-  private acceptCall(call: MediaConnection) {
-    if (!this.streams.local) {
-      this.initLocalStream().then((stream) => call.answer(stream));
-    } else call.answer(this.streams.local);
+  private onCallClose(this: MediaConnection) {
+    console.log(`Call with ${this.peer} closed`);
+  }
+
+  private async acceptCall(call: MediaConnection) {
+    if (!localStream) await this.initLocalStream();
+
+    call.answer(localStream);
 
     call.on("stream", this.onCallStream.bind(this));
+    call.on("error", console.error);
+    call.on("close", this.onCallClose.bind(call));
+
+    window.onunload = () => call.close();
   }
 
   private async call(id: string) {
     const peer = this.peer;
     if (!peer || !this.user) return false;
-    if (peer && peer.disconnected) peer.connect(this.user.username);
 
-    const stream = this.streams.local || (await this.initLocalStream());
+    const stream = localStream || (await this.initLocalStream());
     const call = peer.call(id, stream, { metadata: this.user });
 
     if (call) {
       // TODO: A way to storage call in session to reload doesn't close the call
       // setSessionItem("vc-remote-id", id);
 
-      call.on("close", () => (this.onCall = false));
       call.on("stream", this.onCallStream.bind(this));
+      call.on("error", console.error);
+      call.on("close", this.onCallClose.bind(call));
 
-      window.addEventListener("close", () => call.close());
+      window.onunload = () => call.close();
     } else console.warn("Call failed");
   }
 
@@ -119,7 +127,7 @@ export default class VideoCallBox extends React.Component<Props, State> {
 
   private initLocalStream() {
     return new Promise<MediaStream>((res, rej) => {
-      if (this.streams.local) console.warn("initLocalStream called while streams.local had a value");
+      if (localStream) console.warn("initLocalStream called while streams.local had a value");
 
       navigator.mediaDevices
         .getUserMedia({ video: true, audio: true })
@@ -144,13 +152,17 @@ export default class VideoCallBox extends React.Component<Props, State> {
   }
 
   private updateAllVideos() {
-    if (this.streams.local) this.updateVideo("local", this.streams.local);
-    if (this.streams.remote) this.updateVideo("remote", this.streams.remote);
+    if (localStream) this.updateVideo("local", localStream);
+    if (remoteStream) this.updateVideo("remote", remoteStream);
   }
 
   public async componentDidMount() {
-    if (this.user && this.peer && this.streams.remote) {
-      this.initLocalStream();
+    if (this.user && this.peer && remoteStream) {
+      this.peer.on("disconnected", () => {
+        if (this.peer && this.user) this.peer.connect(this.user.username);
+      });
+
+      if (!localStream) this.initLocalStream();
       this.updateAllVideos();
     }
   }
@@ -190,7 +202,7 @@ export default class VideoCallBox extends React.Component<Props, State> {
       <>
         {this.peer && <CallListener peer={this.peer} acceptCall={this.acceptCall.bind(this)} />}
 
-        {!this.state.onCall && (
+        {!onCall && (
           <Popup
             trigger={
               <div className="fixed left-8 bottom-8 rounded-full shadow bg-gray-600 w-16 h-16 text-center hover-mouse-pointer hover:shadow-2xl">
@@ -218,7 +230,7 @@ export default class VideoCallBox extends React.Component<Props, State> {
           </Popup>
         )}
 
-        {this.state.onCall &&
+        {onCall &&
           (this.state.fullScreen ? (
             <div className="bg-black fixed w-screen h-screen overflow-y-auto">
               <div className="text-center md:text-right md:mr-6 mt-3 p-5 text-white">
