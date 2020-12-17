@@ -2,7 +2,11 @@
   "name": "matievisthekat.dev",
   "version": "1.0.0",
   "description": "Frontend for matievisthekat.dev",
-  "author": "Matthew Stead <matthew.stead@matievisthekat.dev>",
+  "author": {
+    "name": "Matthew Stead",
+    "url": "https://matievisthekat.dev",
+    "email": "matthew.stead@matievisthekat.dev"
+  },
   "license": "GPL-3.0",
   "scripts": {
     "build": "gatsby build",
