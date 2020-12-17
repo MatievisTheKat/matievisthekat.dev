@@ -7,7 +7,12 @@
   "scripts": {
     "test": "tsc && rm -rf dist",
     "start": "tsc && node dist/index.js",
+    "pkg": "pkg . --target host -o start",
     "develop": "nodemon"
+  },
+  "bin": "dist/index.js",
+  "pkg": {
+    "scripts": "dist/**/*.js"
   },
   "repository": {
     "type": "git",
@@ -55,6 +60,7 @@
     "@types/pg": "^7.14.7",
     "@types/shortid": "0.0.29",
     "nodemon": "^2.0.6",
+    "pkg": "^4.4.9",
     "typescript": "^4.1.2"
   }
 }
