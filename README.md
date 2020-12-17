@@ -78,7 +78,7 @@ $ cd matievisthekat.dev
 
   mail.user="admin@yoursite.org" # Mail username
   mail.password="1234" # Mail user password
-  mail.host="webmail.yoursite.org" #
+  mail.host="webmail.yoursite.org" # Mail host
   mail.secure="false" # Require a secure connection to the mail host/server
 
   NODE_ENV="development" # Set to 'production' or remove for production mode
