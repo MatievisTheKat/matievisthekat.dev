@@ -59,8 +59,8 @@ module.exports = {
         name: "matievisthekat.dev",
         short_name: "matievisthekat",
         start_url: "/",
-        background_color: "#663399",
-        theme_color: "#663399",
+        background_color: "#808B96",
+        theme_color: "#73C6B6",
         display: "minimal-ui",
         icon: "src/assets/images/logo.png", // This path is relative to the root of the site.
       },
