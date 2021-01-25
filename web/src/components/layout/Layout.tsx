@@ -4,7 +4,6 @@ import { ToastProvider } from "react-toast-notifications";
 
 import Header from "./header/Header";
 import Footer from "./footer/Footer";
-import VideoCallBox from "./VideoCallBox";
 import ConnectivityListener from "./ConnectivityListener";
 
 import { getCurrentUser } from "../../../util";
@@ -43,8 +42,6 @@ export default class Layout extends React.Component<Props, State> {
                 <Header title={site.siteMetadata?.title} tab={tab} />
                 <main className="mb-auto lg:mx-48 mt-10 text-center text-gray-600 place-content-center">{this.props.children}</main>
                 <Footer />
-                <VideoCallBox user={getCurrentUser()} />
-
                 <ConnectivityListener />
               </div>
             </ToastProvider>

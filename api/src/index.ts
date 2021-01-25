@@ -6,7 +6,6 @@ import { ExtractJwt, Strategy as JwtStrategy } from "passport-jwt";
 import bodyParser from "body-parser";
 import cors from "cors";
 import path from "path";
-import { ExpressPeerServer } from "peer";
 
 import { Route } from "./types";
 import { Logger } from "./util/Logger";
@@ -78,6 +77,5 @@ util.saveKeypair(path.resolve("./keys")).then((keys) => {
     )
   );
 
-  const server = app.listen(port, () => Logger.log(`Listening on port http://localhost:${port}/`));
-  app.use("/peerjs", ExpressPeerServer(server));
+  app.listen(port, () => Logger.log(`Listening on port http://localhost:${port}/`));
 });
