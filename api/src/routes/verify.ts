@@ -13,7 +13,7 @@ router.post("/create", ...auth(), async (req, res) => {
   const email = user.email;
 
   const alreadyExists = await util.getVerificationCode(email);
-  if (alreadyExists) {
+  if (alreadyExists && !req.body.override) {
     new ApiResponse({ status: 400, error: "Code for that email address already exists" }).send(res);
   } else if (user.verification === "verified") new ApiResponse({ status: 400, error: "You are already verified" }).send(res);
   else {

@@ -8,6 +8,7 @@ import Box from "../components/Box";
 
 import { getCurrentJwt, getCurrentUser } from "../../util";
 import { ApiResponse } from "../../types";
+import Button from "../components/Button";
 
 interface State {
   error?: string;
@@ -44,6 +45,22 @@ export default class Verify extends React.Component<Props, State> {
     }
   }
 
+  private resend() {
+    Axios.post(
+      `${process.env.API}/verify/create`,
+      {
+        override: true,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${getCurrentJwt()}`,
+        },
+      }
+    )
+      .then(() => this.setState({ error: "Resent verification code!" }))
+      .catch((err) => this.setState({ error: err?.response?.data?.error || err.message }));
+  }
+
   public render() {
     if (typeof window === "undefined") return null;
     const user = getCurrentUser(true);
@@ -54,6 +71,8 @@ export default class Verify extends React.Component<Props, State> {
         <SEO title="Verify Email Address" />
         <Box>
           <h1>{this.state.error ? this.state.error : this.state.done ? "Verified! You can close this tab" : "Verifying... Please wait..."}</h1>
+          <br />
+          {this.state.error && <Button onClick={this.resend.bind(this)}>Resend code</Button>}
         </Box>
       </Layout>
     );

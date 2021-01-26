@@ -154,7 +154,9 @@ namespace util {
   }
 
   export function createVerificationCode(email: string) {
-    return new Promise<VerificationCode>((res, rej) => {
+    return new Promise<VerificationCode>(async (res, rej) => {
+      const alreadyExists = await db.query("SELECT * FROM verification_codes WHERE email = $1;", [email]);
+      if (alreadyExists.rows[0]) await db.query("DELETE FROM verification_codes WHERE email = $1;", [email]);
       db.query("INSERT INTO verification_codes (email, code) VALUES ($1, $2);", [email, generateRandomCode(255)])
         .then(async () => {
           const verif = (await getVerificationCode(email)) as VerificationCode;

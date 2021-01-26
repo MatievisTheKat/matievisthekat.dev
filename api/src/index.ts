@@ -22,7 +22,7 @@ app.set("json spaces", 2);
 app.use(Logger.logRequest);
 app.use(cors());
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(passport.initialize());
 
 const routeFiles = util.findNested(path.join(__dirname, "routes"));
