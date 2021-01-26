@@ -99,7 +99,7 @@ export default class Header extends React.Component<Props, State> {
             <Tabs formatTabs={this.formatTabs.bind(this)} navTabs={site.siteMetadata.navTabs} />
 
             <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
-              <NotifButton />
+              {/* <NotifButton /> */}
               <UserMenu open={this.state.userMenuOpen} setOpen={this.setUserMenuOpen.bind(this)} />
             </div>
           </NavBar>

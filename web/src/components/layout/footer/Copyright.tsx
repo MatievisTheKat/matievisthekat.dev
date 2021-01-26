@@ -9,9 +9,9 @@ export default class Copyright extends React.Component<Props, State> {
   public render() {
     return (
       <span className="mt-auto text-xs">
-        © Copyright MatievisTheKat 2020
+        © Copyright MatievisTheKat {new Date().getFullYear()}
         <br />
-        Icons made by{" "}
+        Some icons made by{" "}
         <Link to="https://www.flaticon.com/authors/freepik" external={true} title="Freepik">
           Freepik
         </Link>{" "}

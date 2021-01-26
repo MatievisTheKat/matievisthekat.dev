@@ -2,6 +2,7 @@ import React from "react";
 import { StaticQuery, graphql } from "gatsby";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faGithub, faFacebook, faDiscord, faInstagram, faYoutube, faLinkedin, faTwitter, faReddit } from "@fortawesome/free-brands-svg-icons";
+import { faEnvelope } from "@fortawesome/free-solid-svg-icons";
 
 import Link from "../../Link";
 import Copyright from "./Copyright";
@@ -23,6 +24,7 @@ const icons: Record<string, any> = {
   youtube: faYoutube,
   twitter: faTwitter,
   reddit: faReddit,
+  email: faEnvelope,
 };
 
 const SocialLinksQuery = graphql`

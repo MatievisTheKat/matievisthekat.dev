@@ -6,10 +6,9 @@ import Header from "./header/Header";
 import Footer from "./footer/Footer";
 import ConnectivityListener from "./ConnectivityListener";
 
-import { getCurrentUser } from "../../../util";
-
 import "../../assets/css/global.css";
 import "../../assets/css/tailwind.css";
+import "animate.css";
 
 interface State {}
 interface Props {

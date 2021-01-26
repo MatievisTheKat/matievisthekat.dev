@@ -5,12 +5,13 @@ require("dotenv").config({
 module.exports = {
   siteMetadata: {
     title: "matievisthekat.dev",
-    description: "Freelance prgramming and development services",
+    description: "Freelance developing and tutoring services",
     author: "@matievisthekat",
     navTabs: [
       { name: "Home", slug: "" },
-      { name: "Products", slug: "products" },
-      { name: "Services", slug: "services" },
+      { name: "Development", slug: "development" },
+      { name: "Tutoring", slug: "tutoring" },
+      { name: "Reviews", slug: "reviews" },
       { name: "CDN", slug: "cdn", admin: true },
     ],
     socialLinks: [
@@ -22,6 +23,7 @@ module.exports = {
       { name: "Instagram", url: "https://instagram.com/matievisthekat/", slug: "instagram" },
       { name: "YouTube", url: "https://youtube.com/channel/UCMgFIRIW3WaAotLMqoFFTTw", slug: "youtube" },
       { name: "Discord", url: "https://discord.gg/t65hRpd", slug: "discord" },
+      { name: "Email", url: "mailto:matthew@matievisthekat.dev", slug: "email" },
     ],
     userMenuLinks: [
       { name: "Profile", url: "/me" },

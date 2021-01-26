@@ -1,4 +1,22 @@
-@import url("https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css");
+body {
+  background-color: #e0e0e0;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #888;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
 
 @font-face {
   font-family: "Nunito";
@@ -32,4 +50,12 @@
 
 .border-radius-1\/2 {
   border-radius: 50%;
+}
+
+.link {
+  color: rgba(96, 165, 250);
+}
+
+.link:hover {
+  text-decoration: underline;
 }
