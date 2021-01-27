@@ -11,6 +11,8 @@ export interface User {
   verification: VerificationLevel;
 }
 
+export const importance = 0;
+
 export const table: Table = {
   name: "users",
   cols: {

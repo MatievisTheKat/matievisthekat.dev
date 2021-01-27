@@ -7,11 +7,11 @@ import bodyParser from "body-parser";
 import cors from "cors";
 import path from "path";
 
-import { Route } from "./types";
+import { Route, Table } from "./types";
 import { Logger } from "./util/Logger";
 import ApiResponse from "./util/Response";
 import util from "./util/util";
-// import db from "./util/database";
+import db from "./util/database";
 import { User } from "./tables/users";
 
 const app = express();
@@ -32,16 +32,6 @@ for (const route of routes) {
   app.use(route.path, route.router);
 }
 
-// TODO: Find way to do this better
-/* const tableFiles = util.findNested(path.join(__dirname, "tables"));
-const tables = tableFiles.map((f) => require(f).table);
-
-for (const table of tables) {
-  db.parseTableToQuery(table).then((tableQuery) => {
-    db.query(tableQuery).catch((err) => Logger.error(err));
-  });
-} */
-
 app.get("/", (req, res) => {
   new ApiResponse({
     status: 200,
@@ -50,7 +40,7 @@ app.get("/", (req, res) => {
 });
 
 Logger.log("Generating keys...");
-util.saveKeypair(path.resolve("./keys")).then((keys) => {
+util.saveKeypair(path.resolve("./keys")).then(async (keys) => {
   util.loadObjectToEnv({
     "keys.public": keys.pub,
     "keys.private": keys.pri,
@@ -76,6 +66,14 @@ util.saveKeypair(path.resolve("./keys")).then((keys) => {
       }
     )
   );
+
+  // TODO: Find way to do this better
+  const tableFiles = util.findNested(path.join(__dirname, "tables"));
+  const tables = tableFiles.map((f) => require(f) as { table: Table; importance: number }).sort((a, b) => a.importance - b.importance);
+  for (const { table } of tables) {
+    const query = await db.parseTableToQuery(table);
+    if (typeof query === "string") await db.query(query).catch((err) => Logger.error(err));
+  }
 
   app.listen(port, () => Logger.log(`Listening on port http://localhost:${port}/`));
 });

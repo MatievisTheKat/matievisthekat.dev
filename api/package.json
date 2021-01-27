@@ -5,8 +5,9 @@
   "author": "Matthew Stead <matthew.stead@matievisthekat.dev>",
   "license": "GPL-3.0",
   "scripts": {
-    "test": "tsc && rm -rf dist",
-    "start": "tsc && node dist/index.js",
+    "compile": "rm -rf dist && tsc",
+    "test": "yarn compile && rm -rf dist",
+    "start": "yarn compile && node dist/index.js",
     "pkg": "pkg . --target host -o start",
     "develop": "nodemon"
   },

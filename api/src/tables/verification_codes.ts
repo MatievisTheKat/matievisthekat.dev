@@ -7,6 +7,8 @@ export interface VerificationCode {
   expires_in: number;
 }
 
+export const importance = 1;
+
 export const table: Table = {
   name: "verification_codes",
   cols: {
@@ -29,7 +31,7 @@ export const table: Table = {
     expires_in: {
       datatype: "INT",
       required: true,
-      default: 10 * 60 * 1000,
+      default: 60 * 60 * 1000,
     },
   },
 };

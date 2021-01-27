@@ -1,6 +1,6 @@
 import { Pool, QueryResult } from "pg";
 import { Table, TableCol } from "../types";
-// import { Logger } from "./Logger";
+import { Logger } from "./Logger";
 
 const pool = new Pool({
   host: process.env["db.host"],
@@ -16,11 +16,12 @@ namespace db {
     const tableExists = await doesTableExist(table.name);
 
     if (!tableExists) {
-      return `CREATE TABLE IF NOT EXISTS ${table.name} (
-    ${colNames.map((name) => generateColumnQuery(name, table.cols[name])).join(",\n")}
-  )`;
+      return `CREATE TABLE IF NOT EXISTS ${table.name} ( ${colNames.map((name) => generateColumnQuery(name, table.cols[name])).join(",\n")} )`;
     } else {
-      const { rows } = await query("SELECT column_name, data_type FROM information_schema.columns WHERE table_name = $1", [table.name]);
+      return Logger.warn(`Table '${table.name}' already exists`);
+
+      // TODO: Find a way to do this
+      /* const { rows } = await query("SELECT column_name, data_type FROM information_schema.columns WHERE table_name = $1", [table.name]);
       const colData: {
         drop?: boolean;
         alter?: boolean;
@@ -53,7 +54,7 @@ namespace db {
         alters.forEach((a) => queries.push(`ALTER TABLE ${table.name} ALTER COLUMN ${a.name} TYPE ${table.cols[a.name].datatype}`));
       if (drops.length > 0) queries.push(`ALTER TABLE ${table.name} ${drops.map((d, i) => `${i === 0 ? "DROP " : ""}${d.name}`).join(",\n")}`);
 
-      return `${queries.join(";\n")};`;
+      return `${queries.join(";\n")};`; */
     }
   }
 
@@ -79,9 +80,9 @@ namespace db {
     });
   }
 
-  export function query(queryString: string, values?: any[]) {
-    return new Promise<QueryResult<any>>((res, rej) => {
-      const start = Date.now();
+  export function query<T = any>(queryString: string, values?: any[]) {
+    return new Promise<QueryResult<T>>((res, rej) => {
+      // const start = Date.now();
 
       pool.query(queryString, values ?? [], (err, result) => {
         if (err) return rej(err);
