@@ -1,6 +1,17 @@
 import { NextFunction, Router, Request, Response } from "express";
 import { User as CustomUser } from "./tables/users";
 
+export interface UserReview {
+  id: number;
+  avatar_url: string;
+  username: string;
+  verification: VerificationLevel;
+  admin: boolean;
+  stars: number;
+  body: string;
+  created_timestamp: Date;
+}
+
 export interface Route {
   path: string;
   router: Router;

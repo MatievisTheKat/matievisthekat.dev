@@ -1,4 +1,5 @@
 import { Table, VerificationLevel } from "../types";
+import { Review } from "./reviews";
 
 export interface User {
   id: string;
@@ -9,6 +10,7 @@ export interface User {
   password_hash: string;
   avatar_url: string;
   verification: VerificationLevel;
+  review: Review | undefined;
 }
 
 export const importance = 0;
@@ -55,5 +57,13 @@ export const table: Table = {
       default: "'not_sent'",
       required: true,
     },
+    
+    // TODO: Have to alter table after creation to add this column
+    // ALTER TABLE users ADD COLUMN review INT REFERENCES reviews(id);
+    
+    /* review: {
+      datatype: "INT",
+      foreignKey: "reviews(id)",
+    }, */
   },
 };

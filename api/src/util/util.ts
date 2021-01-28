@@ -3,12 +3,16 @@ import path from "path";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { generateKeyPair, createCipheriv, randomBytes } from "crypto";
+import { Response } from "express";
 
-import { HTTPStatusCode, KeyPair, VerificationLevel } from "../types";
+import { HTTPStatusCode, KeyPair, UserReview, VerificationLevel } from "../types";
 import { User } from "../tables/users";
 import { VerificationCode } from "../tables/verification_codes";
 import db from "./database";
 import mail from "./mail";
+import { Review } from "../tables/reviews";
+import { Logger } from "./Logger";
+import { InternalError } from "./Response";
 
 namespace util {
   export function loadObjectToEnv(obj: object) {
@@ -173,6 +177,67 @@ namespace util {
         })
         .catch(rej);
     });
+  }
+
+  export function createReview(uid: string, body: string, stars: number) {
+    return new Promise<Review>(async (resolve, reject) => {
+      const alreadyExists = await getReview({ uid });
+      if (alreadyExists) return reject(new Error("A review with that email already exists"));
+
+      db.query("INSERT INTO reviews (uid, body, stars) VALUES ($1, $2, $3);", [uid, body, stars])
+        .then(async () => {
+          const review = (await getReview({ uid })) as Review;
+
+          db.query("UPDATE users SET review = $1 WHERE id = $2;", [review.id, uid])
+            .then(() => resolve(review))
+            .catch(reject);
+        })
+        .catch(reject);
+    });
+  }
+
+  export function getReviews() {
+    return new Promise<UserReview[]>((resolve, reject) => {
+      db.query(
+        "SELECT r.id, r.body, r.stars, r.created_timestamp, u.admin, u.username, u.avatar_url, u.verification FROM reviews r INNER JOIN users u ON r.uid = u.id;"
+      )
+        .then((res) => resolve(res.rows))
+        .catch(reject);
+    });
+  }
+
+  export function deleteReview(id: number) {
+    return new Promise<void>((resolve, reject) => {
+      db.query("DELETE FROM reviews WHERE id = $1;", [id])
+        .then(() => resolve())
+        .catch(reject);
+    });
+  }
+
+  export function getReview({ id, uid }: { id: number; uid?: void } | { id?: void; uid: string }) {
+    return new Promise<Review | undefined>((resolve, reject) => {
+      db.query<Review>(`SELECT * FROM reviews WHERE ${id ? "id" : "uid"} = $1;`, [id || uid])
+        .then((res) => resolve(res.rows[0]))
+        .catch(reject);
+    });
+  }
+
+  export function getUserReview({ id, uid }: { id?: void; uid: string } | { id: number; uid?: void }) {
+    return new Promise<UserReview | undefined>(async (resolve, reject) => {
+      db.query(
+        `SELECT u.avatar_url, u.username, u.verification, u.admin, r.stars, r.body, r.created_timestamp, r.id FROM users u INNER JOIN reviews r ON r.uid = u.id AND ${
+          id ? "u.review" : "u.id"
+        } = $1;`,
+        [id || uid]
+      )
+        .then((res) => resolve(res.rows[0]))
+        .catch(reject);
+    });
+  }
+
+  export function handleErr(this: Response, err: unknown) {
+    Logger.error(err);
+    InternalError.send(this);
   }
 
   export function hasExpired(createdTimestamp: Date, expiresIn: number) {

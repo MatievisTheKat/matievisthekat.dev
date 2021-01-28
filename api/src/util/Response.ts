@@ -21,3 +21,5 @@ export default class ApiResponse {
     res.status(this.status).json(this);
   }
 }
+
+export const InternalError = new ApiResponse({ status: 500, error: "Something went wrong on our end" });
