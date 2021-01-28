@@ -1,3 +1,5 @@
+export type VerificationLevel = "not_sent" | "pending" | "verified";
+
 export interface User {
   username: string;
   admin?: boolean;
@@ -6,6 +8,17 @@ export interface User {
   password_hash: string;
   created_timestamp: string;
   avatar_url: string;
+}
+
+export interface UserReview {
+  id: number;
+  created_timestamp: string;
+  body: string;
+  stars: number;
+  username: string;
+  verification: VerificationLevel;
+  avatar_url: string;
+  admin: boolean;
 }
 
 export interface FileResponse {
