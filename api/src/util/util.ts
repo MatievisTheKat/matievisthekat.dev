@@ -170,8 +170,10 @@ namespace util {
             subject: "Verify Email Address | matievisthekat.dev",
             html: `<div style="background-color: rgba(243, 244, 246);text-align: center;font-size: larger;margin-x: 10%;padding: 5%;">Please verify your email address by clicking the button below<br /><br /><a style="background-color: rgba(59, 130, 246); border-radius: 0.25rem; color: rgba(255, 255, 255); padding: 10px; border: none; shadow: 2px 2px rgba(243, 244, 246); text-decoration: none; color: white;" href="${
               process.env.NODE_ENV === "development" ? "http://localhost:8000" : "https://new.matievisthekat.dev"
-            }/verify?code=${verif.code}" target="_blank" rel=noreferrer">Confirm Address</a></div>`,
+            }/verify?code=${verif.code}" target="_blank" rel="noreferrer">Confirm Address</a></div>`,
           });
+
+          await db.query("UPDATE users SET verification = $1 WHERE email = $2;", ["pending", verif.email]).catch(rej);
 
           res(verif);
         })
