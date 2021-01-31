@@ -1,6 +1,5 @@
 keys
 api/public/cdn
-*.env.*
 start
 
 # Logs
