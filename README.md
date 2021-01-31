@@ -26,7 +26,6 @@ Frontend:
 - Gatsby
 - React
 - Tailwind CSS
-- FontAwesome
 - Axios
 
 Backend:
@@ -34,7 +33,6 @@ Backend:
 - Express
 - PassportJS
 - Passport JWT
-- NodeMailer
 - Multer
 - Bcrypt
 - Postgresql
