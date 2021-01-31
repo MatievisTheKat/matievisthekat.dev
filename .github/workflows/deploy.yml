@@ -30,12 +30,3 @@ jobs:
         with:
           source: "./web/public/"
           target: "/var/www/matievisthekat.dev/"
-
-      - name: Executing remote command
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.HOST }}
-          USERNAME: ${{ secrets.USERNAME }}
-          PORT: ${{ secrets.PORT }}
-          KEY: ${{ secrets.SSHKEY }}
-          script: ls
