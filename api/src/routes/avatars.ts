@@ -7,7 +7,9 @@ import path from "path";
 const router = Router();
 
 router.get("/default/random", (req, res) => res.redirect(`/public/avatars/default/${Math.floor(Math.random() * 80)}.webp`));
-router.get("/default/:id", (req, res) => res.redirect(`/public/avatars/default/${req.params.id}${req.params.id.endsWith(".webp") ? "" : ".webp"}`));
+router.get("/default/:id", (req, res) =>
+  res.redirect(`/public/avatars/default/${req.params.id}${req.params.id.endsWith(".webp") || req.params.id.endsWith(".png") ? "" : ".webp"}`)
+);
 router.get("/default", (req, res) => res.redirect("/public/avatars/default.webp"));
 
 router.get("/", async (req, res) => {
