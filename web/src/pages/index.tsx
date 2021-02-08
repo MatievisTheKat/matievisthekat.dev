@@ -12,7 +12,7 @@ interface Props {}
 export default class Home extends React.Component<Props, State> {
   public render() {
     const props = {
-      rel: "noreferer",
+      rel: "noreferrer",
       target: "_blank",
       className: "link",
     };
