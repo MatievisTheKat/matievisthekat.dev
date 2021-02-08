@@ -34,7 +34,7 @@ export default class Tabs extends React.Component<Props, State> {
       <StaticQuery
         query={AssetsQuery}
         render={({ allFile: { edges } }: { allFile: { edges: Edge[] } }) => {
-          const src = edges.find((e: Edge) => e.node.name === "logo")?.node.publicURL;
+          const src = edges.find((e: Edge) => e.node.name === "logo" && e.node.publicURL.endsWith(".webp"))?.node.publicURL;
 
           return (
             <div className="flex-1 flex items-center justify-center sm:items-stretch sm:justify-start">
