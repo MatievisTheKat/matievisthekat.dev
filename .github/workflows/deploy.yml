@@ -19,14 +19,23 @@ jobs:
         run: cd web && yarn build
         env:
           API: https://api.matievisthekat.dev
-
-      - name: Copy repository contents via scp
-        uses: appleboy/scp-action@master
-        env:
-          HOST: ${{ secrets.HOST }}
-          USERNAME: ${{ secrets.USERNAME }}
-          PORT: ${{ secrets.PORT }}
-          KEY: ${{ secrets.SSHKEY }}
+          
+      - name: 📂 Sync files
+        uses: SamKirkland/FTP-Deploy-Action@4.0.0
         with:
-          source: "./web/public/"
-          target: "/var/www/matievisthekat.dev/"
+          server: ${{ secrets.FTP_HOST }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          local-dir: ./web/public/
+          server-dir: /var/www/matievisthekat.dev/web/public
+
+      #- name: Copy repository contents via scp
+      #  uses: appleboy/scp-action@master
+      #  env:
+      #    HOST: ${{ secrets.HOST }}
+      #    USERNAME: ${{ secrets.USERNAME }}
+      #    PORT: ${{ secrets.PORT }}
+      #    KEY: ${{ secrets.SSHKEY }}
+      #  with:
+      #    source: "./web/public/"
+      #    target: "/var/www/matievisthekat.dev/"
