@@ -59,7 +59,6 @@ $ cd matievisthekat.dev
 - `web/.env.production`:
   ```bash
   API="https://api.yoursite.org" # Production API url
-  POST_BUILD_DIR="/var/www/html/yoursite.org" # Directory for built files to be copied to post `gatsby build`
   ```
 - `api/.env`:
 
