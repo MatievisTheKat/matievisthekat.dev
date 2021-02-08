@@ -67,7 +67,7 @@ export default class Settings extends React.Component<Props, State> {
           <p>Select an avatar:</p>
           {this.state.avatars && (
             <AvatarSelection
-              exclude={`${user.avatar_url}${user.avatar_url.endsWith(".webp") ? "" : ".webp"}`}
+              exclude={`${user.avatar_url}${user.avatar_url.endsWith(".webp") || user.avatar_url.endsWith(".png") ? "" : ".webp"}`}
               avatars={this.state.avatars}
               onClick={this.updateAvatar.bind(this)}
             />
