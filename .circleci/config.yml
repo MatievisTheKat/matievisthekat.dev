@@ -10,10 +10,10 @@ jobs:
       tag: '14.15.3'
     steps:
       - checkout
-      - node/install-packages:
-          app-dir: ~/project/web
-          cache-path: node_modules
-          pkg-manager: yarn
+      - node/install-yarn
+      - run:
+          name: Install Dependencies
+          command: yarn install --immutable
 
   test:
     docker:
