@@ -1,18 +1,19 @@
 version: 2.1
 orbs:
-  node: circleci/node@3.0.1
+  node: circleci/node@4.2.0
 
 jobs:
   build:
     working_directory: ~/project
-    executor: node/default
+    executor:
+      name: node/default
+      tag: '14.15.3'
     steps:
       - checkout
-      - node/install-yarn
       - node/install-packages:
           app-dir: ~/project/web
           cache-path: node_modules
-          override-ci-command: yarn
+          pkg-manager: yarn
       - persist_to_workspace:
           root: .
           paths:
