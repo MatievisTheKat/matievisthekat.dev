@@ -21,7 +21,7 @@ jobs:
           API: https://api.matievisthekat.dev
           
       - name: Sync files
-        uses: SamKirkland/FTP-Deploy-Action@3.0.0
+        uses: SamKirkland/FTP-Deploy-Action@3.1.1
         with:
           server: ${{ secrets.FTP_HOST }}
           username: ${{ secrets.FTP_USERNAME }}
