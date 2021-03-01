@@ -14,17 +14,11 @@ jobs:
           app-dir: ~/project/web
           cache-path: node_modules
           pkg-manager: yarn
-      - persist_to_workspace:
-          root: .
-          paths:
-            - .
 
   test:
     docker:
       - image: cimg/node:current
     steps:
-      - attach_workspace:
-          at: .
       - run:
           name: Test
           command: yarn test
