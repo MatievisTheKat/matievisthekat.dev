@@ -18,7 +18,6 @@ jobs:
           name: List
           command: ls
 
-
   test:
     working_directory: ./web
     executor:
