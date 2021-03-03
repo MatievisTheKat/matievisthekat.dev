@@ -35,7 +35,7 @@ jobs:
       - checkout
       - run:
           name: Deploy SSH
-          command: ssh -oStrictHostKeyChecking=no -v $DROPLET_USER@$DROPLET_IP “./matievisthekat.dev/deploy.sh”
+          command: ssh -oStrictHostKeyChecking=no -v $DROPLET_USER@$DROPLET_IP “ls”
 
 workflows:
   version: 2
