@@ -9,13 +9,11 @@ jobs:
       tag: '14.15.3'
     steps:
       - checkout
-      - run:
-          name: Change directory
-          command: cd web
       - node/install-yarn
       - run:
           name: Install Dependencies
           command: yarn install
+          working_directory: ./web
       
 
   test:
@@ -25,12 +23,9 @@ jobs:
     steps:
       - checkout
       - run:
-          name: Change directory
-          command: cd web
-      - run: ls
-      - run:
           name: Test
           command: yarn test
+          working_directory: ./web
 
   deploy:
     executor:
