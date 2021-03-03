@@ -11,8 +11,8 @@ jobs:
     steps:
       - checkout
       - run:
-          name: List
-          command: ls
+          name: Change directory
+          command: cd web
       - node/install-yarn
       - run:
           name: Install Dependencies
@@ -25,8 +25,11 @@ jobs:
       name: node/default
       tag: '14.15.3'
     steps:
-      - checkout
-      - node/install-yarn
+      # - checkout
+      # - run:
+      #     name: Change directory
+      #     command: cd web
+      # - node/install-yarn
       - run:
           name: Test
           command: yarn test
