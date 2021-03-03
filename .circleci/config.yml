@@ -30,6 +30,14 @@ jobs:
           name: Test
           command: yarn test
 
+  deploy-prod:
+    docker:
+    # specify the version you desire here (you might not want node)
+    - image: circleci/node:7.10
+    steps:
+      - checkout
+      - run: ssh -oStrictHostKeyChecking=no -v $DROPLET_USER@$DROPLET_IP “./matievisthekat.dev/deploy.sh”
+
 workflows:
   version: 2
   build_test:
