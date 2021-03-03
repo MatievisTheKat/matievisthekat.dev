@@ -2,14 +2,14 @@ import React from "react";
 import Axios from "axios";
 import moment from "moment";
 
-import Layout from "../components/layout/Layout";
-import SEO from "../components/layout/SEO";
-import Box from "../components/Box";
-import UserAvatar from "../components/UserAvatar";
+import Layout from "../../components/layout/Layout";
+import SEO from "../../components/layout/SEO";
+import Box from "../../components/Box";
+import UserAvatar from "../../components/UserAvatar";
 
-import { ApiResponse, UserReview } from "../../types";
-import AdminBadge from "../components/AdminBadge";
-import Link from "../components/Link";
+import { ApiResponse, UserReview } from "../../../types";
+import AdminBadge from "../../components/AdminBadge";
+import Link from "../../components/Link";
 
 interface State {
   reviews: UserReview[];
@@ -44,7 +44,9 @@ export default class Reviews extends React.Component<Props, State> {
           <h1 className="font-nunito font-bold">Reviews</h1>
           <span className={`text-${rounded >= 4 ? "green" : rounded >= 2 ? "yellow" : "red"}-500`}>{rounded}/5</span>
           <br />
-          <Link to="/reviews/create" className="text-blue-400 hover:underline hover:text-blue-500">Create a review</Link>
+          <Link to="/reviews/create" className="text-blue-400 hover:underline hover:text-blue-500">
+            Create a review
+          </Link>
           <br />
           {this.state.error && <span className="text-red-500">{this.state.error}</span>}
         </Box>
