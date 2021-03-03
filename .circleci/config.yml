@@ -3,8 +3,7 @@ orbs:
   node: circleci/node@4.2.0
 
 jobs:
-  build:
-    # working_directory: ./web
+  install:
     executor:
       name: node/default
       tag: '14.15.3'
@@ -20,36 +19,36 @@ jobs:
       
 
   test:
-    # working_directory: ./web
     executor:
       name: node/default
       tag: '14.15.3'
     steps:
-      # - checkout
-      # - run:
-      #     name: Change directory
-      #     command: cd web
-      # - node/install-yarn
+      - checkout
+      - run:
+          name: Change directory
+          command: cd web
       - run:
           name: Test
           command: yarn test
 
   deploy:
-    docker:
-    # specify the version you desire here (you might not want node)
-    - image: circleci/node:7.10
+    executor:
+      name: node/default
+      tag: '14.15.3'
     steps:
       - checkout
-      - run: ssh -oStrictHostKeyChecking=no -v $DROPLET_USER@$DROPLET_IP “./matievisthekat.dev/deploy.sh”
+      - run:
+          name: Deploy SSH
+          command: ssh -oStrictHostKeyChecking=no -v $DROPLET_USER@$DROPLET_IP “./matievisthekat.dev/deploy.sh”
 
 workflows:
   version: 2
   ci:
     jobs:
-      - build
+      - install
       - test:
           requires:
-            - build
+            - install
       - deploy:
           filters:
             branches:
