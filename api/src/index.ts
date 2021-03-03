@@ -15,7 +15,7 @@ import db from "./util/database";
 import { User } from "./tables/users";
 
 const app = express();
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 1234;
 
 app.set("json spaces", 2);
 
