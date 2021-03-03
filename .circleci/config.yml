@@ -4,22 +4,23 @@ orbs:
 
 jobs:
   build:
-    working_directory: ./web
+    # working_directory: ./web
     executor:
       name: node/default
       tag: '14.15.3'
     steps:
       - checkout
+      - run:
+          name: List
+          command: ls
       - node/install-yarn
       - run:
           name: Install Dependencies
           command: yarn install
-      - run:
-          name: List
-          command: ls
+      
 
   test:
-    working_directory: ./web
+    # working_directory: ./web
     executor:
       name: node/default
       tag: '14.15.3'
@@ -40,7 +41,7 @@ jobs:
 
 workflows:
   version: 2
-  build_test:
+  ci:
     jobs:
       - build
       - test:
