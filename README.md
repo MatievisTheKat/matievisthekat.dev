@@ -91,15 +91,15 @@ The backend and frontend need to run on seperate NodeJS processes
 
   ```console
   $ cd api
-  $ npm i
-  $ npm start # Nodemon is installed and configured but it doesn't currently work
+  $ yarn
+  $ yarn start # Nodemon is installed and configured but it doesn't currently work
   ```
 
 - Start frontend
   ```console
   $ cd web
-  $ npm i
-  $ npm run develop
+  $ yarn
+  $ yarn develop
   ```
 
 ### Running in production
@@ -112,16 +112,16 @@ Only the backend will need a NodeJS process to run. It is already set up to run 
 
   ```console
   $ cd api
-  $ npm i
-  $ npm i -g pm2
+  $ yarn
+  $ yarn global add pm2
   $ pm2 start
   ```
 
 - Build frontend:
   ```console
   $ cd web
-  $ npm i
-  $ npm run build
+  $ yarn
+  $ yarn build
   ```
 
 ### Logs

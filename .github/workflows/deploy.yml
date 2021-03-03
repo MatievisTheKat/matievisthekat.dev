@@ -7,7 +7,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v2
 
       - name: Install dependencies
         run: cd web && yarn
@@ -20,22 +20,11 @@ jobs:
         env:
           API: https://api.matievisthekat.dev
           
-      - name: 📂 Sync files
-        uses: SamKirkland/FTP-Deploy-Action@4.0.0
+      - name: Sync files
+        uses: wlixcc/SFTP-Deploy-Action@v1.0
         with:
-          server: ${{ secrets.FTP_HOST }}
-          username: ${{ secrets.FTP_USERNAME }}
-          password: ${{ secrets.FTP_PASSWORD }}
-          local-dir: ./web/public/
-          server-dir: /var/www/matievisthekat.dev/web/public/
-
-      #- name: Copy repository contents via scp
-      #  uses: appleboy/scp-action@master
-      #  env:
-      #    HOST: ${{ secrets.HOST }}
-      #    USERNAME: ${{ secrets.USERNAME }}
-      #    PORT: ${{ secrets.PORT }}
-      #    KEY: ${{ secrets.SSHKEY }}
-      #  with:
-      #    source: "./web/public/"
-      #    target: "/var/www/matievisthekat.dev/"
+          username: ${{ secrets.USERNAME }}
+          server: ${{ secrets.HOST }}
+          ssh_private_key: ${{ secrets.SSH_KEY }}
+          local_path: './web/public/*'
+          remote_path: '/var/www/matievisthekat.dev/web/public/'
