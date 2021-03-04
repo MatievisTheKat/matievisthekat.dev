@@ -18,7 +18,7 @@ router.get("/", (req, res) => {
 router.post("/create", ...auth(), async (req, res) => {
   const user = req.user as User;
   const { stars, body } = req.body;
-  if (!stars || !body) return new ApiResponse({ status: 400, error: "Missing one of 'stars', or 'body'" }).send(res);
+  if (!stars || !body) return new ApiResponse({ status: 400, error: "Missing 'stars' or 'body'" }).send(res);
 
   const alreadyExists = await util.getReview({ uid: user.id }).catch(util.handleErr.bind(res));
   if (alreadyExists) return new ApiResponse({ status: 400, error: "You have already created a review" }).send(res);
