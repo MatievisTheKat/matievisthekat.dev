@@ -57,8 +57,8 @@ export default class LoginForm extends React.Component<Props, State> {
             <input className="mr-2 leading-tight" type="checkbox" onChange={this.props.onRememberChange} />
             <span className="text-sm">Remember me</span>
           </label>
-          <Link className="inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800" to="#">
-            Forgot Password?
+          <Link className="inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800" to="/register">
+            Register instead?
           </Link>
         </div>
       </form>
