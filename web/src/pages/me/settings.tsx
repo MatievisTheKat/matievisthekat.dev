@@ -61,7 +61,7 @@ export default class Settings extends React.Component<Props, State> {
 
     return (
       <Layout>
-        <SEO title="User Settings" />
+        <SEO title="User Settings" description="Customize your experience on matievisthekat.dev" />
         <Box>
           <UserAvatar src={user.avatar_url} className="mx-auto mb-3" />
           <p>Select an avatar:</p>

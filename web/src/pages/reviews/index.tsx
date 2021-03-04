@@ -39,7 +39,7 @@ export default class Reviews extends React.Component<Props, State> {
 
     return (
       <Layout>
-        <SEO title="Reviews" />
+        <SEO title="Reviews" description={`${rounded} out of 5 stars`} />
         <Box>
           <h1 className="font-nunito font-bold">Reviews</h1>
           <span className={`text-${rounded >= 4 ? "green" : rounded >= 2 ? "yellow" : "red"}-500`}>{rounded}/5</span>

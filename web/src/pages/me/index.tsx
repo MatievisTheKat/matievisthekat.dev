@@ -18,7 +18,7 @@ export default class Me extends React.Component<Props, State> {
 
     return (
       <Layout>
-        <SEO title="Profile" />
+        <SEO title="Profile" description="View your profile on matievisthekat.dev" />
         <Box>
           <UserAvatar src={user.avatar_url} className="mx-auto mb-3" />
           <h1 className="font-bold">{user.username}</h1>

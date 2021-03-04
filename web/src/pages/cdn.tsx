@@ -48,7 +48,7 @@ export default class ContentDeliveryNetwork extends React.Component<Props, State
 
     if (state) {
       state.splice(i, 1);
-      ///@ts-ignore
+      //@ts-ignore
       this.setState({ [stateProp]: state });
     }
 
@@ -115,7 +115,7 @@ export default class ContentDeliveryNetwork extends React.Component<Props, State
 
     return (
       <Layout>
-        <SEO title="Content Delviery Network" />
+        <SEO title="Content Delviery Network" description="Admin-Only content delivery network for matievisthekat.dev" />
         {!user.admin ? (
           <Error code={401}>You are not authorized to view this page</Error>
         ) : (

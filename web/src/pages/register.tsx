@@ -83,7 +83,7 @@ export default class Register extends React.Component<Props, State> {
   }
 
   private handleError(err: any) {
-    console.log(err);
+    console.warn(err);
     this.setState({
       error: err.response.data.error,
     });
@@ -105,7 +105,7 @@ export default class Register extends React.Component<Props, State> {
 
     return (
       <Layout>
-        <SEO title="Register" />
+        <SEO title="Register" description="Register for a new account on matievisthekat.dev" />
         <Box>
           <form className="text-center" onSubmit={this.onSubmit.bind(this)}>
             <UsernameInput

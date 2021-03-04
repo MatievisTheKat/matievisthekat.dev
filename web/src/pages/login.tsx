@@ -111,7 +111,7 @@ export default class Login extends React.Component<Props, State> {
   public render() {
     return (
       <Layout>
-        <SEO title="Login" />
+        <SEO title="Login" description="Login to your account on matievisthekat.dev" />
         <Box>
           {this.state.rememberedLogin ? (
             <RememberedLogin

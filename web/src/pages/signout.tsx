@@ -22,7 +22,7 @@ export default class SignOut extends React.Component<Props, State> {
 
     return (
       <Layout>
-        <SEO title="Sign Out" />
+        <SEO title="Sign Out" description="Sign out from your account on matievisthekat.dev" />
         <div className="text-center">
           <h1>Please wait...</h1>
         </div>

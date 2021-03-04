@@ -68,7 +68,7 @@ export default class Verify extends React.Component<Props, State> {
 
     return (
       <Layout>
-        <SEO title="Verify Email Address" />
+        <SEO title="Verify" description="Verify your email address" />
         <Box>
           <h1>{this.state.error ? this.state.error : this.state.done ? "Verified! You can close this tab" : "Verifying... Please wait..."}</h1>
           <br />

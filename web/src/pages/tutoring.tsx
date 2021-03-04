@@ -11,7 +11,7 @@ export default class Services extends React.Component<Props, State> {
   public render() {
     return (
       <Layout>
-        <SEO title="Services" />
+        <SEO title="Tutoring" description="Freelance tutoring services" />
         <Box>
           <h1 className="font-nunito font-bold">Tutoring</h1>
           <br />
