@@ -124,7 +124,7 @@ export default class ContentDeliveryNetwork extends React.Component<Props, State
             {this.state.loading && <BarLoader />}
 
             <p className="text-sm mt-4">
-              <label className="hover-mouse-pointer mt-3 mx-1 bg-blue-500 text-white font-bold shadow appearance-none rounded w-full max-w-xs py-2 px-3 leading-tight hover:bg-blue-700">
+              <label className="hover:pointer mt-3 mx-1 bg-blue-500 text-white font-bold shadow appearance-none rounded w-full max-w-xs py-2 px-3 leading-tight hover:bg-blue-700">
                 {this.state.files && this.state.files.length > 0 ? `${this.state.files.length} files selected` : "Select file(s)"}
                 <input type="file" multiple={true} className="hidden" onChange={this.onInputChange.bind(this)} />
               </label>
@@ -139,7 +139,7 @@ export default class ContentDeliveryNetwork extends React.Component<Props, State
                   <li key={i}>
                     {f.name}
                     <span className="ml-2">
-                      <FontAwesomeIcon className="text-red-500 hover-mouse-pointer" icon={faTimes} onClick={() => this.removeFile(i)} />
+                      <FontAwesomeIcon className="text-red-500 hover:pointer" icon={faTimes} onClick={() => this.removeFile(i)} />
                     </span>
                   </li>
                 ))}

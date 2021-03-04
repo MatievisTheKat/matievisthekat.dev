@@ -37,15 +37,15 @@ body {
   text-shadow: 3px 3px #607d8b;
 }
 
-.hover-mouse-pointer:hover {
+.hover\:pointer:hover {
   cursor: pointer;
 }
 
-.hover-mouse-not-allowed:hover {
+.hover\:not-allowed:hover {
   cursor: not-allowed;
 }
 
-.hover-mouse-help:hover {
+.hover\:help:hover {
   cursor: help;
 }
 

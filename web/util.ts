@@ -140,7 +140,7 @@ export function saveLogin(this: Component, jwt: string, expires?: string, overri
 }
 
 export function onInputChange(key: string, errKey: string, validate: (value: string) => string | undefined) {
-  return function (this: Component, e: ChangeEvent<HTMLInputElement>) {
+  return function (this: Component, e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
     const value = e.target.value;
     const err = validate(value);
     this.setState({ [key]: value, [errKey]: err });

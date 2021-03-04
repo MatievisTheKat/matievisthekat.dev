@@ -16,7 +16,7 @@ export default class AvatarSelection extends React.Component<Props, State> {
         {this.props.avatars.map((a, i) => {
           if (a !== this.props.exclude)
             return (
-              <UserAvatar src={a} width="12" className="mx-1 hover-mouse-pointer hover:shadow-lg" key={i} onClick={(e) => this.props.onClick(a)} />
+              <UserAvatar src={a} width="12" className="mx-1 hover:pointer hover:shadow-lg" key={i} onClick={(e) => this.props.onClick(a)} />
             );
         })}
       </div>

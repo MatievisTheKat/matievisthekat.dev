@@ -63,12 +63,12 @@ export default class FileListItem extends React.Component<Props, State> {
           {name}
         </Link>
         <span
-          className="ml-2 hover-mouse-pointer hover:text-blue-700"
+          className="ml-2 hover:pointer hover:text-blue-700"
           onClick={() => navigator.clipboard.writeText(`${process.env.API}/cdn/${name}`)}
         >
           <FontAwesomeIcon icon={faCopy} />
         </span>
-        <span className="ml-2 hover-mouse-pointer text-red-500 hover:text-red-700" onClick={() => this.removeFile(name)}>
+        <span className="ml-2 hover:pointer text-red-500 hover:text-red-700" onClick={() => this.removeFile(name)}>
           <FontAwesomeIcon icon={faTrashAlt} />
         </span>
       </li>
