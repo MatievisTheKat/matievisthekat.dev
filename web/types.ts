@@ -10,11 +10,15 @@ export interface User {
   avatar_url: string;
 }
 
-export interface UserReview {
+export interface Review {
   id: number;
-  created_timestamp: string;
   body: string;
+  uid: string;
+  created_timestamp: string;
   stars: number;
+}
+
+export interface UserReview extends Review {
   username: string;
   verification: VerificationLevel;
   avatar_url: string;

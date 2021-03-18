@@ -1,19 +1,20 @@
-import React from "react";
+import React, { Suspense } from "react";
 import Axios from "axios";
-import moment from "moment";
 
 import Layout from "../../components/layout/Layout";
 import SEO from "../../components/layout/SEO";
 import Box from "../../components/Box";
-import UserAvatar from "../../components/UserAvatar";
+import Link from "../../components/Link";
+import ScaleLoader from "../../components/loaders/Scale";
+
+const Review = React.lazy(() => import("../../components/reviews/Review"));
 
 import { ApiResponse, UserReview } from "../../../types";
-import AdminBadge from "../../components/AdminBadge";
-import Link from "../../components/Link";
 
 interface State {
   reviews: UserReview[];
   error?: string;
+  loading: boolean;
 }
 interface Props {}
 
@@ -24,13 +25,16 @@ export default class Reviews extends React.Component<Props, State> {
     this.state = {
       reviews: [],
       error: undefined,
+      loading: false,
     };
   }
 
   public componentDidMount() {
+    this.setState({ loading: true });
     Axios.get<ApiResponse>(`${process.env.API}/reviews`)
       .then((res) => this.setState({ reviews: res.data.data, error: undefined }))
-      .catch((err) => this.setState({ error: err?.response?.data?.error || "Failed to fetch reviews" }));
+      .catch((err) => this.setState({ error: err?.response?.data?.error || "Failed to fetch reviews" }))
+      .finally(() => this.setState({ loading: false }));
   }
 
   public render() {
@@ -51,16 +55,17 @@ export default class Reviews extends React.Component<Props, State> {
           {this.state.error && <span className="text-red-500">{this.state.error}</span>}
         </Box>
         <div className="mb-8" />
-        {this.state.reviews.map((r, i) => (
-          <Box className="px-16 text-left mb-3" key={i}>
-            <UserAvatar src={r.avatar_url} width={7} border={false} className="inline-block mr-2" />
-            <h1 className="inline-block mr-3">{r.username}</h1>
-            {r.admin && <AdminBadge className="-ml-2.5 mr-3 -mb-1.5" />}
-            <span className="text-xs">{moment(new Date(r.created_timestamp)).fromNow()}</span>
-            <hr className="mt-1 w-2/4 ml-8 mb-3 border border-gray-400" />
-            <span className="ml-5">{r.body}</span>
-          </Box>
-        ))}
+        {this.state.loading ? (
+          <span className="mx-auto">
+            <ScaleLoader />
+          </span>
+        ) : (
+          this.state.reviews.map((review, i) => (
+            <Suspense fallback={false} key={i}>
+              <Review {...review} />
+            </Suspense>
+          ))
+        )}
       </Layout>
     );
   }
