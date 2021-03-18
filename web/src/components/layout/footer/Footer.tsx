@@ -50,13 +50,13 @@ export default class Footer extends React.Component<Props, State> {
           const links: SocialLink[] = site.siteMetadata.socialLinks;
 
           return (
-            <footer className="mt-16 max-w-screen bg-gray-500 px-10 pt-8 pb-6 text-center text-gray-700 border-t-2 border-gray-600">
+            <footer className="mt-16 max-w-screen bg-gray-500 px-10 pt-8 pb-6 text-center text-gray-800 border-t-2 border-gray-600">
               <div className="row mx-auto">
                 {links.map((l: SocialLink, i) => {
                   if (icons[l.slug]) {
                     return (
                       <Link external={true} to={l.url} title={l.name} className="mx-3 text-lg" key={i}>
-                        <FontAwesomeIcon icon={icons[l.slug]} />
+                        <FontAwesomeIcon icon={icons[l.slug]} size="lg" />
                       </Link>
                     );
                   } else return null;

@@ -8,7 +8,7 @@ interface Props {}
 export default class Copyright extends React.Component<Props, State> {
   public render() {
     return (
-      <span className="mt-auto text-xs">
+      <span className="mt-auto text-xs text-gray-900">
         © Copyright MatievisTheKat {new Date().getFullYear()}
         <br />
         Some icons made by{" "}
