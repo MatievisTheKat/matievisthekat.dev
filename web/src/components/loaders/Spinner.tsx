@@ -9,7 +9,7 @@ interface Props extends BaseLoaderProps {
 
 export default class SpinLoader extends React.Component<Props, State> {
   static defaultProps = {
-    colour: "blue",
+    colour: "#64B5F6",
   };
 
   public render() {
