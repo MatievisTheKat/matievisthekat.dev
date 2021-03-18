@@ -58,7 +58,7 @@ export default class Reviews extends React.Component<Props, State> {
             </Suspense>
           ) : (
             <span>
-              You have already created a review. You can view it <Link className="link" to={`/reviews/view?id=${this.state.meReview?.id}`}>here</Link>
+              You have already created a review. You can view it <Link className="link" to={`/reviews/view/?id=${this.state.meReview?.id}`}>here</Link>
             </span>
           )}
         </Box>
