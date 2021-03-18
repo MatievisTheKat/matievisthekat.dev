@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useToasts } from "react-toast-notifications";
 
-interface Props {}
-
-const ConnectivityListener: React.FC<Props> = (props) => {
+const ConnectivityListener: React.FC = () => {
   const { addToast } = useToasts();
   const [online, setOnline] = useState(window.navigator.onLine);
   const [hasGoneOffline, setHasGoneOffline] = useState(false);
