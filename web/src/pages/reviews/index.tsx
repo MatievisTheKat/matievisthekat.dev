@@ -57,7 +57,7 @@ export default class Reviews extends React.Component<Props, State> {
             <h1 className="inline-block mr-3">{r.username}</h1>
             {r.admin && <AdminBadge className="-ml-2.5 mr-3 -mb-1.5" />}
             <span className="text-xs">{moment(new Date(r.created_timestamp)).fromNow()}</span>
-            <hr className="mt-1 w-2/4 ml-7 mb-3 border border-gray-400" />
+            <hr className="mt-1 w-2/4 ml-8 mb-3 border border-gray-400" />
             <span className="ml-5">{r.body}</span>
           </Box>
         ))}
