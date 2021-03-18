@@ -29,7 +29,7 @@ export default class LoggedInLinks extends React.Component<Props, State> {
         render={({ site }) => {
           const links: UserLink[] = site.siteMetadata.userMenuLinks;
           if (!links.find((l) => l.name.toLowerCase() === "sign out"))
-            links.push({ name: "Sign Out", url: `/signout?continueTo=${window.location.pathname}` });
+            links.push({ name: "Sign Out", url: `/signout/?continueTo=${window.location.pathname}` });
 
           return links.map((l, i) => (
             <Link

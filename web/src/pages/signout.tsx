@@ -1,5 +1,6 @@
 import React from "react";
 import qs from "querystring";
+import { navigate } from "gatsby";
 
 import Layout from "../components/layout/Layout";
 import SEO from "../components/layout/SEO";
@@ -18,7 +19,7 @@ export default class SignOut extends React.Component<Props, State> {
   public render() {
     if (typeof window === "undefined") return null;
     const continueTo = (qs.parse(window.location.href, "?") as Record<string, string>).continueTo || "/";
-    window.location.href = continueTo.startsWith("/me") ? "/" : continueTo;
+    navigate(continueTo.startsWith("/me") ? "/" : continueTo);
 
     return (
       <Layout>

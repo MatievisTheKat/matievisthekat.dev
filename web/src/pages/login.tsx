@@ -1,5 +1,6 @@
 import React, { ChangeEvent } from "react";
 import qs from "querystring";
+import { navigate } from "gatsby";
 
 import Box from "../components/Box";
 import Layout from "../components/layout/Layout";
@@ -89,7 +90,7 @@ export default class Login extends React.Component<Props, State> {
 
   private redirect() {
     const { continueTo } = qs.parse(window.location.href, "?") as Record<string, string>;
-    window.location.href = continueTo || "/me";
+    navigate(continueTo || "/me");
   }
 
   public componentDidMount() {

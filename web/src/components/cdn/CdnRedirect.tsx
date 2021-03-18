@@ -1,4 +1,5 @@
 import React from "react";
+import { navigate } from "gatsby";
 
 import Layout from "../layout/Layout";
 import SEO from "../layout/SEO";
@@ -13,7 +14,7 @@ export default class CDNFile extends React.Component<Props, State> {
   public render() {
     if (typeof window === "undefined") return null;
     const file = this.props.file;
-    window.location.href = `${process.env.API}/cdn/${file}`;
+    navigate(`${process.env.API}/cdn/${file}`);
 
     return (
       <Layout>

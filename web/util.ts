@@ -2,6 +2,7 @@ import Axios from "axios";
 import ms from "ms";
 import { ChangeEvent, Component } from "react";
 import Cookies from "universal-cookie";
+import { navigate } from "gatsby";
 
 import { ApiResponse, HTTPStatusCode, User } from "./types";
 
@@ -80,7 +81,7 @@ export function getCurrentUser(loginIfNotFound?: boolean): User | void {
   const user: User = cookies.get("user");
 
   if (!user && loginIfNotFound) {
-    window.location.href = `/login?continueTo=${window.location.pathname}`;
+    navigate(`/login?continueTo=${window.location.pathname}`);
   } else return user;
 }
 

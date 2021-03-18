@@ -1,6 +1,7 @@
 import React, { FormEvent } from "react";
 import Axios from "axios";
 import qs from "querystring";
+import { navigate } from "gatsby";
 
 import Layout from "../components/layout/Layout";
 import SEO from "../components/layout/SEO";
@@ -95,7 +96,7 @@ export default class Register extends React.Component<Props, State> {
   }
 
   private redirect(toLogin?: boolean) {
-    window.location.href = this.getRedirectUrl(toLogin);
+    navigate(this.getRedirectUrl(toLogin));
   }
 
   public render() {
