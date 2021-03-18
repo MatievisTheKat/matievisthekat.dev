@@ -10,14 +10,6 @@ export interface User {
   avatar_url: string;
 }
 
-export interface Review {
-  id: number;
-  body: string;
-  uid: string;
-  created_timestamp: Date;
-  stars: number;
-}
-
 export interface UserReview {
   id: number;
   created_timestamp: string;
