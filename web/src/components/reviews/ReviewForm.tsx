@@ -1,6 +1,7 @@
 import React from "react";
 import Axios from "axios";
 import { faStar } from "@fortawesome/free-solid-svg-icons";
+import { navigate } from "gatsby";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Button from "../Button";
@@ -43,9 +44,9 @@ export default class ReviewForm extends React.Component<Props, State> {
           Authorization: `Bearer ${getCurrentJwt()}`,
         },
       }
-    ).then((res) => {
-      window.location.href = `/reviews/view?id=${res.data.id}`;
-    });
+    )
+      .then((res) => navigate(`/reviews/view/?id=${res.data.id}`))
+      .catch((err) => this.setState({ error: err?.response?.data?.error || err }));
   }
 
   public render() {
