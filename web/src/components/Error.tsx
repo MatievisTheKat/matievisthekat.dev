@@ -1,4 +1,4 @@
-import React from "react";
+import React, { ReactNode } from "react";
 
 import { httpPairs, HTTPStatusCode } from "../../types";
 
@@ -7,6 +7,7 @@ import Link from "./Link";
 interface State {}
 interface Props {
   code?: HTTPStatusCode;
+  children: ReactNode;
 }
 
 export default class Error extends React.Component<Props, State> {

@@ -5,7 +5,7 @@ import Menu from "./Menu";
 import Tabs from "./Tabs";
 import NavBar from "./NavBar";
 import UserMenu from "./userMenu/UserMenu";
-import NotifButton from "./NotifButton";
+// import NotifButton from "./NotifButton";
 
 import { getCurrentUser } from "../../../../util";
 import { Tab } from "../../../../types";

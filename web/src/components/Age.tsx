@@ -18,7 +18,7 @@ const Age: React.FC = () => {
     };
   }, []);
 
-  return age ? <span style={{ fontFamily: "monospace" }}>{`${age}`}</span> : null;
+  return age ? <>{`${age}`}</> : null;
 };
 
 export default Age;

@@ -1,4 +1,4 @@
-import React, { ChangeEvent } from "react";
+import React, { ChangeEvent, Suspense } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTimes } from "@fortawesome/free-solid-svg-icons";
 import Axios from "axios";
@@ -11,7 +11,8 @@ import Error from "../components/Error";
 import Button from "../components/Button";
 import BarLoader from "../components/loaders/Bar";
 import CDNFile from "../components/cdn/CdnRedirect";
-import FileList from "../components/cdn/FileList";
+
+const FileList = React.lazy(() => import("../components/cdn/FileList"));
 
 import { getCurrentJwt, getCurrentUser } from "../../util";
 import { ApiResponse, FileResponse } from "../../types";
@@ -152,25 +153,29 @@ export default class ContentDeliveryNetwork extends React.Component<Props, State
             )}
 
             {this.state.uploaded && !this.state.files && (
-              <FileList
-                files={this.state.uploaded}
-                onError={this.handleErr.bind(this)}
-                onFileRemove={(name) => {
-                  const { uploaded } = this.state;
-                  if (uploaded) this.removeFile(uploaded.indexOf(uploaded.find((f) => f.filename === name) as FileResponse), "uploaded");
-                }}
-              />
+              <Suspense fallback={true}>
+                <FileList
+                  files={this.state.uploaded}
+                  onError={this.handleErr.bind(this)}
+                  onFileRemove={(name) => {
+                    const { uploaded } = this.state;
+                    if (uploaded) this.removeFile(uploaded.indexOf(uploaded.find((f) => f.filename === name) as FileResponse), "uploaded");
+                  }}
+                />
+              </Suspense>
             )}
 
             {this.state.viewFiles && !this.state.files && !this.state.uploaded && (
-              <FileList
-                files={this.state.viewFiles}
-                onError={this.handleErr.bind(this)}
-                onFileRemove={(name) => {
-                  const { viewFiles } = this.state;
-                  if (viewFiles) this.removeFile(viewFiles.indexOf(name), "viewFiles");
-                }}
-              />
+              <Suspense fallback={true}>
+                <FileList
+                  files={this.state.viewFiles}
+                  onError={this.handleErr.bind(this)}
+                  onFileRemove={(name) => {
+                    const { viewFiles } = this.state;
+                    if (viewFiles) this.removeFile(viewFiles.indexOf(name), "viewFiles");
+                  }}
+                />
+              </Suspense>
             )}
 
             {this.state.error && <p className="mt-3 text-red-500">{this.state.error}</p>}

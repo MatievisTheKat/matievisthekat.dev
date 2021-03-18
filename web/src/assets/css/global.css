@@ -52,11 +52,3 @@ body {
 .border-radius-1\/2 {
   border-radius: 50%;
 }
-
-.link {
-  color: rgb(42, 137, 253);
-}
-
-.link:hover {
-  text-decoration: underline;
-}

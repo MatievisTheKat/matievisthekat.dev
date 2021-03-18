@@ -1,12 +1,13 @@
-import React, { ChangeEvent } from "react";
+import React, { ChangeEvent, Suspense } from "react";
 import qs from "querystring";
 import { navigate } from "gatsby";
 
 import Box from "../components/Box";
 import Layout from "../components/layout/Layout";
 import SEO from "../components/layout/SEO";
-import LoginForm from "../components/login/Form";
 import RememberedLogin from "../components/login/RemeberedLogin";
+
+const LoginForm = React.lazy(() => import("../components/login/Form"));
 
 import { getUser, getCurrentUser, getCurrentJwt, onInputChange, validatePassword, validateUsername, saveLogin } from "../../util";
 import { User } from "../../types";
@@ -121,19 +122,21 @@ export default class Login extends React.Component<Props, State> {
               resetRemembered={this.setRemembered.bind(this)}
             />
           ) : (
-            <LoginForm
-              onPasswordChange={onInputChange("password", "passwordErr", validatePassword).bind(this)}
-              onUsernameChange={onInputChange("username", "usernameErr", validateUsername).bind(this)}
-              onRememberChange={this.onRememberChange.bind(this)}
-              saveLogin={this.saveLogin.bind(this)}
-              handleError={this.handleError.bind(this)}
-              username={this.state.username}
-              usernameErr={this.state.usernameErr}
-              password={this.state.password}
-              passwordErr={this.state.passwordErr}
-              loading={this.state.loading}
-              loginErr={this.state.loginErr}
-            />
+            <Suspense fallback={true}>
+              <LoginForm
+                onPasswordChange={onInputChange("password", "passwordErr", validatePassword).bind(this)}
+                onUsernameChange={onInputChange("username", "usernameErr", validateUsername).bind(this)}
+                onRememberChange={this.onRememberChange.bind(this)}
+                saveLogin={this.saveLogin.bind(this)}
+                handleError={this.handleError.bind(this)}
+                username={this.state.username}
+                usernameErr={this.state.usernameErr}
+                password={this.state.password}
+                passwordErr={this.state.passwordErr}
+                loading={this.state.loading}
+                loginErr={this.state.loginErr}
+              />
+            </Suspense>
           )}
         </Box>
       </Layout>
