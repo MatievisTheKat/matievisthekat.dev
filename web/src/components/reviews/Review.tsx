@@ -20,7 +20,7 @@ const Review: React.FC<UserReview> = ({ admin, avatar_url, created_timestamp, us
           <AdminBadge className="-ml-2.5 mr-3 -mb-1.5" />
         </Suspense>
       )}
-      <span className="text-xs">{moment(new Date(created_timestamp)).fromNow()}</span>
+      <span className="text-xs">{moment(moment(created_timestamp).utc().format("YYYY-MM-DD HH:mm:ss")).fromNow()}</span>
       <hr className="mt-1 w-2/4 ml-8 mb-3 border border-gray-400" />
       <span className="ml-5">{body}</span>
     </Box>
