@@ -13,7 +13,7 @@ router.get("/me", ...auth(), (req, res) => {
 
 router.post("/register", async (req, res) => {
   const { email: uncleanEmail, username, password, confirmPassword } = req.body;
-  const email = uncleanEmail.toLowerCase();
+  const email = uncleanEmail?.toLowerCase();
 
   if (!email || !username || !password || !confirmPassword)
     return new ApiResponse({
