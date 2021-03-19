@@ -38,7 +38,7 @@ export default class Reviews extends React.Component<Props, State> {
   }
 
   public render() {
-    const average = this.state.reviews.map((r) => r.stars).reduce((prev, curr) => (prev += curr), 0);
+    const average = this.state.reviews.map((r) => r.stars).reduce((prev, curr) => (prev += curr), 0) / this.state.reviews.length;
     const rounded = Math.round(average * 10) / 10;
 
     return (
