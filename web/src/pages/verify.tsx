@@ -58,7 +58,7 @@ export default class Verify extends React.Component<Props, State> {
       }
     )
       .then(() => this.setState({ error: "Resent verification code!" }))
-      .catch((err) => this.setState({ error: err?.response?.data?.error || err.message }));
+      .catch((err) => this.setState({ error: err.response.data.error || err.message }));
   }
 
   public render() {

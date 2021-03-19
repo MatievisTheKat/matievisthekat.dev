@@ -33,7 +33,7 @@ export default class Reviews extends React.Component<Props, State> {
     this.setState({ loading: true });
     Axios.get<ApiResponse>(`${process.env.API}/reviews`)
       .then((res) => this.setState({ reviews: res.data.data, error: undefined }))
-      .catch((err) => this.setState({ error: err?.response?.data?.error || "Failed to fetch reviews" }))
+      .catch((err) => this.setState({ error: err.response.data.error || "Failed to fetch reviews" }))
       .finally(() => this.setState({ loading: false }));
   }
 

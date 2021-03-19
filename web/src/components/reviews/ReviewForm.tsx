@@ -46,7 +46,7 @@ export default class ReviewForm extends React.Component<Props, State> {
       }
     )
       .then((res) => navigate(`/reviews/view/?id=${res.data.id}`))
-      .catch((err) => this.setState({ error: err?.response?.data?.error || err }));
+      .catch((err) => this.setState({ error: err.response.data.error || err }));
   }
 
   public render() {

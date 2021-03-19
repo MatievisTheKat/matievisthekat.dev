@@ -41,7 +41,7 @@ export default class Reviews extends React.Component<Props, State> {
       },
     })
       .then(({ data }) => this.setState({ meReview: data.data, alreadyCreated: true }))
-      .catch((err) => this.setState({ error: err?.response?.data?.error || err, alreadyCreated: err.response.status !== 404 }))
+      .catch((err) => this.setState({ error: err.response.data.error || err, alreadyCreated: err.response.status !== 404 }))
       .finally(() => this.setState({ loading: false }));
   }
 
